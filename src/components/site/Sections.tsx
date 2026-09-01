@@ -288,12 +288,16 @@ function SectionBody({
 
     case "featured_products":
     case "product_grid": {
-      const count = Number(d.count ?? 8);
-      const list = products.slice(0, count);
+      const list = pickProducts(products, d);
       return (
         <div className="space-y-6">
           <div className="flex flex-wrap items-end justify-between gap-3">
-            <h2 className="text-3xl font-semibold tracking-tight">{str(d.heading, section.title ?? "Products")}</h2>
+            <div className="space-y-1">
+              {str(d['eyebrow']) ? (
+                <p className="text-xs font-semibold uppercase tracking-[0.18em] text-primary">{str(d['eyebrow'])}</p>
+              ) : null}
+              <h2 className="text-3xl font-semibold tracking-tight">{str(d.heading, section.title ?? "Products")}</h2>
+            </div>
             <Button asChild variant="ghost" size="sm" className="gap-1">
               <CmsLink to={str(d['linkTo'], "/shop")}>
                 {str(d['linkLabel'], "View all")}
@@ -306,8 +310,11 @@ function SectionBody({
           ) : (
             <div className="grid grid-cols-2 gap-6 md:grid-cols-3 lg:grid-cols-4">
               {list.map((p) => (
-                <ProductCard key={p.node.id} product={p} />
+                <ProductCard key={p.node.id} product={p} features={features} />
               ))}
+            </div>
+          )}
+
             </div>
           )}
         </div>
