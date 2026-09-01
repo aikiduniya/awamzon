@@ -21,6 +21,7 @@ import { Route as SiteFaqRouteImport } from './routes/_site.faq'
 import { Route as SiteSearchRouteImport } from './routes/_site.search'
 import { Route as SiteShopRouteImport } from './routes/_site.shop'
 import { Route as AuthenticatedAdminIndexRouteImport } from './routes/_authenticated/admin.index'
+import { Route as AuthenticatedAdminSettingsRouteImport } from './routes/_authenticated/admin.settings'
 import { Route as SiteBlogIndexRouteImport } from './routes/_site.blog.index'
 import { Route as SiteBlogSlugRouteImport } from './routes/_site.blog.$slug'
 import { Route as SiteCollectionsHandleRouteImport } from './routes/_site.collections.$handle'
@@ -85,6 +86,12 @@ const AuthenticatedAdminIndexRoute = AuthenticatedAdminIndexRouteImport.update({
   path: '/',
   getParentRoute: () => AuthenticatedAdminRoute,
 } as any)
+const AuthenticatedAdminSettingsRoute =
+  AuthenticatedAdminSettingsRouteImport.update({
+    id: '/settings',
+    path: '/settings',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
 const SiteBlogIndexRoute = SiteBlogIndexRouteImport.update({
   id: '/blog/',
   path: '/blog/',
@@ -121,6 +128,7 @@ export interface FileRoutesByFullPath {
   '/faq': typeof SiteFaqRoute
   '/search': typeof SiteSearchRoute
   '/shop': typeof SiteShopRoute
+  '/admin/settings': typeof AuthenticatedAdminSettingsRoute
   '/blog/$slug': typeof SiteBlogSlugRoute
   '/collections/$handle': typeof SiteCollectionsHandleRoute
   '/pages/$slug': typeof SitePagesSlugRoute
@@ -137,6 +145,7 @@ export interface FileRoutesByTo {
   '/faq': typeof SiteFaqRoute
   '/search': typeof SiteSearchRoute
   '/shop': typeof SiteShopRoute
+  '/admin/settings': typeof AuthenticatedAdminSettingsRoute
   '/blog/$slug': typeof SiteBlogSlugRoute
   '/collections/$handle': typeof SiteCollectionsHandleRoute
   '/pages/$slug': typeof SitePagesSlugRoute
@@ -157,6 +166,7 @@ export interface FileRoutesById {
   '/_site/search': typeof SiteSearchRoute
   '/_site/shop': typeof SiteShopRoute
   '/_site/': typeof SiteIndexRoute
+  '/_authenticated/admin/settings': typeof AuthenticatedAdminSettingsRoute
   '/_site/blog/$slug': typeof SiteBlogSlugRoute
   '/_site/collections/$handle': typeof SiteCollectionsHandleRoute
   '/_site/pages/$slug': typeof SitePagesSlugRoute
@@ -176,6 +186,7 @@ export interface FileRouteTypes {
     | '/faq'
     | '/search'
     | '/shop'
+    | '/admin/settings'
     | '/blog/$slug'
     | '/collections/$handle'
     | '/pages/$slug'
@@ -192,6 +203,7 @@ export interface FileRouteTypes {
     | '/faq'
     | '/search'
     | '/shop'
+    | '/admin/settings'
     | '/blog/$slug'
     | '/collections/$handle'
     | '/pages/$slug'
@@ -211,6 +223,7 @@ export interface FileRouteTypes {
     | '/_site/search'
     | '/_site/shop'
     | '/_site/'
+    | '/_authenticated/admin/settings'
     | '/_site/blog/$slug'
     | '/_site/collections/$handle'
     | '/_site/pages/$slug'
@@ -311,6 +324,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminIndexRouteImport
       parentRoute: typeof AuthenticatedAdminRoute
     }
+    '/_authenticated/admin/settings': {
+      id: '/_authenticated/admin/settings'
+      path: '/settings'
+      fullPath: '/admin/settings'
+      preLoaderRoute: typeof AuthenticatedAdminSettingsRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
     '/_site/blog/': {
       id: '/_site/blog/'
       path: '/blog'
@@ -350,10 +370,12 @@ declare module '@tanstack/react-router' {
 }
 
 interface AuthenticatedAdminRouteChildren {
+  AuthenticatedAdminSettingsRoute: typeof AuthenticatedAdminSettingsRoute
   AuthenticatedAdminIndexRoute: typeof AuthenticatedAdminIndexRoute
 }
 
 const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
+  AuthenticatedAdminSettingsRoute: AuthenticatedAdminSettingsRoute,
   AuthenticatedAdminIndexRoute: AuthenticatedAdminIndexRoute,
 }
 
