@@ -24,7 +24,7 @@ import {
   Package,
   Palette,
   PanelsTopLeft,
-  Route,
+  Route as RouteIcon,
   Search,
   ShieldCheck,
   ShoppingCart,
@@ -78,7 +78,7 @@ const NAV: Array<{ group: string; items: Array<{ to: string; label: string; icon
     group: "SEO",
     items: [
       { to: "/admin/seo", label: "SEO manager", icon: Search },
-      { to: "/admin/redirects", label: "Redirects", icon: Route },
+      { to: "/admin/redirects", label: "Redirects", icon: RouteIcon },
       { to: "/admin/security", label: "Security & performance", icon: ShieldCheck },
     ],
   },
