@@ -5,6 +5,8 @@ import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogTitle } from "@/components/ui/dialog";
 import { formatMoney, type ShopifyProduct } from "@/lib/shopify";
+import { CmsIcon } from "./Icon";
+import { useSiteButtons } from "@/hooks/useSiteButtons";
 import { useCartStore } from "@/stores/cartStore";
 
 export function QuickViewDialog({
@@ -95,8 +97,12 @@ export function QuickViewDialog({
                 </button>
               </div>
               <Button onClick={add} disabled={isLoading || !variant?.availableForSale} className="flex-1 gap-1.5">
-                {isLoading ? <Loader2 className="size-4 animate-spin" /> : <ShoppingBag className="size-4" aria-hidden />}
-                {variant?.availableForSale ? "Add to cart" : "Out of stock"}
+                {isLoading ? (
+                  <Loader2 className="size-4 animate-spin" />
+                ) : buttons.showIcons ? (
+                  <CmsIcon name={buttons.addToCartIcon} className="size-4" />
+                ) : null}
+                {variant?.availableForSale ? buttons.addToCartLabel : "Out of stock"}
               </Button>
             </div>
 
