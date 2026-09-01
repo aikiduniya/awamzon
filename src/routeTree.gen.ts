@@ -23,6 +23,7 @@ import { Route as SiteShopRouteImport } from './routes/_site.shop'
 import { Route as AuthenticatedAdminIndexRouteImport } from './routes/_authenticated/admin.index'
 import { Route as AuthenticatedAdminHomepageRouteImport } from './routes/_authenticated/admin.homepage'
 import { Route as AuthenticatedAdminMenusRouteImport } from './routes/_authenticated/admin.menus'
+import { Route as AuthenticatedAdminPagesRouteImport } from './routes/_authenticated/admin.pages'
 import { Route as AuthenticatedAdminSeoRouteImport } from './routes/_authenticated/admin.seo'
 import { Route as AuthenticatedAdminSettingsRouteImport } from './routes/_authenticated/admin.settings'
 import { Route as AuthenticatedAdminThemeRouteImport } from './routes/_authenticated/admin.theme'
@@ -101,6 +102,11 @@ const AuthenticatedAdminMenusRoute = AuthenticatedAdminMenusRouteImport.update({
   path: '/menus',
   getParentRoute: () => AuthenticatedAdminRoute,
 } as any)
+const AuthenticatedAdminPagesRoute = AuthenticatedAdminPagesRouteImport.update({
+  id: '/pages',
+  path: '/pages',
+  getParentRoute: () => AuthenticatedAdminRoute,
+} as any)
 const AuthenticatedAdminSeoRoute = AuthenticatedAdminSeoRouteImport.update({
   id: '/seo',
   path: '/seo',
@@ -155,6 +161,7 @@ export interface FileRoutesByFullPath {
   '/shop': typeof SiteShopRoute
   '/admin/homepage': typeof AuthenticatedAdminHomepageRoute
   '/admin/menus': typeof AuthenticatedAdminMenusRoute
+  '/admin/pages': typeof AuthenticatedAdminPagesRoute
   '/admin/seo': typeof AuthenticatedAdminSeoRoute
   '/admin/settings': typeof AuthenticatedAdminSettingsRoute
   '/admin/theme': typeof AuthenticatedAdminThemeRoute
@@ -176,6 +183,7 @@ export interface FileRoutesByTo {
   '/shop': typeof SiteShopRoute
   '/admin/homepage': typeof AuthenticatedAdminHomepageRoute
   '/admin/menus': typeof AuthenticatedAdminMenusRoute
+  '/admin/pages': typeof AuthenticatedAdminPagesRoute
   '/admin/seo': typeof AuthenticatedAdminSeoRoute
   '/admin/settings': typeof AuthenticatedAdminSettingsRoute
   '/admin/theme': typeof AuthenticatedAdminThemeRoute
@@ -201,6 +209,7 @@ export interface FileRoutesById {
   '/_site/': typeof SiteIndexRoute
   '/_authenticated/admin/homepage': typeof AuthenticatedAdminHomepageRoute
   '/_authenticated/admin/menus': typeof AuthenticatedAdminMenusRoute
+  '/_authenticated/admin/pages': typeof AuthenticatedAdminPagesRoute
   '/_authenticated/admin/seo': typeof AuthenticatedAdminSeoRoute
   '/_authenticated/admin/settings': typeof AuthenticatedAdminSettingsRoute
   '/_authenticated/admin/theme': typeof AuthenticatedAdminThemeRoute
@@ -225,6 +234,7 @@ export interface FileRouteTypes {
     | '/shop'
     | '/admin/homepage'
     | '/admin/menus'
+    | '/admin/pages'
     | '/admin/seo'
     | '/admin/settings'
     | '/admin/theme'
@@ -246,6 +256,7 @@ export interface FileRouteTypes {
     | '/shop'
     | '/admin/homepage'
     | '/admin/menus'
+    | '/admin/pages'
     | '/admin/seo'
     | '/admin/settings'
     | '/admin/theme'
@@ -270,6 +281,7 @@ export interface FileRouteTypes {
     | '/_site/'
     | '/_authenticated/admin/homepage'
     | '/_authenticated/admin/menus'
+    | '/_authenticated/admin/pages'
     | '/_authenticated/admin/seo'
     | '/_authenticated/admin/settings'
     | '/_authenticated/admin/theme'
@@ -387,6 +399,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminMenusRouteImport
       parentRoute: typeof AuthenticatedAdminRoute
     }
+    '/_authenticated/admin/pages': {
+      id: '/_authenticated/admin/pages'
+      path: '/pages'
+      fullPath: '/admin/pages'
+      preLoaderRoute: typeof AuthenticatedAdminPagesRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
     '/_authenticated/admin/seo': {
       id: '/_authenticated/admin/seo'
       path: '/seo'
@@ -449,6 +468,7 @@ declare module '@tanstack/react-router' {
 interface AuthenticatedAdminRouteChildren {
   AuthenticatedAdminHomepageRoute: typeof AuthenticatedAdminHomepageRoute
   AuthenticatedAdminMenusRoute: typeof AuthenticatedAdminMenusRoute
+  AuthenticatedAdminPagesRoute: typeof AuthenticatedAdminPagesRoute
   AuthenticatedAdminSeoRoute: typeof AuthenticatedAdminSeoRoute
   AuthenticatedAdminSettingsRoute: typeof AuthenticatedAdminSettingsRoute
   AuthenticatedAdminThemeRoute: typeof AuthenticatedAdminThemeRoute
@@ -458,6 +478,7 @@ interface AuthenticatedAdminRouteChildren {
 const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
   AuthenticatedAdminHomepageRoute: AuthenticatedAdminHomepageRoute,
   AuthenticatedAdminMenusRoute: AuthenticatedAdminMenusRoute,
+  AuthenticatedAdminPagesRoute: AuthenticatedAdminPagesRoute,
   AuthenticatedAdminSeoRoute: AuthenticatedAdminSeoRoute,
   AuthenticatedAdminSettingsRoute: AuthenticatedAdminSettingsRoute,
   AuthenticatedAdminThemeRoute: AuthenticatedAdminThemeRoute,
