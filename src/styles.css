@@ -66,6 +66,10 @@
 
 :root {
   --radius: 0.625rem;
+  --heading-font: "Instrument Serif", Georgia, serif;
+  --body-font: "DM Sans", system-ui, sans-serif;
+  --container-width: 1280px;
+  --section-spacing: 5rem;
   --background: oklch(1 0 0);
   --foreground: oklch(0.129 0.042 264.695);
   --card: oklch(1 0 0);
@@ -143,5 +147,25 @@
   body {
     background-color: var(--color-background);
     color: var(--color-foreground);
+    font-family: var(--body-font);
+  }
+
+  h1, h2, h3, h4 {
+    font-family: var(--heading-font);
+    letter-spacing: -0.01em;
+  }
+}
+
+@utility container-site {
+  width: 100%;
+  max-width: var(--container-width);
+  margin-inline: auto;
+  padding-inline: 1rem;
+}
+
+@layer base {
+  :focus-visible {
+    outline: 2px solid var(--color-ring);
+    outline-offset: 2px;
   }
 }
