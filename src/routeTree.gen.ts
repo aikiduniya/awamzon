@@ -22,6 +22,7 @@ import { Route as SiteSearchRouteImport } from './routes/_site.search'
 import { Route as SiteShopRouteImport } from './routes/_site.shop'
 import { Route as AuthenticatedAdminIndexRouteImport } from './routes/_authenticated/admin.index'
 import { Route as AuthenticatedAdminBlogRouteImport } from './routes/_authenticated/admin.blog'
+import { Route as AuthenticatedAdminFaqRouteImport } from './routes/_authenticated/admin.faq'
 import { Route as AuthenticatedAdminHomepageRouteImport } from './routes/_authenticated/admin.homepage'
 import { Route as AuthenticatedAdminMenusRouteImport } from './routes/_authenticated/admin.menus'
 import { Route as AuthenticatedAdminPagesRouteImport } from './routes/_authenticated/admin.pages'
@@ -97,6 +98,11 @@ const AuthenticatedAdminBlogRoute = AuthenticatedAdminBlogRouteImport.update({
   path: '/blog',
   getParentRoute: () => AuthenticatedAdminRoute,
 } as any)
+const AuthenticatedAdminFaqRoute = AuthenticatedAdminFaqRouteImport.update({
+  id: '/faq',
+  path: '/faq',
+  getParentRoute: () => AuthenticatedAdminRoute,
+} as any)
 const AuthenticatedAdminHomepageRoute =
   AuthenticatedAdminHomepageRouteImport.update({
     id: '/homepage',
@@ -166,6 +172,7 @@ export interface FileRoutesByFullPath {
   '/search': typeof SiteSearchRoute
   '/shop': typeof SiteShopRoute
   '/admin/blog': typeof AuthenticatedAdminBlogRoute
+  '/admin/faq': typeof AuthenticatedAdminFaqRoute
   '/admin/homepage': typeof AuthenticatedAdminHomepageRoute
   '/admin/menus': typeof AuthenticatedAdminMenusRoute
   '/admin/pages': typeof AuthenticatedAdminPagesRoute
@@ -189,6 +196,7 @@ export interface FileRoutesByTo {
   '/search': typeof SiteSearchRoute
   '/shop': typeof SiteShopRoute
   '/admin/blog': typeof AuthenticatedAdminBlogRoute
+  '/admin/faq': typeof AuthenticatedAdminFaqRoute
   '/admin/homepage': typeof AuthenticatedAdminHomepageRoute
   '/admin/menus': typeof AuthenticatedAdminMenusRoute
   '/admin/pages': typeof AuthenticatedAdminPagesRoute
@@ -216,6 +224,7 @@ export interface FileRoutesById {
   '/_site/shop': typeof SiteShopRoute
   '/_site/': typeof SiteIndexRoute
   '/_authenticated/admin/blog': typeof AuthenticatedAdminBlogRoute
+  '/_authenticated/admin/faq': typeof AuthenticatedAdminFaqRoute
   '/_authenticated/admin/homepage': typeof AuthenticatedAdminHomepageRoute
   '/_authenticated/admin/menus': typeof AuthenticatedAdminMenusRoute
   '/_authenticated/admin/pages': typeof AuthenticatedAdminPagesRoute
@@ -242,6 +251,7 @@ export interface FileRouteTypes {
     | '/search'
     | '/shop'
     | '/admin/blog'
+    | '/admin/faq'
     | '/admin/homepage'
     | '/admin/menus'
     | '/admin/pages'
@@ -265,6 +275,7 @@ export interface FileRouteTypes {
     | '/search'
     | '/shop'
     | '/admin/blog'
+    | '/admin/faq'
     | '/admin/homepage'
     | '/admin/menus'
     | '/admin/pages'
@@ -291,6 +302,7 @@ export interface FileRouteTypes {
     | '/_site/shop'
     | '/_site/'
     | '/_authenticated/admin/blog'
+    | '/_authenticated/admin/faq'
     | '/_authenticated/admin/homepage'
     | '/_authenticated/admin/menus'
     | '/_authenticated/admin/pages'
@@ -404,6 +416,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminBlogRouteImport
       parentRoute: typeof AuthenticatedAdminRoute
     }
+    '/_authenticated/admin/faq': {
+      id: '/_authenticated/admin/faq'
+      path: '/faq'
+      fullPath: '/admin/faq'
+      preLoaderRoute: typeof AuthenticatedAdminFaqRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
     '/_authenticated/admin/homepage': {
       id: '/_authenticated/admin/homepage'
       path: '/homepage'
@@ -486,6 +505,7 @@ declare module '@tanstack/react-router' {
 
 interface AuthenticatedAdminRouteChildren {
   AuthenticatedAdminBlogRoute: typeof AuthenticatedAdminBlogRoute
+  AuthenticatedAdminFaqRoute: typeof AuthenticatedAdminFaqRoute
   AuthenticatedAdminHomepageRoute: typeof AuthenticatedAdminHomepageRoute
   AuthenticatedAdminMenusRoute: typeof AuthenticatedAdminMenusRoute
   AuthenticatedAdminPagesRoute: typeof AuthenticatedAdminPagesRoute
@@ -497,6 +517,7 @@ interface AuthenticatedAdminRouteChildren {
 
 const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
   AuthenticatedAdminBlogRoute: AuthenticatedAdminBlogRoute,
+  AuthenticatedAdminFaqRoute: AuthenticatedAdminFaqRoute,
   AuthenticatedAdminHomepageRoute: AuthenticatedAdminHomepageRoute,
   AuthenticatedAdminMenusRoute: AuthenticatedAdminMenusRoute,
   AuthenticatedAdminPagesRoute: AuthenticatedAdminPagesRoute,
