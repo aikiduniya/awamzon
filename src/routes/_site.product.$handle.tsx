@@ -3,14 +3,12 @@ import { createFileRoute, notFound } from "@tanstack/react-router";
 import {
   Check,
   ChevronRight,
-  CreditCard,
   Heart,
   Loader2,
   Minus,
   Plus,
   RefreshCw,
   ShieldCheck,
-  ShoppingBag,
   Star,
   Truck,
   ZoomIn,
@@ -20,6 +18,10 @@ import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { CmsLink } from "@/components/site/CmsLink";
+import { CmsIcon } from "@/components/site/Icon";
+import { CtaSection } from "@/components/site/CtaSection";
+import { useSiteButtons } from "@/hooks/useSiteButtons";
+import { siteRouteApi } from "@/routes/_site";
 import { ProductCarousel } from "@/components/site/ProductCarousel";
 import { getSettings } from "@/lib/cms.functions";
 import { fetchProductByHandle, fetchProducts, formatMoney } from "@/lib/shopify";
@@ -100,6 +102,8 @@ function ProductPage() {
   const [variantId, setVariantId] = useState(variants.find((v) => v.availableForSale)?.id ?? variants[0]?.id);
   const [activeImage, setActiveImage] = useState(0);
   const [qty, setQty] = useState(1);
+  const buttons = useSiteButtons();
+  const siteConfig = siteRouteApi.useLoaderData();
   const [zoomOpen, setZoomOpen] = useState(false);
   const variant = variants.find((v) => v.id === variantId) ?? variants[0];
   const addItem = useCartStore((s) => s.addItem);
