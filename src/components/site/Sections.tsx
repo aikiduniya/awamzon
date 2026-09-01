@@ -415,22 +415,38 @@ function SectionBody({
 
     case "faq": {
       const limit = Number(d.limit ?? 5);
-      const faqs = config.faqs.slice(0, limit);
+      const category = str(d["category"], "");
+      const source = category ? config.faqs.filter((f) => (f.category ?? "") === category) : config.faqs;
+      const faqs = source.slice(0, limit);
       if (faqs.length === 0) return null;
+      const link = str(d.buttonLink, "");
       return (
-        <div className="mx-auto max-w-3xl space-y-6">
-          <h2 className="text-center text-3xl font-semibold tracking-tight">{str(d.heading, "FAQ")}</h2>
-          <Accordion type="single" collapsible>
-            {faqs.map((faq) => (
-              <AccordionItem key={faq.id} value={faq.id}>
-                <AccordionTrigger>{faq.question}</AccordionTrigger>
-                <AccordionContent>{faq.answer}</AccordionContent>
-              </AccordionItem>
-            ))}
-          </Accordion>
+        <div className="mx-auto max-w-3xl space-y-8">
+          <div className="text-center space-y-3">
+            <span className="inline-flex items-center gap-2 rounded-full border bg-muted/60 px-3 py-1 text-xs font-semibold uppercase tracking-[0.18em] text-primary">
+              <CmsIcon name={str(d["icon"], "HelpCircle")} className="size-3.5" />
+              {str(d.subheading, "FAQ")}
+            </span>
+            <h2 className="font-heading text-3xl tracking-tight md:text-4xl">
+              {str(d.heading, "Frequently asked questions")}
+            </h2>
+            {d.text ? <p className="mx-auto max-w-xl text-muted-foreground">{str(d.text, "")}</p> : null}
+          </div>
+          <FaqAccordion items={faqs} iconStyle={str(d["iconStyle"], "plus")} defaultOpenFirst />
+          {link && d.buttonLabel ? (
+            <div className="text-center">
+              <Button asChild variant="outline" size="lg" className="gap-2">
+                <CmsLink to={link}>
+                  <CmsIcon name={str(d["buttonIcon"], "MessageCircle")} />
+                  {str(d.buttonLabel, "")}
+                </CmsLink>
+              </Button>
+            </div>
+          ) : null}
         </div>
       );
     }
+
 
     case "blog_posts": {
       const list = posts.slice(0, Number(d.limit ?? 3));
