@@ -1,14 +1,9 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Button } from "@/components/ui/button";
 import { group } from "@/lib/cms-types";
-import { setResponseStatus } from "@tanstack/react-start/server";
 import { siteRouteApi } from "./_site";
 
 export const Route = createFileRoute("/_site/$")({
-  loader: () => {
-    if (typeof window === "undefined") setResponseStatus(404);
-    return null;
-  },
   head: () => ({ meta: [{ title: "Page not found" }, { name: "robots", content: "noindex, follow" }] }),
   component: SiteNotFound,
 });
