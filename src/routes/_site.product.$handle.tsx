@@ -1,23 +1,41 @@
 import { useState } from "react";
 import { createFileRoute, notFound } from "@tanstack/react-router";
-import { Loader2 } from "lucide-react";
+import {
+  Check,
+  ChevronRight,
+  CreditCard,
+  Heart,
+  Loader2,
+  Minus,
+  Plus,
+  RefreshCw,
+  ShieldCheck,
+  ShoppingBag,
+  Star,
+  Truck,
+  ZoomIn,
+} from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
+import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { CmsLink } from "@/components/site/CmsLink";
-import { ProductCard } from "@/components/site/ProductCard";
+import { ProductCarousel } from "@/components/site/ProductCarousel";
 import { getSettings } from "@/lib/cms.functions";
 import { fetchProductByHandle, fetchProducts, formatMoney } from "@/lib/shopify";
 import { applyTemplate, buildMeta, jsonLd, seoDefaults } from "@/lib/seo";
 import { group } from "@/lib/cms-types";
 import { useCartStore } from "@/stores/cartStore";
+import { useWishlistStore } from "@/stores/wishlistStore";
 
 export const Route = createFileRoute("/_site/product/$handle")({
   loader: async ({ params }) => {
     const [settings, product] = await Promise.all([getSettings(), fetchProductByHandle(params.handle)]);
     if (!product) throw notFound();
-    const related = await fetchProducts({ first: 4 }).catch(() => []);
-    return { settings, product, related: related.filter((r) => r.node.handle !== params.handle).slice(0, 4) };
+    const related = await fetchProducts({ first: 12 }).catch(() => []);
+    return { settings, product, related: related.filter((r) => r.node.handle !== params.handle).slice(0, 8) };
   },
+
   head: ({ loaderData, params }) => {
     if (!loaderData) return { meta: [{ title: "Product unavailable" }, { name: "robots", content: "noindex" }] };
     const seo = group(loaderData.settings, "seo", seoDefaults);
