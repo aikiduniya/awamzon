@@ -1,4 +1,5 @@
 import { Link } from "@tanstack/react-router";
+import { CmsLink } from "./CmsLink";
 import { Facebook, Instagram, Linkedin, Youtube, Music2, Twitter } from "lucide-react";
 import { NewsletterForm } from "./NewsletterForm";
 import { group, type SiteConfig, type StoreSettings } from "@/lib/cms-types";
@@ -65,9 +66,9 @@ export function SiteFooter({ config }: { config: SiteConfig }) {
           <ul className="space-y-2 text-sm text-muted-foreground">
             {nav.map((item) => (
               <li key={item.id}>
-                <Link to={item.url} className="hover:text-foreground">
+                <CmsLink to={item.url} className="hover:text-foreground">
                   {item.label}
-                </Link>
+                </CmsLink>
               </li>
             ))}
           </ul>
@@ -78,9 +79,9 @@ export function SiteFooter({ config }: { config: SiteConfig }) {
           <ul className="space-y-2 text-sm text-muted-foreground">
             {legal.map((item) => (
               <li key={item.id}>
-                <Link to={item.url} className="hover:text-foreground">
+                <CmsLink to={item.url} className="hover:text-foreground">
                   {item.label}
-                </Link>
+                </CmsLink>
               </li>
             ))}
           </ul>

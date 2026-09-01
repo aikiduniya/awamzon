@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Link, useNavigate } from "@tanstack/react-router";
+import { CmsLink } from "./CmsLink";
 import { Menu, Search, User, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -65,9 +66,9 @@ export function SiteHeader({ config }: { config: SiteConfig }) {
           style={{ background: announcement.background, color: announcement.color }}
         >
           {announcement.link ? (
-            <Link to={announcement.link as string} className="underline-offset-4 hover:underline">
-              {announcement.text}
-            </Link>
+            <CmsLink to={announcement.link as string} className="underline-offset-4 hover:underline">
+              {announcement.text as string}
+            </CmsLink>
           ) : (
             announcement.text
           )}
@@ -106,14 +107,9 @@ export function SiteHeader({ config }: { config: SiteConfig }) {
 
           <nav className="hidden md:flex items-center gap-6" aria-label="Main navigation">
             {nav.map((item) => (
-              <Link
-                key={item.id}
-                to={item.url}
-                className="text-sm hover:text-primary transition-colors"
-                activeProps={{ className: "text-sm text-primary font-medium" }}
-              >
+              <CmsLink key={item.id} to={item.url} className="text-sm hover:text-primary transition-colors">
                 {item.label}
-              </Link>
+              </CmsLink>
             ))}
           </nav>
 
@@ -156,9 +152,9 @@ export function SiteHeader({ config }: { config: SiteConfig }) {
           <div className="md:hidden border-t">
             <nav className="container-site flex flex-col py-3" aria-label="Mobile navigation">
               {nav.map((item) => (
-                <Link key={item.id} to={item.url} className="py-2 text-sm" onClick={() => setMobileOpen(false)}>
+                <CmsLink key={item.id} to={item.url} className="py-2 text-sm" onClick={() => setMobileOpen(false)}>
                   {item.label}
-                </Link>
+                </CmsLink>
               ))}
               {features.search && (
                 <form onSubmit={submitSearch} className="flex gap-2 pt-2">
