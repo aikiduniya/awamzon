@@ -577,6 +577,7 @@ export type Database = {
       }
       is_admin: { Args: { _user_id: string }; Returns: boolean }
       is_staff: { Args: { _user_id: string }; Returns: boolean }
+      purge_demo_data: { Args: never; Returns: Json }
     }
     Enums: {
       app_role:
