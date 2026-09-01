@@ -6,7 +6,7 @@ import { ArrowRight, ChevronDown, Heart, Menu, Search, Truck, User, X } from "lu
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { CartDrawer } from "./CartDrawer";
-import { useWishlist } from "@/stores/wishlistStore";
+import { useWishlistStore } from "@/stores/wishlistStore";
 import { group, type SiteConfig, type StoreSettings } from "@/lib/cms-types";
 
 
