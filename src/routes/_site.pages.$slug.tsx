@@ -14,7 +14,7 @@ export const Route = createFileRoute("/_site/pages/$slug")({
     const seo = (loaderData.page.seo ?? {}) as Record<string, string>;
     return buildMeta(loaderData.settings, {
       title: seo.metaTitle || loaderData.page.title,
-      description: seo.metaDescription || loaderData.page.excerpt || "",
+      description: seo.metaDescription || `${loaderData.page.title} — read more.`,
       path: `/pages/${params.slug}`,
       image: seo.ogImage,
       robots: seo.robots,
