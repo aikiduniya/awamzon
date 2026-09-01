@@ -9,59 +9,84 @@ import { Toaster } from "@/components/ui/sonner";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
+import {
+  FileText,
+  HelpCircle,
+  History,
+  Image as ImageIcon,
+  LayoutDashboard,
+  LayoutTemplate,
+  LogOut,
+  Megaphone,
+  Menu,
+  MessageSquare,
+  Newspaper,
+  Package,
+  Palette,
+  PanelsTopLeft,
+  Route as RouteIcon,
+  Search,
+  ShieldCheck,
+  ShoppingCart,
+  Sparkles,
+  UserCog,
+  Users,
+  ExternalLink,
+  type LucideIcon,
+} from "lucide-react";
 
 export const Route = createFileRoute("/_authenticated/admin")({
   component: AdminLayout,
   head: () => ({ meta: [{ title: "Admin | Store CMS" }, { name: "robots", content: "noindex, nofollow" }] }),
 });
 
-const NAV: Array<{ group: string; items: Array<{ to: string; label: string }> }> = [
+const NAV: Array<{ group: string; items: Array<{ to: string; label: string; icon: LucideIcon }> }> = [
   {
-    group: "Overview",
+    group: "Commerce",
     items: [
-      { to: "/admin", label: "Dashboard" },
-      { to: "/admin/products", label: "Products & inventory" },
-      { to: "/admin/orders", label: "Orders & customers" },
+      { to: "/admin", label: "Dashboard", icon: LayoutDashboard },
+      { to: "/admin/products", label: "Products & inventory", icon: Package },
+      { to: "/admin/orders", label: "Orders & customers", icon: ShoppingCart },
     ],
   },
   {
     group: "Storefront",
     items: [
-      { to: "/admin/homepage", label: "Homepage builder" },
-      { to: "/admin/menus", label: "Header & footer menus" },
-      { to: "/admin/theme", label: "Theme, colors & fonts" },
-      { to: "/admin/media", label: "Media library" },
+      { to: "/admin/homepage", label: "Homepage builder", icon: LayoutTemplate },
+      { to: "/admin/menus", label: "Header & footer menus", icon: Menu },
+      { to: "/admin/theme", label: "Theme, colors & fonts", icon: Palette },
+      { to: "/admin/media", label: "Media library", icon: ImageIcon },
     ],
   },
   {
     group: "Content",
     items: [
-      { to: "/admin/pages", label: "Pages" },
-      { to: "/admin/blog", label: "Blog" },
-      { to: "/admin/faq", label: "FAQ" },
+      { to: "/admin/pages", label: "Pages", icon: FileText },
+      { to: "/admin/blog", label: "Blog", icon: Newspaper },
+      { to: "/admin/faq", label: "FAQ", icon: HelpCircle },
     ],
   },
   {
     group: "Marketing",
     items: [
-      { to: "/admin/settings", label: "Settings & banners" },
-      { to: "/admin/subscribers", label: "Subscribers" },
-      { to: "/admin/messages", label: "Contact messages" },
+      { to: "/admin/settings", label: "Settings & banners", icon: Megaphone },
+      { to: "/admin/subscribers", label: "Subscribers", icon: Users },
+      { to: "/admin/messages", label: "Contact messages", icon: MessageSquare },
     ],
   },
   {
     group: "SEO",
     items: [
-      { to: "/admin/seo", label: "SEO manager" },
-      { to: "/admin/redirects", label: "Redirects" },
-      { to: "/admin/security", label: "Security & performance" },
+      { to: "/admin/seo", label: "SEO manager", icon: Search },
+      { to: "/admin/redirects", label: "Redirects", icon: RouteIcon },
+      { to: "/admin/security", label: "Security & performance", icon: ShieldCheck },
     ],
   },
   {
     group: "Administration",
     items: [
-      { to: "/admin/users", label: "Users & roles" },
-      { to: "/admin/activity", label: "Activity log" },
+      { to: "/admin/users", label: "Users & roles", icon: UserCog },
+      { to: "/admin/activity", label: "Activity log", icon: History },
     ],
   },
 ];
@@ -110,23 +135,29 @@ function AdminLayout() {
   }
 
   const nav = (
-    <nav className="space-y-6 p-4">
+    <nav className="space-y-7 px-3 py-5">
       {NAV.map((section) => (
         <div key={section.group}>
-          <p className="mb-2 px-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">{section.group}</p>
-          <ul className="space-y-0.5">
+          <p className="mb-2 px-3 text-[11px] font-semibold uppercase tracking-[0.14em] text-muted-foreground/70">
+            {section.group}
+          </p>
+          <ul className="space-y-1">
             {section.items.map((item) => {
               const active = item.to === "/admin" ? pathname === "/admin" : pathname.startsWith(item.to);
+              const Icon = item.icon;
               return (
                 <li key={item.to}>
                   <Link
                     to={item.to}
                     className={cn(
-                      "block rounded-md px-2 py-2 text-sm transition-colors hover:bg-muted",
-                      active && "bg-primary/10 font-medium text-primary",
+                      "group flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium text-muted-foreground transition-all",
+                      "hover:bg-accent hover:text-foreground",
+                      active &&
+                        "bg-primary/10 text-primary shadow-[inset_2px_0_0_0_var(--color-primary)] hover:bg-primary/15 hover:text-primary",
                     )}
                   >
-                    {item.label}
+                    <Icon className={cn("size-4 shrink-0 transition-transform group-hover:scale-110")} aria-hidden />
+                    <span className="truncate">{item.label}</span>
                   </Link>
                 </li>
               );
@@ -167,40 +198,58 @@ function AdminLayout() {
   }
 
   return (
-    <div className="min-h-screen bg-muted/30">
-      <header className="sticky top-0 z-40 flex items-center gap-3 border-b bg-background px-4 py-3">
+    <div className="min-h-screen bg-muted/40">
+      <header className="sticky top-0 z-40 flex h-16 items-center gap-3 border-b bg-background/85 px-4 backdrop-blur supports-[backdrop-filter]:bg-background/70">
         <Sheet open={open} onOpenChange={setOpen}>
           <SheetTrigger asChild>
-            <Button variant="outline" size="sm" className="lg:hidden">
-              Menu
+            <Button variant="outline" size="icon" className="lg:hidden" aria-label="Open menu">
+              <Menu className="size-4" />
             </Button>
           </SheetTrigger>
           <SheetContent side="left" className="w-72 overflow-y-auto p-0">
             {nav}
           </SheetContent>
         </Sheet>
-        <Link to="/admin" className="font-semibold">
-          Store admin
+        <Link to="/admin" className="flex items-center gap-2.5">
+          <span className="grid size-9 place-items-center rounded-xl bg-primary text-primary-foreground shadow-sm">
+            <Sparkles className="size-4.5" aria-hidden />
+          </span>
+          <span className="leading-tight">
+            <span className="block text-sm font-semibold tracking-tight">Store admin</span>
+            <span className="hidden text-xs text-muted-foreground sm:block">Commerce control centre</span>
+          </span>
         </Link>
         <div className="ml-auto flex items-center gap-2">
-          {me.roles.map((r) => (
-            <Badge key={r} variant="secondary" className="hidden sm:inline-flex">
-              {r.replace("_", " ")}
+          {me.roles.slice(0, 2).map((r) => (
+            <Badge key={r} variant="secondary" className="hidden capitalize md:inline-flex">
+              {r.replace(/_/g, " ")}
             </Badge>
           ))}
-          <Button asChild variant="outline" size="sm">
+          <Button asChild variant="outline" size="sm" className="gap-1.5">
             <a href="/" target="_blank" rel="noreferrer">
-              View store
+              <ExternalLink className="size-3.5" aria-hidden />
+              <span className="hidden sm:inline">View store</span>
             </a>
           </Button>
-          <Button variant="ghost" size="sm" onClick={signOut}>
-            Sign out
+          <Button variant="ghost" size="sm" onClick={signOut} className="gap-1.5">
+            <LogOut className="size-3.5" aria-hidden />
+            <span className="hidden sm:inline">Sign out</span>
           </Button>
         </div>
       </header>
       <div className="flex">
-        <aside className="hidden w-64 shrink-0 border-r bg-background lg:block">
-          <div className="sticky top-[57px] max-h-[calc(100vh-57px)] overflow-y-auto">{nav}</div>
+        <aside className="hidden w-[264px] shrink-0 border-r bg-background lg:block">
+          <div className="sticky top-16 max-h-[calc(100vh-4rem)] overflow-y-auto">
+            {nav}
+            <div className="px-6 pb-6">
+              <div className="rounded-xl border bg-muted/50 p-3 text-xs text-muted-foreground">
+                <p className="flex items-center gap-1.5 font-medium text-foreground">
+                  <PanelsTopLeft className="size-3.5" aria-hidden /> No code needed
+                </p>
+                <p className="mt-1">Every storefront element on this list updates the live site instantly.</p>
+              </div>
+            </div>
+          </div>
         </aside>
         <main className="min-w-0 flex-1 p-4 sm:p-6 lg:p-8">
           <Outlet />

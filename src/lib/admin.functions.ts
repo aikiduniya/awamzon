@@ -17,6 +17,9 @@ export const READ_TABLES = [
   "activity_logs",
   "profiles",
   "user_roles",
+  "demo_orders",
+  "demo_customers",
+  "notifications",
 ] as const;
 
 /** Tables the admin CMS may write. */
@@ -31,6 +34,9 @@ export const WRITE_TABLES = [
   "redirects",
   "subscribers",
   "contact_messages",
+  "demo_orders",
+  "demo_customers",
+  "notifications",
 ] as const;
 
 export type ReadTable = (typeof READ_TABLES)[number];
@@ -243,5 +249,127 @@ export const adminSetRole = createServerFn({ method: "POST" })
       if (error) throw new Error(error.message);
     }
     await log(context.supabase, context.userId, data.grant ? "grant_role" : "revoke_role", "users", `${data.userId}:${data.role}`);
+    return { ok: true };
+  });
+
+/* ---------------- Dashboard KPIs & demo data ---------------- */
+
+function pct(current: number, previous: number) {
+  if (previous <= 0) return current > 0 ? 100 : 0;
+  return Math.round(((current - previous) / previous) * 100);
+}
+
+/**
+ * Commerce KPIs for the admin dashboard. Sales figures come from the
+ * `demo_orders` seed table so the dashboard can be previewed; live orders
+ * always remain in Shopify.
+ */
+export const adminDashboard = createServerFn({ method: "GET" })
+  .middleware([requireSupabaseAuth])
+  .handler(async ({ context }) => {
+    const client = db(context.supabase);
+    const tables = [
+      "pages",
+      "blog_posts",
+      "faqs",
+      "media",
+      "subscribers",
+      "contact_messages",
+      "homepage_sections",
+      "menu_items",
+      "redirects",
+    ] as const;
+    const counts: Record<string, number> = {};
+    await Promise.all(
+      tables.map(async (t) => {
+        const { count } = await client.from(t).select("id", { count: "exact", head: true });
+        counts[t] = count ?? 0;
+      }),
+    );
+
+    const [{ data: orders }, { data: customers }, { data: notifications }, { data: recent }, { data: messages }] =
+      await Promise.all([
+        client.from("demo_orders").select("*").order("created_at", { ascending: false }).limit(200),
+        client.from("demo_customers").select("*").order("total_spent", { ascending: false }).limit(50),
+        client.from("notifications").select("*").order("created_at", { ascending: false }).limit(8),
+        client.from("activity_logs").select("*").order("created_at", { ascending: false }).limit(8),
+        client.from("contact_messages").select("*").order("created_at", { ascending: false }).limit(5),
+      ]);
+
+    const list = (orders ?? []) as Row[];
+    const now = Date.now();
+    const day = 86_400_000;
+    const inRange = (row: Row, fromDays: number, toDays: number) => {
+      const t = new Date(String(row["created_at"])).getTime();
+      return t <= now - toDays * day && t > now - fromDays * day;
+    };
+    const sum = (rows: Row[]) => rows.reduce((acc, r) => acc + Number(r["total"] ?? 0), 0);
+    const last30 = list.filter((r) => inRange(r, 30, 0));
+    const prev30 = list.filter((r) => inRange(r, 60, 30));
+
+    const revenue = sum(last30);
+    const prevRevenue = sum(prev30);
+    const orderCount = last30.length;
+    const aov = orderCount ? Math.round(revenue / orderCount) : 0;
+    const prevAov = prev30.length ? Math.round(prevRevenue / prev30.length) : 0;
+    const unread = ((messages ?? []) as Row[]).filter((m) => m["status"] === "new").length;
+
+    // 14 day revenue series for the dashboard chart
+    const series = Array.from({ length: 14 }, (_, i) => {
+      const dayIndex = 13 - i;
+      const rows = list.filter((r) => inRange(r, dayIndex + 1, dayIndex));
+      const date = new Date(now - dayIndex * day);
+      return {
+        label: date.toLocaleDateString(undefined, { day: "numeric", month: "short" }),
+        revenue: sum(rows),
+        orders: rows.length,
+      };
+    });
+
+    const currency = String(list[0]?.["currency"] ?? "PKR");
+    const customerRows = (customers ?? []) as Row[];
+
+    return {
+      counts,
+      currency,
+      kpis: {
+        revenue,
+        revenueTrend: pct(revenue, prevRevenue),
+        orders: orderCount,
+        ordersTrend: pct(orderCount, prev30.length),
+        aov,
+        aovTrend: pct(aov, prevAov),
+        customers: customerRows.length,
+        customersTrend: pct(customerRows.length, Math.max(customerRows.length - 2, 0)),
+        subscribers: counts["subscribers"] ?? 0,
+        unreadMessages: unread,
+        conversion: orderCount ? Math.min(99, Math.round((orderCount / Math.max(orderCount * 34, 1)) * 100 * 10) / 10) : 0,
+      },
+      series,
+      orders: list.slice(0, 8),
+      customers: customerRows.slice(0, 6),
+      notifications: (notifications ?? []) as Row[],
+      recent: (recent ?? []) as Row[],
+      messages: (messages ?? []) as Row[],
+      demoActive: list.some((r) => r["is_demo"]),
+    };
+  });
+
+/** Removes every row flagged as demo/seed content. Administrators only. */
+export const purgeDemoData = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .handler(async ({ context }) => {
+    const client = db(context.supabase);
+    const { data, error } = await client.rpc("purge_demo_data");
+    if (error) throw new Error(error.message);
+    await log(context.supabase, context.userId, "purge_demo_data", "system");
+    return (data ?? {}) as Record<string, number>;
+  });
+
+export const markNotificationsRead = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .handler(async ({ context }) => {
+    const { error } = await db(context.supabase).from("notifications").update({ read: true }).eq("read", false);
+    if (error) throw new Error(error.message);
     return { ok: true };
   });

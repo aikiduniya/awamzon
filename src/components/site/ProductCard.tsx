@@ -1,5 +1,6 @@
 import { Link } from "@tanstack/react-router";
-import { Loader2 } from "lucide-react";
+import { Loader2, ShoppingBag } from "lucide-react";
+
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { useCartStore } from "@/stores/cartStore";
@@ -29,12 +30,17 @@ export function ProductCard({ product }: { product: ShopifyProduct }) {
     setOpen(true);
   };
 
+  const onSale =
+    compareAt && variant && parseFloat(compareAt.amount) > parseFloat(variant.price.amount)
+      ? Math.round((1 - parseFloat(variant.price.amount) / parseFloat(compareAt.amount)) * 100)
+      : 0;
+
   return (
-    <article className="group flex flex-col">
+    <article className="group flex flex-col overflow-hidden rounded-2xl border bg-card transition-all duration-300 hover:-translate-y-1 hover:border-primary/30 hover:shadow-lg">
       <Link
         to="/product/$handle"
         params={{ handle: node.handle }}
-        className="block overflow-hidden rounded-lg bg-muted aspect-[4/5]"
+        className="relative block aspect-[4/5] overflow-hidden bg-muted"
       >
         {image ? (
           <img
@@ -46,31 +52,47 @@ export function ProductCard({ product }: { product: ShopifyProduct }) {
         ) : (
           <div className="flex h-full items-center justify-center text-sm text-muted-foreground">No image</div>
         )}
+        {onSale > 0 ? (
+          <span className="absolute left-3 top-3 rounded-full bg-primary px-2.5 py-1 text-[11px] font-semibold text-primary-foreground shadow-sm">
+            −{onSale}%
+          </span>
+        ) : null}
+        {variant && !variant.availableForSale ? (
+          <span className="absolute right-3 top-3 rounded-full bg-background/90 px-2.5 py-1 text-[11px] font-semibold">
+            Sold out
+          </span>
+        ) : null}
       </Link>
-      <div className="mt-3 flex flex-col gap-1">
-        <Link to="/product/$handle" params={{ handle: node.handle }} className="font-medium leading-snug hover:underline">
+      <div className="flex flex-1 flex-col gap-1 p-4">
+        <Link
+          to="/product/$handle"
+          params={{ handle: node.handle }}
+          className="line-clamp-2 text-sm font-medium leading-snug hover:text-primary"
+        >
           {node.title}
         </Link>
-        <div className="flex items-baseline gap-2">
+        <div className="mt-1 flex items-baseline gap-2">
           <span className="font-semibold">
             {formatMoney(node.priceRange.minVariantPrice.amount, node.priceRange.minVariantPrice.currencyCode)}
           </span>
-          {compareAt && parseFloat(compareAt.amount) > parseFloat(variant!.price.amount) && (
+          {onSale > 0 && compareAt ? (
             <span className="text-sm text-muted-foreground line-through">
               {formatMoney(compareAt.amount, compareAt.currencyCode)}
             </span>
-          )}
+          ) : null}
         </div>
         <Button
           onClick={handleAddToCart}
           disabled={isLoading || !variant || !variant.availableForSale}
           variant="secondary"
-          className="mt-2"
+          className="mt-3 w-full gap-1.5"
         >
           {isLoading ? (
-            <Loader2 className="h-4 w-4 animate-spin" />
+            <Loader2 className="size-4 animate-spin" />
           ) : variant?.availableForSale ? (
-            "Add to cart"
+            <>
+              <ShoppingBag className="size-4" aria-hidden /> Add to cart
+            </>
           ) : (
             "Out of stock"
           )}
@@ -79,3 +101,4 @@ export function ProductCard({ product }: { product: ShopifyProduct }) {
     </article>
   );
 }
+
