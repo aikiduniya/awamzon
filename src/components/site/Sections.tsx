@@ -131,7 +131,7 @@ function SectionBody({
 
     case "featured_collections": {
       const configured = Array.isArray(d['items'])
-        ? (d['items'] as unknown as Array<{ handle: string; title?: string; image?: string; text?: string }>)
+        ? (d['items'] as unknown as Array<{ handle: string; title?: string; image?: string; text?: string; link?: string }>)
         : [];
       const items =
         configured.length > 0
@@ -139,6 +139,7 @@ function SectionBody({
               const match = collections.find((c) => c.handle === item.handle);
               return {
                 handle: item.handle,
+                link: item.link ?? `/collections/${item.handle}`,
                 title: item.title ?? match?.title ?? item.handle,
                 text: item.text ?? match?.description ?? "",
                 image: item.image ?? match?.image?.url ?? "",
@@ -146,6 +147,7 @@ function SectionBody({
             })
           : collections.slice(0, Number(d['limit'] ?? 3)).map((c) => ({
               handle: c.handle,
+              link: `/collections/${c.handle}`,
               title: c.title,
               text: c.description,
               image: c.image?.url ?? "",
@@ -170,7 +172,7 @@ function SectionBody({
             {items.map((item) => (
               <CmsLink
                 key={item.handle}
-                to={`/collections/${item.handle}`}
+                to={item.link}
                 className="group relative block aspect-[4/5] overflow-hidden rounded-2xl bg-muted"
               >
                 {item.image ? (
