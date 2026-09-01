@@ -1,9 +1,11 @@
 import { useState } from "react";
 import { Link } from "@tanstack/react-router";
-import { Eye, Heart, Loader2, ShoppingBag } from "lucide-react";
+import { Heart, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { QuickViewDialog } from "./QuickViewDialog";
+import { CmsIcon } from "./Icon";
+import { useSiteButtons } from "@/hooks/useSiteButtons";
 import { useCartStore } from "@/stores/cartStore";
 import { useWishlistStore } from "@/stores/wishlistStore";
 import { formatMoney, type ShopifyProduct } from "@/lib/shopify";
@@ -29,6 +31,7 @@ export function ProductCard({
   const toggleWish = useWishlistStore((s) => s.toggle);
   const wishHandles = useWishlistStore((s) => s.handles);
   const [quickOpen, setQuickOpen] = useState(false);
+  const buttons = useSiteButtons();
 
   const node = product.node;
   const image = node.images.edges[0]?.node;
