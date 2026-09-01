@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link, useNavigate } from "@tanstack/react-router";
 import { CmsLink } from "./CmsLink";
-import { Menu, Search, User, X } from "lucide-react";
+import { ArrowRight, ChevronDown, Menu, Search, User, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { CartDrawer } from "./CartDrawer";
@@ -48,7 +48,15 @@ export function SiteHeader({ config }: { config: SiteConfig }) {
   const features = group(config.settings, "features", { search: true });
   const shop = group(config.settings, "shop", { freeShippingThreshold: 0, showFreeShippingBar: false });
 
-  const nav = config.menus.filter((m) => m.location === "header");
+  const headerItems = config.menus.filter((m) => m.location === "header");
+  const nav = headerItems.filter((m) => !m.column_group);
+  const megaGroups = headerItems
+    .filter((m) => Boolean(m.column_group))
+    .reduce<Record<string, typeof headerItems>>((acc, item) => {
+      const key = item.column_group as string;
+      (acc[key] ||= []).push(item);
+      return acc;
+    }, {});
 
   const submitSearch = (e: React.FormEvent) => {
     e.preventDefault();
