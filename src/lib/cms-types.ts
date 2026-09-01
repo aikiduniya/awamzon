@@ -46,7 +46,29 @@ export interface MenuItem {
   position: number;
   enabled: boolean;
   column_group: string | null;
+  icon?: string | null;
+  description?: string | null;
+  badge?: string | null;
 }
+
+export interface CtaBlock {
+  id: string;
+  location: string;
+  enabled: boolean;
+  eyebrow: string | null;
+  heading: string | null;
+  text: string | null;
+  image: string | null;
+  button_label: string | null;
+  button_icon: string | null;
+  button_url: string | null;
+  secondary_label: string | null;
+  secondary_icon: string | null;
+  secondary_url: string | null;
+  style: string;
+  position: number;
+}
+
 
 export type JsonValue = string | number | boolean | null | JsonValue[] | { [key: string]: JsonValue };
 
@@ -93,7 +115,9 @@ export interface SiteConfig {
   menus: MenuItem[];
   sections: HomepageSection[];
   faqs: FaqRow[];
+  ctas: CtaBlock[];
 }
+
 
 export function group<T extends object>(settings: SettingsMap, key: string, fallback: T): T {
   return { ...fallback, ...((settings[key] ?? {}) as Partial<T>) } as T;

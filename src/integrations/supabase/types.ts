@@ -50,54 +50,84 @@ export type Database = {
       blog_posts: {
         Row: {
           author: string | null
+          author_avatar: string | null
+          author_bio: string | null
+          author_slug: string | null
           category: string | null
           content: string
           cover_alt: string | null
           cover_image: string | null
           created_at: string
           excerpt: string | null
+          faqs: Json
           id: string
           is_demo: boolean
+          links: Json
           published_at: string | null
+          reading_time: number | null
+          related_slugs: string[]
           seo: Json
+          show_breadcrumbs: boolean
+          show_toc: boolean
           slug: string
           status: string
+          subcategory: string | null
           tags: string[]
           title: string
           updated_at: string
         }
         Insert: {
           author?: string | null
+          author_avatar?: string | null
+          author_bio?: string | null
+          author_slug?: string | null
           category?: string | null
           content?: string
           cover_alt?: string | null
           cover_image?: string | null
           created_at?: string
           excerpt?: string | null
+          faqs?: Json
           id?: string
           is_demo?: boolean
+          links?: Json
           published_at?: string | null
+          reading_time?: number | null
+          related_slugs?: string[]
           seo?: Json
+          show_breadcrumbs?: boolean
+          show_toc?: boolean
           slug: string
           status?: string
+          subcategory?: string | null
           tags?: string[]
           title: string
           updated_at?: string
         }
         Update: {
           author?: string | null
+          author_avatar?: string | null
+          author_bio?: string | null
+          author_slug?: string | null
           category?: string | null
           content?: string
           cover_alt?: string | null
           cover_image?: string | null
           created_at?: string
           excerpt?: string | null
+          faqs?: Json
           id?: string
           is_demo?: boolean
+          links?: Json
           published_at?: string | null
+          reading_time?: number | null
+          related_slugs?: string[]
           seo?: Json
+          show_breadcrumbs?: boolean
+          show_toc?: boolean
           slug?: string
           status?: string
+          subcategory?: string | null
           tags?: string[]
           title?: string
           updated_at?: string
@@ -134,6 +164,66 @@ export type Database = {
           name?: string
           status?: string
           subject?: string | null
+        }
+        Relationships: []
+      }
+      cta_blocks: {
+        Row: {
+          button_icon: string | null
+          button_label: string | null
+          button_url: string | null
+          created_at: string
+          enabled: boolean
+          eyebrow: string | null
+          heading: string | null
+          id: string
+          image: string | null
+          is_demo: boolean
+          location: string
+          position: number
+          secondary_icon: string | null
+          secondary_label: string | null
+          secondary_url: string | null
+          style: string
+          text: string | null
+        }
+        Insert: {
+          button_icon?: string | null
+          button_label?: string | null
+          button_url?: string | null
+          created_at?: string
+          enabled?: boolean
+          eyebrow?: string | null
+          heading?: string | null
+          id?: string
+          image?: string | null
+          is_demo?: boolean
+          location: string
+          position?: number
+          secondary_icon?: string | null
+          secondary_label?: string | null
+          secondary_url?: string | null
+          style?: string
+          text?: string | null
+        }
+        Update: {
+          button_icon?: string | null
+          button_label?: string | null
+          button_url?: string | null
+          created_at?: string
+          enabled?: boolean
+          eyebrow?: string | null
+          heading?: string | null
+          id?: string
+          image?: string | null
+          is_demo?: boolean
+          location?: string
+          position?: number
+          secondary_icon?: string | null
+          secondary_label?: string | null
+          secondary_url?: string | null
+          style?: string
+          text?: string | null
         }
         Relationships: []
       }
@@ -331,9 +421,12 @@ export type Database = {
       }
       menu_items: {
         Row: {
+          badge: string | null
           column_group: string | null
           created_at: string
+          description: string | null
           enabled: boolean
+          icon: string | null
           id: string
           is_demo: boolean
           label: string
@@ -342,9 +435,12 @@ export type Database = {
           url: string
         }
         Insert: {
+          badge?: string | null
           column_group?: string | null
           created_at?: string
+          description?: string | null
           enabled?: boolean
+          icon?: string | null
           id?: string
           is_demo?: boolean
           label: string
@@ -353,9 +449,12 @@ export type Database = {
           url?: string
         }
         Update: {
+          badge?: string | null
           column_group?: string | null
           created_at?: string
+          description?: string | null
           enabled?: boolean
+          icon?: string | null
           id?: string
           is_demo?: boolean
           label?: string
