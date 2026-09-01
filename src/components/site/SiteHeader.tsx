@@ -137,30 +137,57 @@ export function SiteHeader({ config }: { config: SiteConfig }) {
 
           <nav className="hidden items-center gap-1 md:flex" aria-label="Main navigation">
             {nav.map((item) => {
-              const children = megaGroups[item.label] ?? [];
+              const children = header.megaMenu ? (megaGroups[item.label] ?? []) : [];
               return (
                 <div key={item.id} className="group/nav relative">
                   <CmsLink
                     to={item.url}
-                    className="inline-flex items-center gap-1 rounded-md px-3 py-2 text-sm font-medium transition-colors hover:text-primary"
+                    className={`group/link relative inline-flex items-center gap-1.5 rounded-md px-3 py-2 text-sm font-medium transition-colors hover:text-primary ${
+                      header.activeUnderline
+                        ? "after:absolute after:inset-x-3 after:-bottom-0.5 after:h-0.5 after:origin-left after:scale-x-0 after:bg-primary after:transition-transform hover:after:scale-x-100"
+                        : ""
+                    }`}
                   >
+                    {header.showIcons && item.icon ? <CmsIcon name={item.icon} className="size-4" /> : null}
                     {item.label}
+                    {item.badge ? (
+                      <span className="rounded-full bg-primary/10 px-1.5 py-0.5 text-[10px] font-semibold text-primary">
+                        {item.badge}
+                      </span>
+                    ) : null}
                     {children.length > 0 ? (
                       <ChevronDown className="size-3.5 transition-transform group-hover/nav:rotate-180" aria-hidden />
                     ) : null}
                   </CmsLink>
                   {children.length > 0 ? (
-                    <div className="invisible absolute left-1/2 top-full z-50 w-[560px] -translate-x-1/2 pt-3 opacity-0 transition-all duration-150 group-hover/nav:visible group-hover/nav:opacity-100 group-focus-within/nav:visible group-focus-within/nav:opacity-100">
-                      <div className="rounded-2xl border bg-popover p-6 shadow-2xl">
-                        <div className="grid grid-cols-2 gap-x-8 gap-y-1">
+                    <div className="invisible absolute left-1/2 top-full z-50 w-[620px] -translate-x-1/2 pt-3 opacity-0 transition-all duration-150 group-hover/nav:visible group-hover/nav:opacity-100 group-focus-within/nav:visible group-focus-within/nav:opacity-100">
+                      <div className="rounded-2xl border bg-popover p-5 shadow-2xl">
+                        <div className="grid grid-cols-2 gap-x-6 gap-y-1">
                           {children.map((child) => (
                             <CmsLink
                               key={child.id}
                               to={child.url}
-                              className="flex items-center justify-between rounded-lg px-3 py-2 text-sm transition-colors hover:bg-muted"
+                              className="flex items-start gap-3 rounded-xl px-3 py-2.5 transition-colors hover:bg-muted"
                             >
-                              {child.label}
-                              <ArrowRight className="size-3.5 opacity-0 transition-opacity group-hover/nav:opacity-40" aria-hidden />
+                              {header.showIcons && child.icon ? (
+                                <span className="mt-0.5 grid size-8 shrink-0 place-items-center rounded-lg bg-primary/10 text-primary">
+                                  <CmsIcon name={child.icon} className="size-4" />
+                                </span>
+                              ) : null}
+                              <span className="min-w-0">
+                                <span className="flex items-center gap-2 text-sm font-medium">
+                                  {child.label}
+                                  {child.badge ? (
+                                    <span className="rounded-full bg-primary/10 px-1.5 py-0.5 text-[10px] font-semibold text-primary">
+                                      {child.badge}
+                                    </span>
+                                  ) : null}
+                                </span>
+                                {child.description ? (
+                                  <span className="mt-0.5 block text-xs text-muted-foreground">{child.description}</span>
+                                ) : null}
+                              </span>
+                              <ArrowRight className="ml-auto mt-1 size-3.5 shrink-0 opacity-0 transition-opacity group-hover/nav:opacity-40" aria-hidden />
                             </CmsLink>
                           ))}
                         </div>
@@ -171,6 +198,7 @@ export function SiteHeader({ config }: { config: SiteConfig }) {
               );
             })}
           </nav>
+
 
           <div className="flex items-center gap-1">
             {header.showSearch && features.search && (
