@@ -1,7 +1,7 @@
 import { createServerFn } from "@tanstack/react-start";
 import { createClient } from "@supabase/supabase-js";
 import type { Database } from "@/integrations/supabase/types";
-import type { SiteConfig } from "./cms-types";
+import type { SettingsMap, SiteConfig } from "./cms-types";
 
 function publicClient() {
   return createClient<Database>(
@@ -20,9 +20,9 @@ export const getSiteConfig = createServerFn({ method: "GET" }).handler(async ():
     supabase.from("faqs").select("*").eq("enabled", true).order("position"),
   ]);
 
-  const settingsMap: Record<string, Record<string, unknown>> = {};
+  const settingsMap: SettingsMap = {};
   for (const row of settings.data ?? []) {
-    settingsMap[row.key] = (row.value ?? {}) as Record<string, unknown>;
+    settingsMap[row.key] = (row.value ?? {}) as SettingsMap[string];
   }
 
   const now = Date.now();
@@ -125,8 +125,8 @@ export const sendContactMessage = createServerFn({ method: "POST" })
 export const getSettings = createServerFn({ method: "GET" }).handler(async () => {
   const supabase = publicClient();
   const { data } = await supabase.from("site_settings").select("key,value");
-  const map: Record<string, Record<string, unknown>> = {};
-  for (const row of data ?? []) map[row.key] = (row.value ?? {}) as Record<string, unknown>;
+  const map: SettingsMap = {};
+  for (const row of data ?? []) map[row.key] = (row.value ?? {}) as SettingsMap[string];
   return map;
 });
 

@@ -39,7 +39,7 @@ export function Sections({ sections, config, products, posts, noProductsMessage 
   );
 }
 
-function SectionBody({ section, config, products, posts, noProductsMessage }: Props & { section: HomepageSection }) {
+function SectionBody({ section, config, products, posts, noProductsMessage }: Omit<Props, "sections"> & { section: HomepageSection }) {
   const d = section.data ?? {};
 
   switch (section.type) {
