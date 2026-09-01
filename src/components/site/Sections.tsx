@@ -316,10 +316,8 @@ function SectionBody({
               ))}
             </div>
           )}
-
-            </div>
-          )}
         </div>
+
       );
     }
 
