@@ -99,9 +99,11 @@ export const Route = createFileRoute("/sitemap.xml")({
           /* commerce catalogue unavailable — still return CMS URLs */
         }
 
-        const urls = security["noindexSite"]
+        const { indexingEnabled } = await import("@/lib/seo");
+        const urls = !indexingEnabled(settings)
           ? []
           : entries.map((e) =>
+
               [
                 "  <url>",
                 `    <loc>${base}${e.path}</loc>`,
