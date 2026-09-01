@@ -1,11 +1,14 @@
 import { useState } from "react";
 import { Link, useNavigate } from "@tanstack/react-router";
 import { CmsLink } from "./CmsLink";
-import { ArrowRight, ChevronDown, Menu, Search, User, X } from "lucide-react";
+import { CmsIcon } from "./Icon";
+import { ArrowRight, ChevronDown, Heart, Menu, Search, Truck, User, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { CartDrawer } from "./CartDrawer";
+import { useWishlist } from "@/stores/wishlistStore";
 import { group, type SiteConfig, type StoreSettings } from "@/lib/cms-types";
+
 
 const storeDefaults: StoreSettings = {
   name: "Store",
