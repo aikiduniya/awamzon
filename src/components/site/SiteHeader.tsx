@@ -104,6 +104,16 @@ export function SiteHeader({ config }: { config: SiteConfig }) {
         </div>
       )}
 
+      {header.topBarEnabled && header.topBarText ? (
+        <div className="hidden border-b bg-muted/50 md:block">
+          <div className="container-site flex h-9 items-center justify-center gap-2 text-xs text-muted-foreground">
+            <Truck className="size-3.5 text-primary" aria-hidden />
+            <span>{String(header.topBarText)}</span>
+          </div>
+        </div>
+      ) : null}
+
+
       <header className={`${header.sticky ? "sticky top-0 z-40" : ""} border-b bg-background/90 backdrop-blur-md`}>
         <div className="container-site flex h-16 items-center justify-between gap-4">
           <div className="flex items-center gap-3">
