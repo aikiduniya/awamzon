@@ -20,8 +20,8 @@ export function ProductCard({
   priority = false,
 }: {
   product: ShopifyProduct;
-  features?: ProductCardFeatures;
-  priority?: boolean;
+  features?: ProductCardFeatures | undefined;
+  priority?: boolean | undefined;
 }) {
   const addItem = useCartStore((s) => s.addItem);
   const isLoading = useCartStore((s) => s.isLoading);
