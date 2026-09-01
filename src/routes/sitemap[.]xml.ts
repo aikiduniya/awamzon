@@ -24,7 +24,7 @@ export const Route = createFileRoute("/sitemap.xml")({
         );
         const seo = settings["seo"] ?? {};
         const cache = settings["cache"] ?? {};
-        const security = settings["security"] ?? {};
+        
 
         const configuredBase = String(seo["canonicalBase"] ?? "").replace(/\/+$/, "");
         const base = configuredBase || new URL(request.url).origin;
@@ -99,9 +99,11 @@ export const Route = createFileRoute("/sitemap.xml")({
           /* commerce catalogue unavailable — still return CMS URLs */
         }
 
-        const urls = security["noindexSite"]
+        const { indexingEnabled } = await import("@/lib/seo");
+        const urls = !indexingEnabled(settings)
           ? []
           : entries.map((e) =>
+
               [
                 "  <url>",
                 `    <loc>${base}${e.path}</loc>`,

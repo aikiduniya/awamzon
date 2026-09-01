@@ -17,16 +17,18 @@ export const Route = createFileRoute("/robots.txt")({
         );
         const robots = settings["robots"] ?? {};
         const cache = settings["cache"] ?? {};
-        const security = settings["security"] ?? {};
         const seo = settings["seo"] ?? {};
+        const { indexingEnabled } = await import("@/lib/seo");
+        const allowIndexing = indexingEnabled(settings);
 
         const base = String(seo["canonicalBase"] ?? "").replace(/\/+$/, "") || new URL(request.url).origin;
 
-        let body = security["noindexSite"]
+        let body = !allowIndexing
           ? "User-agent: *\nDisallow: /"
           : String(robots["content"] ?? "User-agent: *\nAllow: /\nDisallow: /admin").trim();
 
-        if (!security["noindexSite"] && !/^sitemap:/im.test(body)) {
+        if (allowIndexing && !/^sitemap:/im.test(body)) {
+
           body += `\n\nSitemap: ${base}/sitemap.xml`;
         }
 

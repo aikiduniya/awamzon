@@ -64,6 +64,13 @@
       "when": 1788289363583,
       "tag": "0008_blog_cms_cta_and_ui_settings",
       "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "7",
+      "when": 1788290633213,
+      "tag": "0009_seo_indexing_master_control",
+      "breakpoints": true
     }
   ]
 }

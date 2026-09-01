@@ -17,7 +17,12 @@ export interface AdvancedSeo {
   canonicalBase: string;
   twitterSite: string;
   titleTemplatePage: string;
+  /** Master switch: when false every public page outputs noindex, nofollow. */
+  searchEngineIndexing: boolean;
+  /** Default index directive used when indexing is ON: "index" or "noindex". */
   defaultRobots: string;
+  /** Default follow directive used when indexing is ON: "follow" or "nofollow". */
+  defaultFollow: string;
   googleSiteVerification: string;
   bingSiteVerification: string;
 }
@@ -26,10 +31,40 @@ export const advancedSeoDefaults: AdvancedSeo = {
   canonicalBase: "",
   twitterSite: "",
   titleTemplatePage: "{page_title} | {site_name}",
-  defaultRobots: "index, follow",
+  searchEngineIndexing: false,
+  defaultRobots: "noindex",
+  defaultFollow: "nofollow",
   googleSiteVerification: "",
   bingSiteVerification: "",
 };
+
+/** Truthy check tolerant of admin JSON storing booleans as strings. */
+function isOn(value: unknown) {
+  if (typeof value === "boolean") return value;
+  if (typeof value === "string") return ["true", "1", "on", "yes"].includes(value.trim().toLowerCase());
+  return false;
+}
+
+/** Single source of truth for the robots directive on every storefront page. */
+export function resolveRobots(settings: SettingsMap, pageRobots?: string) {
+  const adv = group(settings, "seo", advancedSeoDefaults);
+  const security = group(settings, "security", securityDefaults);
+  if (!isOn(adv.searchEngineIndexing) || isOn(security.noindexSite)) return "noindex, nofollow";
+  if (pageRobots) return pageRobots;
+  const raw = String(adv.defaultRobots ?? "index").trim();
+  if (raw.includes(",")) return raw;
+  const index = raw || "index";
+  const follow = String(adv.defaultFollow ?? "follow").trim() || "follow";
+  return `${index}, ${follow}`;
+}
+
+/** True when the site is allowed to be indexed at all (used by robots.txt / sitemap). */
+export function indexingEnabled(settings: Record<string, unknown>) {
+  const seo = (settings["seo"] ?? {}) as Record<string, unknown>;
+  const security = (settings["security"] ?? {}) as Record<string, unknown>;
+  return isOn(seo["searchEngineIndexing"]) && !isOn(security["noindexSite"]);
+}
+
 
 export interface SecuritySettings {
   maintenanceMode: boolean;
@@ -70,12 +105,12 @@ export function absoluteUrl(settings: SettingsMap, path: string) {
 export function buildMeta(settings: SettingsMap, input: MetaInput) {
   const seo = group(settings, "seo", seoDefaults);
   const adv = group(settings, "seo", advancedSeoDefaults);
-  const security = group(settings, "security", securityDefaults);
   const rawImage = input.image || seo.ogImage;
   const image = rawImage ? absoluteUrl(settings, rawImage) : "";
   const url = absoluteUrl(settings, input.path);
   const description = input.description || seo.defaultDescription;
-  const robots = security.noindexSite ? "noindex, nofollow" : input.robots || adv.defaultRobots;
+  const robots = resolveRobots(settings, input.robots);
+
 
   const meta: Array<Record<string, string>> = [
     { title: input.title },
