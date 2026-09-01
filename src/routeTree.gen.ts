@@ -31,6 +31,7 @@ import { Route as AuthenticatedAdminPagesRouteImport } from './routes/_authentic
 import { Route as AuthenticatedAdminRedirectsRouteImport } from './routes/_authenticated/admin.redirects'
 import { Route as AuthenticatedAdminSeoRouteImport } from './routes/_authenticated/admin.seo'
 import { Route as AuthenticatedAdminSettingsRouteImport } from './routes/_authenticated/admin.settings'
+import { Route as AuthenticatedAdminSubscribersRouteImport } from './routes/_authenticated/admin.subscribers'
 import { Route as AuthenticatedAdminThemeRouteImport } from './routes/_authenticated/admin.theme'
 import { Route as SiteBlogIndexRouteImport } from './routes/_site.blog.index'
 import { Route as SiteBlogSlugRouteImport } from './routes/_site.blog.$slug'
@@ -150,6 +151,12 @@ const AuthenticatedAdminSettingsRoute =
     path: '/settings',
     getParentRoute: () => AuthenticatedAdminRoute,
   } as any)
+const AuthenticatedAdminSubscribersRoute =
+  AuthenticatedAdminSubscribersRouteImport.update({
+    id: '/subscribers',
+    path: '/subscribers',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
 const AuthenticatedAdminThemeRoute = AuthenticatedAdminThemeRouteImport.update({
   id: '/theme',
   path: '/theme',
@@ -201,6 +208,7 @@ export interface FileRoutesByFullPath {
   '/admin/redirects': typeof AuthenticatedAdminRedirectsRoute
   '/admin/seo': typeof AuthenticatedAdminSeoRoute
   '/admin/settings': typeof AuthenticatedAdminSettingsRoute
+  '/admin/subscribers': typeof AuthenticatedAdminSubscribersRoute
   '/admin/theme': typeof AuthenticatedAdminThemeRoute
   '/blog/$slug': typeof SiteBlogSlugRoute
   '/collections/$handle': typeof SiteCollectionsHandleRoute
@@ -228,6 +236,7 @@ export interface FileRoutesByTo {
   '/admin/redirects': typeof AuthenticatedAdminRedirectsRoute
   '/admin/seo': typeof AuthenticatedAdminSeoRoute
   '/admin/settings': typeof AuthenticatedAdminSettingsRoute
+  '/admin/subscribers': typeof AuthenticatedAdminSubscribersRoute
   '/admin/theme': typeof AuthenticatedAdminThemeRoute
   '/blog/$slug': typeof SiteBlogSlugRoute
   '/collections/$handle': typeof SiteCollectionsHandleRoute
@@ -259,6 +268,7 @@ export interface FileRoutesById {
   '/_authenticated/admin/redirects': typeof AuthenticatedAdminRedirectsRoute
   '/_authenticated/admin/seo': typeof AuthenticatedAdminSeoRoute
   '/_authenticated/admin/settings': typeof AuthenticatedAdminSettingsRoute
+  '/_authenticated/admin/subscribers': typeof AuthenticatedAdminSubscribersRoute
   '/_authenticated/admin/theme': typeof AuthenticatedAdminThemeRoute
   '/_site/blog/$slug': typeof SiteBlogSlugRoute
   '/_site/collections/$handle': typeof SiteCollectionsHandleRoute
@@ -289,6 +299,7 @@ export interface FileRouteTypes {
     | '/admin/redirects'
     | '/admin/seo'
     | '/admin/settings'
+    | '/admin/subscribers'
     | '/admin/theme'
     | '/blog/$slug'
     | '/collections/$handle'
@@ -316,6 +327,7 @@ export interface FileRouteTypes {
     | '/admin/redirects'
     | '/admin/seo'
     | '/admin/settings'
+    | '/admin/subscribers'
     | '/admin/theme'
     | '/blog/$slug'
     | '/collections/$handle'
@@ -346,6 +358,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/redirects'
     | '/_authenticated/admin/seo'
     | '/_authenticated/admin/settings'
+    | '/_authenticated/admin/subscribers'
     | '/_authenticated/admin/theme'
     | '/_site/blog/$slug'
     | '/_site/collections/$handle'
@@ -517,6 +530,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminSettingsRouteImport
       parentRoute: typeof AuthenticatedAdminRoute
     }
+    '/_authenticated/admin/subscribers': {
+      id: '/_authenticated/admin/subscribers'
+      path: '/subscribers'
+      fullPath: '/admin/subscribers'
+      preLoaderRoute: typeof AuthenticatedAdminSubscribersRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
     '/_authenticated/admin/theme': {
       id: '/_authenticated/admin/theme'
       path: '/theme'
@@ -573,6 +593,7 @@ interface AuthenticatedAdminRouteChildren {
   AuthenticatedAdminRedirectsRoute: typeof AuthenticatedAdminRedirectsRoute
   AuthenticatedAdminSeoRoute: typeof AuthenticatedAdminSeoRoute
   AuthenticatedAdminSettingsRoute: typeof AuthenticatedAdminSettingsRoute
+  AuthenticatedAdminSubscribersRoute: typeof AuthenticatedAdminSubscribersRoute
   AuthenticatedAdminThemeRoute: typeof AuthenticatedAdminThemeRoute
   AuthenticatedAdminIndexRoute: typeof AuthenticatedAdminIndexRoute
 }
@@ -588,6 +609,7 @@ const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
   AuthenticatedAdminRedirectsRoute: AuthenticatedAdminRedirectsRoute,
   AuthenticatedAdminSeoRoute: AuthenticatedAdminSeoRoute,
   AuthenticatedAdminSettingsRoute: AuthenticatedAdminSettingsRoute,
+  AuthenticatedAdminSubscribersRoute: AuthenticatedAdminSubscribersRoute,
   AuthenticatedAdminThemeRoute: AuthenticatedAdminThemeRoute,
   AuthenticatedAdminIndexRoute: AuthenticatedAdminIndexRoute,
 }
