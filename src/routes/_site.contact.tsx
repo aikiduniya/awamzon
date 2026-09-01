@@ -10,6 +10,8 @@ import { Textarea } from "@/components/ui/textarea";
 import { getSettings, sendContactMessage } from "@/lib/cms.functions";
 import { buildMeta } from "@/lib/seo";
 import { group, type StoreSettings } from "@/lib/cms-types";
+import { CtaSection } from "@/components/site/CtaSection";
+import { siteRouteApi } from "@/routes/_site";
 
 export const Route = createFileRoute("/_site/contact")({
   loader: () => getSettings(),
@@ -26,6 +28,7 @@ export const Route = createFileRoute("/_site/contact")({
 });
 
 function ContactPage() {
+  const siteConfig = siteRouteApi.useLoaderData();
   const settings = Route.useLoaderData();
   const store = group(settings, "store", {} as Partial<StoreSettings> as StoreSettings);
   const messages = group(settings, "messages", { contactSuccess: "Thanks! We'll be in touch soon." });
@@ -135,6 +138,8 @@ function ContactPage() {
           {pending ? "Sending…" : "Send message"}
         </Button>
       </form>
+      <CtaSection config={siteConfig} location="contact" />
+
     </div>
   );
 }
