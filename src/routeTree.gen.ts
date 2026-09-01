@@ -22,6 +22,7 @@ import { Route as SiteSearchRouteImport } from './routes/_site.search'
 import { Route as SiteShopRouteImport } from './routes/_site.shop'
 import { Route as AuthenticatedAdminIndexRouteImport } from './routes/_authenticated/admin.index'
 import { Route as AuthenticatedAdminSettingsRouteImport } from './routes/_authenticated/admin.settings'
+import { Route as AuthenticatedAdminThemeRouteImport } from './routes/_authenticated/admin.theme'
 import { Route as SiteBlogIndexRouteImport } from './routes/_site.blog.index'
 import { Route as SiteBlogSlugRouteImport } from './routes/_site.blog.$slug'
 import { Route as SiteCollectionsHandleRouteImport } from './routes/_site.collections.$handle'
@@ -92,6 +93,11 @@ const AuthenticatedAdminSettingsRoute =
     path: '/settings',
     getParentRoute: () => AuthenticatedAdminRoute,
   } as any)
+const AuthenticatedAdminThemeRoute = AuthenticatedAdminThemeRouteImport.update({
+  id: '/theme',
+  path: '/theme',
+  getParentRoute: () => AuthenticatedAdminRoute,
+} as any)
 const SiteBlogIndexRoute = SiteBlogIndexRouteImport.update({
   id: '/blog/',
   path: '/blog/',
@@ -129,6 +135,7 @@ export interface FileRoutesByFullPath {
   '/search': typeof SiteSearchRoute
   '/shop': typeof SiteShopRoute
   '/admin/settings': typeof AuthenticatedAdminSettingsRoute
+  '/admin/theme': typeof AuthenticatedAdminThemeRoute
   '/blog/$slug': typeof SiteBlogSlugRoute
   '/collections/$handle': typeof SiteCollectionsHandleRoute
   '/pages/$slug': typeof SitePagesSlugRoute
@@ -146,6 +153,7 @@ export interface FileRoutesByTo {
   '/search': typeof SiteSearchRoute
   '/shop': typeof SiteShopRoute
   '/admin/settings': typeof AuthenticatedAdminSettingsRoute
+  '/admin/theme': typeof AuthenticatedAdminThemeRoute
   '/blog/$slug': typeof SiteBlogSlugRoute
   '/collections/$handle': typeof SiteCollectionsHandleRoute
   '/pages/$slug': typeof SitePagesSlugRoute
@@ -167,6 +175,7 @@ export interface FileRoutesById {
   '/_site/shop': typeof SiteShopRoute
   '/_site/': typeof SiteIndexRoute
   '/_authenticated/admin/settings': typeof AuthenticatedAdminSettingsRoute
+  '/_authenticated/admin/theme': typeof AuthenticatedAdminThemeRoute
   '/_site/blog/$slug': typeof SiteBlogSlugRoute
   '/_site/collections/$handle': typeof SiteCollectionsHandleRoute
   '/_site/pages/$slug': typeof SitePagesSlugRoute
@@ -187,6 +196,7 @@ export interface FileRouteTypes {
     | '/search'
     | '/shop'
     | '/admin/settings'
+    | '/admin/theme'
     | '/blog/$slug'
     | '/collections/$handle'
     | '/pages/$slug'
@@ -204,6 +214,7 @@ export interface FileRouteTypes {
     | '/search'
     | '/shop'
     | '/admin/settings'
+    | '/admin/theme'
     | '/blog/$slug'
     | '/collections/$handle'
     | '/pages/$slug'
@@ -224,6 +235,7 @@ export interface FileRouteTypes {
     | '/_site/shop'
     | '/_site/'
     | '/_authenticated/admin/settings'
+    | '/_authenticated/admin/theme'
     | '/_site/blog/$slug'
     | '/_site/collections/$handle'
     | '/_site/pages/$slug'
@@ -331,6 +343,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminSettingsRouteImport
       parentRoute: typeof AuthenticatedAdminRoute
     }
+    '/_authenticated/admin/theme': {
+      id: '/_authenticated/admin/theme'
+      path: '/theme'
+      fullPath: '/admin/theme'
+      preLoaderRoute: typeof AuthenticatedAdminThemeRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
     '/_site/blog/': {
       id: '/_site/blog/'
       path: '/blog'
@@ -371,11 +390,13 @@ declare module '@tanstack/react-router' {
 
 interface AuthenticatedAdminRouteChildren {
   AuthenticatedAdminSettingsRoute: typeof AuthenticatedAdminSettingsRoute
+  AuthenticatedAdminThemeRoute: typeof AuthenticatedAdminThemeRoute
   AuthenticatedAdminIndexRoute: typeof AuthenticatedAdminIndexRoute
 }
 
 const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
   AuthenticatedAdminSettingsRoute: AuthenticatedAdminSettingsRoute,
+  AuthenticatedAdminThemeRoute: AuthenticatedAdminThemeRoute,
   AuthenticatedAdminIndexRoute: AuthenticatedAdminIndexRoute,
 }
 
