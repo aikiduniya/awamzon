@@ -2,6 +2,8 @@ import { createFileRoute, notFound } from "@tanstack/react-router";
 import { CmsLink } from "@/components/site/CmsLink";
 import { getPageBySlug, getSettings } from "@/lib/cms.functions";
 import { buildMeta } from "@/lib/seo";
+import { CtaSection } from "@/components/site/CtaSection";
+import { siteRouteApi } from "@/routes/_site";
 
 export const Route = createFileRoute("/_site/pages/$slug")({
   loader: async ({ params }) => {
@@ -37,11 +39,14 @@ export const Route = createFileRoute("/_site/pages/$slug")({
 });
 
 function CmsPage() {
+  const siteConfig = siteRouteApi.useLoaderData();
   const { page } = Route.useLoaderData();
   return (
     <article className="container-site max-w-3xl py-12">
       <h1 className="text-4xl">{page.title}</h1>
       <div className="mt-8 whitespace-pre-line leading-relaxed">{page.content}</div>
+      <CtaSection config={siteConfig} location="page" />
+
     </article>
   );
 }

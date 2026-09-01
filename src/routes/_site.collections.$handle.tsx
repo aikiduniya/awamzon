@@ -5,6 +5,8 @@ import { getSettings } from "@/lib/cms.functions";
 import { fetchCollection } from "@/lib/shopify";
 import { applyTemplate, buildMeta, jsonLd, seoDefaults } from "@/lib/seo";
 import { group } from "@/lib/cms-types";
+import { CtaSection } from "@/components/site/CtaSection";
+import { siteRouteApi } from "@/routes/_site";
 
 export const Route = createFileRoute("/_site/collections/$handle")({
   loader: async ({ params }) => {
@@ -58,6 +60,7 @@ export const Route = createFileRoute("/_site/collections/$handle")({
 });
 
 function CollectionPage() {
+  const siteConfig = siteRouteApi.useLoaderData();
   const { settings, collection } = Route.useLoaderData();
   const messages = group(settings, "messages", { noProducts: "No products found" });
 
@@ -80,6 +83,8 @@ function CollectionPage() {
           ))}
         </div>
       )}
+      <CtaSection config={siteConfig} location="collection" />
+
     </div>
   );
 }

@@ -4,6 +4,8 @@ import { getSettings } from "@/lib/cms.functions";
 import { fetchProducts } from "@/lib/shopify";
 import { buildMeta } from "@/lib/seo";
 import { group } from "@/lib/cms-types";
+import { CtaSection } from "@/components/site/CtaSection";
+import { siteRouteApi } from "@/routes/_site";
 
 export const Route = createFileRoute("/_site/search")({
   validateSearch: (search: Record<string, unknown>) => ({ q: String(search['q'] ?? "") }),
@@ -30,6 +32,7 @@ export const Route = createFileRoute("/_site/search")({
 });
 
 function SearchPage() {
+  const siteConfig = siteRouteApi.useLoaderData();
   const { settings, products, term } = Route.useLoaderData();
   const messages = group(settings, "messages", { noSearchResults: "No results matched your search" });
 
@@ -48,6 +51,8 @@ function SearchPage() {
           ))}
         </div>
       )}
+      <CtaSection config={siteConfig} location="search_empty" />
+
     </div>
   );
 }

@@ -7,6 +7,8 @@ import { fetchCollections, fetchProducts } from "@/lib/shopify";
 import { buildMeta } from "@/lib/seo";
 import { group } from "@/lib/cms-types";
 import { CmsLink } from "@/components/site/CmsLink";
+import { CtaSection } from "@/components/site/CtaSection";
+import { siteRouteApi } from "@/routes/_site";
 
 export const Route = createFileRoute("/_site/shop")({
   loader: async () => {
@@ -35,6 +37,7 @@ export const Route = createFileRoute("/_site/shop")({
 });
 
 function Shop() {
+  const siteConfig = siteRouteApi.useLoaderData();
   const { settings, products, collections } = Route.useLoaderData();
   const messages = group(settings, "messages", { noProducts: "No products found" });
   const [sort, setSort] = useState("featured");
@@ -97,6 +100,8 @@ function Shop() {
           ))}
         </div>
       )}
+      <CtaSection config={siteConfig} location="shop" />
+
     </div>
   );
 }

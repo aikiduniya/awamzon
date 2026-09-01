@@ -9,6 +9,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { Badge } from "@/components/ui/badge";
+import { Switch } from "@/components/ui/switch";
 
 export const Route = createFileRoute("/_authenticated/admin/blog")({ component: BlogAdmin });
 
@@ -58,6 +59,7 @@ function PostEditor({ row, onSave, onDelete }: { row: Row; onSave: (v: Row) => P
   const [draft, setDraft] = useState<Row>(row);
   const seo = { ...SEO_TEMPLATE, ...((draft["seo"] ?? {}) as Record<string, unknown>) };
   const tags = Array.isArray(draft["tags"]) ? (draft["tags"] as string[]) : [];
+  const related = Array.isArray(draft["related_slugs"]) ? (draft["related_slugs"] as string[]) : [];
 
   return (
     <Card>
@@ -136,11 +138,79 @@ function PostEditor({ row, onSave, onDelete }: { row: Row; onSave: (v: Row) => P
                 />
               </Field>
             </div>
+            <div className="grid gap-4 md:grid-cols-3">
+              <Field label="Subcategory">
+                <Input value={String(draft["subcategory"] ?? "")} onChange={(e) => setDraft({ ...draft, subcategory: e.target.value || null })} />
+              </Field>
+              <Field label="Author slug" hint="Used for /blog/author/…">
+                <Input value={String(draft["author_slug"] ?? "")} onChange={(e) => setDraft({ ...draft, author_slug: slugify(e.target.value) || null })} />
+              </Field>
+              <Field label="Author avatar URL">
+                <Input value={String(draft["author_avatar"] ?? "")} onChange={(e) => setDraft({ ...draft, author_avatar: e.target.value || null })} />
+              </Field>
+              <Field label="Reading time (min)" hint="Leave blank to auto-calculate">
+                <Input
+                  type="number"
+                  value={draft["reading_time"] == null ? "" : String(draft["reading_time"])}
+                  onChange={(e) => setDraft({ ...draft, reading_time: e.target.value ? Number(e.target.value) : null })}
+                />
+              </Field>
+              <Field label="Related post slugs" hint="Comma separated">
+                <Input
+                  value={related.join(", ")}
+                  onChange={(e) =>
+                    setDraft({ ...draft, related_slugs: e.target.value.split(",").map((t) => slugify(t.trim())).filter(Boolean) })
+                  }
+                />
+              </Field>
+              <div className="flex items-end gap-6">
+                <label className="flex items-center gap-2 text-sm">
+                  <Switch checked={draft["show_toc"] !== false} onCheckedChange={(c) => setDraft({ ...draft, show_toc: c })} />
+                  Table of contents
+                </label>
+                <label className="flex items-center gap-2 text-sm">
+                  <Switch
+                    checked={draft["show_breadcrumbs"] !== false}
+                    onCheckedChange={(c) => setDraft({ ...draft, show_breadcrumbs: c })}
+                  />
+                  Breadcrumbs
+                </label>
+              </div>
+            </div>
+            <Field label="Author bio">
+              <Textarea rows={2} value={String(draft["author_bio"] ?? "")} onChange={(e) => setDraft({ ...draft, author_bio: e.target.value || null })} />
+            </Field>
             <Field label="Excerpt">
               <Textarea rows={2} value={String(draft["excerpt"] ?? "")} onChange={(e) => setDraft({ ...draft, excerpt: e.target.value })} />
             </Field>
             <Field label="Content" hint="Plain text or HTML.">
               <Textarea rows={14} value={String(draft["content"] ?? "")} onChange={(e) => setDraft({ ...draft, content: e.target.value })} />
+            </Field>
+            <Field label="Post FAQs" hint='JSON array: [{"question":"…","answer":"…"}]'>
+              <Textarea
+                rows={4}
+                value={JSON.stringify(draft["faqs"] ?? [], null, 2)}
+                onChange={(e) => {
+                  try {
+                    setDraft({ ...draft, faqs: JSON.parse(e.target.value) });
+                  } catch {
+                    /* keep last valid value while typing */
+                  }
+                }}
+              />
+            </Field>
+            <Field label="Internal / external links" hint='JSON array: [{"label":"…","url":"…"}]'>
+              <Textarea
+                rows={3}
+                value={JSON.stringify(draft["links"] ?? [], null, 2)}
+                onChange={(e) => {
+                  try {
+                    setDraft({ ...draft, links: JSON.parse(e.target.value) });
+                  } catch {
+                    /* keep last valid value while typing */
+                  }
+                }}
+              />
             </Field>
             <div>
               <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground">Post SEO</p>

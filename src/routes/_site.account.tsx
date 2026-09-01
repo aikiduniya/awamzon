@@ -5,6 +5,8 @@ import { CmsLink } from "@/components/site/CmsLink";
 import { getSettings } from "@/lib/cms.functions";
 import { buildMeta } from "@/lib/seo";
 import { group, type StoreSettings } from "@/lib/cms-types";
+import { CtaSection } from "@/components/site/CtaSection";
+import { siteRouteApi } from "@/routes/_site";
 
 export const Route = createFileRoute("/_site/account")({
   loader: () => getSettings(),
@@ -22,6 +24,7 @@ export const Route = createFileRoute("/_site/account")({
 });
 
 function AccountPage() {
+  const siteConfig = siteRouteApi.useLoaderData();
   const settings = Route.useLoaderData();
   const store = group(settings, "store", {} as StoreSettings);
 
@@ -67,6 +70,8 @@ function AccountPage() {
           .
         </p>
       )}
+      <CtaSection config={siteConfig} location="account" />
+
     </div>
   );
 }
