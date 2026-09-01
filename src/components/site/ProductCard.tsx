@@ -132,13 +132,14 @@ export function ProductCard({
         {features?.quickView !== false ? (
           <button
             type="button"
-            aria-label={`Quick view ${node.title}`}
+            aria-label={`${buttons.quickViewLabel} ${node.title}`}
             onClick={() => setQuickOpen(true)}
             className="pointer-events-auto grid size-9 place-items-center rounded-full bg-background/95 shadow-md transition-colors hover:bg-background"
           >
-            <Eye className="size-4" aria-hidden />
+            <CmsIcon name={buttons.quickViewIcon || "Eye"} className="size-4" />
           </button>
         ) : null}
+
       </div>
 
       <div className="flex flex-1 flex-col p-4">
