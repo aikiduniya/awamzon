@@ -2,6 +2,10 @@ import { createFileRoute } from "@tanstack/react-router";
 import { ExternalLink, Loader2, Minus, Plus, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { CmsLink } from "@/components/site/CmsLink";
+import { CmsIcon } from "@/components/site/Icon";
+import { CtaSection } from "@/components/site/CtaSection";
+import { useSiteButtons } from "@/hooks/useSiteButtons";
+import { siteRouteApi } from "@/routes/_site";
 import { getSettings } from "@/lib/cms.functions";
 import { buildMeta } from "@/lib/seo";
 import { group } from "@/lib/cms-types";
@@ -27,6 +31,8 @@ function CartPage() {
   const settings = Route.useLoaderData();
   const messages = group(settings, "messages", { emptyCart: "Your cart is empty" });
   const { items, isLoading, updateQuantity, removeItem, getCheckoutUrl } = useCartStore();
+  const buttons = useSiteButtons();
+  const config = siteRouteApi.useLoaderData();
   const total = items.reduce((sum, i) => sum + parseFloat(i.price.amount) * i.quantity, 0);
   const currency = items[0]?.price.currencyCode ?? "USD";
 
@@ -41,9 +47,13 @@ function CartPage() {
       {items.length === 0 ? (
         <div className="py-20 text-center">
           <p className="text-muted-foreground">{String(messages.emptyCart)}</p>
-          <Button asChild className="mt-6">
-            <CmsLink to="/shop">Continue shopping</CmsLink>
+          <Button asChild className="mt-6 gap-2" size="lg">
+            <CmsLink to="/shop">
+              {buttons.showIcons ? <CmsIcon name={buttons.continueShoppingIcon} className="size-4" /> : null}
+              {buttons.continueShoppingLabel}
+            </CmsLink>
           </Button>
+          <CtaSection config={config} location="cart_empty" className="mt-14 text-left" />
         </div>
       ) : (
         <div className="grid gap-10 lg:grid-cols-3">
@@ -111,8 +121,8 @@ function CartPage() {
                 <Loader2 className="h-4 w-4 animate-spin" />
               ) : (
                 <>
-                  <ExternalLink className="mr-2 h-4 w-4" />
-                  Checkout with Shopify
+                  {buttons.showIcons ? <CmsIcon name={buttons.checkoutIcon} className="mr-2 size-4" /> : null}
+                  {buttons.checkoutLabel}
                 </>
               )}
             </Button>
