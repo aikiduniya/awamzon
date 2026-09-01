@@ -3,14 +3,12 @@ import { createFileRoute, notFound } from "@tanstack/react-router";
 import {
   Check,
   ChevronRight,
-  CreditCard,
   Heart,
   Loader2,
   Minus,
   Plus,
   RefreshCw,
   ShieldCheck,
-  ShoppingBag,
   Star,
   Truck,
   ZoomIn,
@@ -20,6 +18,10 @@ import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { CmsLink } from "@/components/site/CmsLink";
+import { CmsIcon } from "@/components/site/Icon";
+import { CtaSection } from "@/components/site/CtaSection";
+import { useSiteButtons } from "@/hooks/useSiteButtons";
+import { siteRouteApi } from "@/routes/_site";
 import { ProductCarousel } from "@/components/site/ProductCarousel";
 import { getSettings } from "@/lib/cms.functions";
 import { fetchProductByHandle, fetchProducts, formatMoney } from "@/lib/shopify";
@@ -100,6 +102,8 @@ function ProductPage() {
   const [variantId, setVariantId] = useState(variants.find((v) => v.availableForSale)?.id ?? variants[0]?.id);
   const [activeImage, setActiveImage] = useState(0);
   const [qty, setQty] = useState(1);
+  const buttons = useSiteButtons();
+  const siteConfig = siteRouteApi.useLoaderData();
   const [zoomOpen, setZoomOpen] = useState(false);
   const variant = variants.find((v) => v.id === variantId) ?? variants[0];
   const addItem = useCartStore((s) => s.addItem);
@@ -289,8 +293,12 @@ function ProductPage() {
               onClick={handleAdd}
               disabled={isLoading || !variant?.availableForSale}
             >
-              {isLoading ? <Loader2 className="size-4 animate-spin" /> : <ShoppingBag className="size-4" aria-hidden />}
-              Add to cart
+              {isLoading ? (
+                <Loader2 className="size-4 animate-spin" />
+              ) : buttons.showIcons ? (
+                <CmsIcon name={buttons.addToCartIcon} className="size-4" />
+              ) : null}
+              {buttons.addToCartLabel}
             </Button>
             {flags.wishlist !== false ? (
               <Button
@@ -314,7 +322,8 @@ function ProductPage() {
             onClick={handleBuyNow}
             disabled={isLoading || !variant?.availableForSale}
           >
-            <CreditCard className="size-4" aria-hidden /> Buy it now
+            {buttons.showIcons ? <CmsIcon name={buttons.buyNowIcon} className="size-4" /> : null}
+            {buttons.buyNowLabel}
           </Button>
 
           <ul className="grid gap-3 rounded-2xl border bg-muted/40 p-5 text-sm sm:grid-cols-3">
@@ -370,10 +379,12 @@ function ProductPage() {
             eyebrow="Recommended"
             heading="You may also like"
             linkTo="/shop"
-            linkLabel="Browse all"
+            linkLabel={buttons.viewAllLabel}
           />
         </section>
       )}
+
+      <CtaSection config={siteConfig} location="product" className="mt-16" />
 
       <Dialog open={zoomOpen} onOpenChange={setZoomOpen}>
         <DialogContent className="max-w-4xl overflow-hidden p-0">

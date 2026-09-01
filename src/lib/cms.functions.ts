@@ -13,11 +13,12 @@ function publicClient() {
 
 export const getSiteConfig = createServerFn({ method: "GET" }).handler(async (): Promise<SiteConfig> => {
   const supabase = publicClient();
-  const [settings, menus, sections, faqs] = await Promise.all([
+  const [settings, menus, sections, faqs, ctas] = await Promise.all([
     supabase.from("site_settings").select("key,value"),
     supabase.from("menu_items").select("*").eq("enabled", true).order("position"),
     supabase.from("homepage_sections").select("*").order("position"),
     supabase.from("faqs").select("*").eq("enabled", true).order("position"),
+    supabase.from("cta_blocks").select("*").eq("enabled", true).order("position"),
   ]);
 
   const settingsMap: SettingsMap = {};
@@ -38,8 +39,10 @@ export const getSiteConfig = createServerFn({ method: "GET" }).handler(async ():
     menus: (menus.data ?? []) as SiteConfig["menus"],
     sections: activeSections as unknown as SiteConfig["sections"],
     faqs: (faqs.data ?? []) as SiteConfig["faqs"],
+    ctas: (ctas.data ?? []) as unknown as SiteConfig["ctas"],
   };
 });
+
 
 export const getPageBySlug = createServerFn({ method: "GET" })
   .inputValidator((data: { slug: string }) => data)

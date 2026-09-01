@@ -1,9 +1,11 @@
 import { useState } from "react";
 import { Link } from "@tanstack/react-router";
-import { Eye, Heart, Loader2, ShoppingBag } from "lucide-react";
+import { Heart, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { QuickViewDialog } from "./QuickViewDialog";
+import { CmsIcon } from "./Icon";
+import { useSiteButtons } from "@/hooks/useSiteButtons";
 import { useCartStore } from "@/stores/cartStore";
 import { useWishlistStore } from "@/stores/wishlistStore";
 import { formatMoney, type ShopifyProduct } from "@/lib/shopify";
@@ -29,6 +31,7 @@ export function ProductCard({
   const toggleWish = useWishlistStore((s) => s.toggle);
   const wishHandles = useWishlistStore((s) => s.handles);
   const [quickOpen, setQuickOpen] = useState(false);
+  const buttons = useSiteButtons();
 
   const node = product.node;
   const image = node.images.edges[0]?.node;
@@ -132,13 +135,14 @@ export function ProductCard({
         {features?.quickView !== false ? (
           <button
             type="button"
-            aria-label={`Quick view ${node.title}`}
+            aria-label={`${buttons.quickViewLabel} ${node.title}`}
             onClick={() => setQuickOpen(true)}
             className="pointer-events-auto grid size-9 place-items-center rounded-full bg-background/95 shadow-md transition-colors hover:bg-background"
           >
-            <Eye className="size-4" aria-hidden />
+            <CmsIcon name={buttons.quickViewIcon || "Eye"} className="size-4" />
           </button>
         ) : null}
+
       </div>
 
       <div className="flex flex-1 flex-col p-4">
@@ -179,10 +183,12 @@ export function ProductCard({
             "Out of stock"
           ) : (
             <>
-              <ShoppingBag className="size-4" aria-hidden /> Add to cart
+              {buttons.showIcons ? <CmsIcon name={buttons.addToCartIcon} className="size-4" /> : null}
+              {buttons.addToCartLabel}
             </>
           )}
         </Button>
+
       </div>
 
       {features?.quickView !== false ? (

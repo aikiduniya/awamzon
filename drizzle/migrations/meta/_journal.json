@@ -57,6 +57,13 @@
       "when": 1788288160160,
       "tag": "0007_premium_storefront_demo_content",
       "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1788289363583,
+      "tag": "0008_blog_cms_cta_and_ui_settings",
+      "breakpoints": true
     }
   ]
 }

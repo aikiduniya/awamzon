@@ -46,6 +46,9 @@ import { Route as SiteBlogSlugRouteImport } from './routes/_site.blog.$slug'
 import { Route as SiteCollectionsHandleRouteImport } from './routes/_site.collections.$handle'
 import { Route as SitePagesSlugRouteImport } from './routes/_site.pages.$slug'
 import { Route as SiteProductHandleRouteImport } from './routes/_site.product.$handle'
+import { Route as SiteBlogAuthorSlugRouteImport } from './routes/_site.blog.author.$slug'
+import { Route as SiteBlogCategorySlugRouteImport } from './routes/_site.blog.category.$slug'
+import { Route as SiteBlogTagSlugRouteImport } from './routes/_site.blog.tag.$slug'
 
 const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
   id: '/_authenticated',
@@ -239,6 +242,21 @@ const SiteProductHandleRoute = SiteProductHandleRouteImport.update({
   path: '/product/$handle',
   getParentRoute: () => SiteRoute,
 } as any)
+const SiteBlogAuthorSlugRoute = SiteBlogAuthorSlugRouteImport.update({
+  id: '/blog/author/$slug',
+  path: '/blog/author/$slug',
+  getParentRoute: () => SiteRoute,
+} as any)
+const SiteBlogCategorySlugRoute = SiteBlogCategorySlugRouteImport.update({
+  id: '/blog/category/$slug',
+  path: '/blog/category/$slug',
+  getParentRoute: () => SiteRoute,
+} as any)
+const SiteBlogTagSlugRoute = SiteBlogTagSlugRouteImport.update({
+  id: '/blog/tag/$slug',
+  path: '/blog/tag/$slug',
+  getParentRoute: () => SiteRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof SiteIndexRoute
@@ -276,6 +294,9 @@ export interface FileRoutesByFullPath {
   '/product/$handle': typeof SiteProductHandleRoute
   '/admin/': typeof AuthenticatedAdminIndexRoute
   '/blog/': typeof SiteBlogIndexRoute
+  '/blog/author/$slug': typeof SiteBlogAuthorSlugRoute
+  '/blog/category/$slug': typeof SiteBlogCategorySlugRoute
+  '/blog/tag/$slug': typeof SiteBlogTagSlugRoute
 }
 export interface FileRoutesByTo {
   '/': typeof SiteIndexRoute
@@ -312,6 +333,9 @@ export interface FileRoutesByTo {
   '/product/$handle': typeof SiteProductHandleRoute
   '/admin': typeof AuthenticatedAdminIndexRoute
   '/blog': typeof SiteBlogIndexRoute
+  '/blog/author/$slug': typeof SiteBlogAuthorSlugRoute
+  '/blog/category/$slug': typeof SiteBlogCategorySlugRoute
+  '/blog/tag/$slug': typeof SiteBlogTagSlugRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -352,6 +376,9 @@ export interface FileRoutesById {
   '/_site/product/$handle': typeof SiteProductHandleRoute
   '/_authenticated/admin/': typeof AuthenticatedAdminIndexRoute
   '/_site/blog/': typeof SiteBlogIndexRoute
+  '/_site/blog/author/$slug': typeof SiteBlogAuthorSlugRoute
+  '/_site/blog/category/$slug': typeof SiteBlogCategorySlugRoute
+  '/_site/blog/tag/$slug': typeof SiteBlogTagSlugRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -391,6 +418,9 @@ export interface FileRouteTypes {
     | '/product/$handle'
     | '/admin/'
     | '/blog/'
+    | '/blog/author/$slug'
+    | '/blog/category/$slug'
+    | '/blog/tag/$slug'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -427,6 +457,9 @@ export interface FileRouteTypes {
     | '/product/$handle'
     | '/admin'
     | '/blog'
+    | '/blog/author/$slug'
+    | '/blog/category/$slug'
+    | '/blog/tag/$slug'
   id:
     | '__root__'
     | '/_authenticated'
@@ -466,6 +499,9 @@ export interface FileRouteTypes {
     | '/_site/product/$handle'
     | '/_authenticated/admin/'
     | '/_site/blog/'
+    | '/_site/blog/author/$slug'
+    | '/_site/blog/category/$slug'
+    | '/_site/blog/tag/$slug'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -737,6 +773,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SiteProductHandleRouteImport
       parentRoute: typeof SiteRoute
     }
+    '/_site/blog/author/$slug': {
+      id: '/_site/blog/author/$slug'
+      path: '/blog/author/$slug'
+      fullPath: '/blog/author/$slug'
+      preLoaderRoute: typeof SiteBlogAuthorSlugRouteImport
+      parentRoute: typeof SiteRoute
+    }
+    '/_site/blog/category/$slug': {
+      id: '/_site/blog/category/$slug'
+      path: '/blog/category/$slug'
+      fullPath: '/blog/category/$slug'
+      preLoaderRoute: typeof SiteBlogCategorySlugRouteImport
+      parentRoute: typeof SiteRoute
+    }
+    '/_site/blog/tag/$slug': {
+      id: '/_site/blog/tag/$slug'
+      path: '/blog/tag/$slug'
+      fullPath: '/blog/tag/$slug'
+      preLoaderRoute: typeof SiteBlogTagSlugRouteImport
+      parentRoute: typeof SiteRoute
+    }
   }
 }
 
@@ -810,6 +867,9 @@ interface SiteRouteChildren {
   SitePagesSlugRoute: typeof SitePagesSlugRoute
   SiteProductHandleRoute: typeof SiteProductHandleRoute
   SiteBlogIndexRoute: typeof SiteBlogIndexRoute
+  SiteBlogAuthorSlugRoute: typeof SiteBlogAuthorSlugRoute
+  SiteBlogCategorySlugRoute: typeof SiteBlogCategorySlugRoute
+  SiteBlogTagSlugRoute: typeof SiteBlogTagSlugRoute
 }
 
 const SiteRouteChildren: SiteRouteChildren = {
@@ -826,6 +886,9 @@ const SiteRouteChildren: SiteRouteChildren = {
   SitePagesSlugRoute: SitePagesSlugRoute,
   SiteProductHandleRoute: SiteProductHandleRoute,
   SiteBlogIndexRoute: SiteBlogIndexRoute,
+  SiteBlogAuthorSlugRoute: SiteBlogAuthorSlugRoute,
+  SiteBlogCategorySlugRoute: SiteBlogCategorySlugRoute,
+  SiteBlogTagSlugRoute: SiteBlogTagSlugRoute,
 }
 
 const SiteRouteWithChildren = SiteRoute._addFileChildren(SiteRouteChildren)
