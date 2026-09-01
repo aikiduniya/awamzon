@@ -289,8 +289,12 @@ function ProductPage() {
               onClick={handleAdd}
               disabled={isLoading || !variant?.availableForSale}
             >
-              {isLoading ? <Loader2 className="size-4 animate-spin" /> : <ShoppingBag className="size-4" aria-hidden />}
-              Add to cart
+              {isLoading ? (
+                <Loader2 className="size-4 animate-spin" />
+              ) : buttons.showIcons ? (
+                <CmsIcon name={buttons.addToCartIcon} className="size-4" />
+              ) : null}
+              {buttons.addToCartLabel}
             </Button>
             {flags.wishlist !== false ? (
               <Button
@@ -314,7 +318,8 @@ function ProductPage() {
             onClick={handleBuyNow}
             disabled={isLoading || !variant?.availableForSale}
           >
-            <CreditCard className="size-4" aria-hidden /> Buy it now
+            {buttons.showIcons ? <CmsIcon name={buttons.buyNowIcon} className="size-4" /> : null}
+            {buttons.buyNowLabel}
           </Button>
 
           <ul className="grid gap-3 rounded-2xl border bg-muted/40 p-5 text-sm sm:grid-cols-3">
