@@ -24,7 +24,7 @@ export const Route = createFileRoute("/sitemap.xml")({
         );
         const seo = settings["seo"] ?? {};
         const cache = settings["cache"] ?? {};
-        const security = settings["security"] ?? {};
+        
 
         const configuredBase = String(seo["canonicalBase"] ?? "").replace(/\/+$/, "");
         const base = configuredBase || new URL(request.url).origin;
