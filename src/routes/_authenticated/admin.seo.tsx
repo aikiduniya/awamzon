@@ -9,8 +9,9 @@ const KEYS: Array<{ key: string; title: string; description: string }> = [
     key: "seo",
     title: "Global SEO",
     description:
-      "Titles, descriptions, keywords, OG/Twitter images, title templates, default robots directive, canonical base URL (used for canonical tags, Open Graph URLs and the sitemap) and search-engine verification codes.",
+      "Master control: “search engine indexing” OFF forces noindex, nofollow on every public page (homepage, products, collections, blog, categories, tags, CMS pages, search) and blocks robots.txt + sitemap. When ON, pages use “default robots” (index/noindex) + “default follow” (follow/nofollow). Also holds titles, descriptions, keywords, OG/Twitter images, title templates, canonical base URL and verification codes.",
   },
+
   {
     key: "schema",
     title: "Structured data (JSON-LD)",
