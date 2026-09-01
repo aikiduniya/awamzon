@@ -121,3 +121,17 @@ export const sendContactMessage = createServerFn({ method: "POST" })
     if (error) throw new Error("Could not send message");
     return { ok: true };
   });
+
+export const getSettings = createServerFn({ method: "GET" }).handler(async () => {
+  const supabase = publicClient();
+  const { data } = await supabase.from("site_settings").select("key,value");
+  const map: Record<string, Record<string, unknown>> = {};
+  for (const row of data ?? []) map[row.key] = (row.value ?? {}) as Record<string, unknown>;
+  return map;
+});
+
+export const getFaqs = createServerFn({ method: "GET" }).handler(async () => {
+  const supabase = publicClient();
+  const { data } = await supabase.from("faqs").select("*").eq("enabled", true).order("position");
+  return data ?? [];
+});
