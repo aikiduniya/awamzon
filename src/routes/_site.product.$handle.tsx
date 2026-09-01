@@ -379,10 +379,12 @@ function ProductPage() {
             eyebrow="Recommended"
             heading="You may also like"
             linkTo="/shop"
-            linkLabel="Browse all"
+            linkLabel={buttons.viewAllLabel}
           />
         </section>
       )}
+
+      <CtaSection config={siteConfig} location="product" className="mt-16" />
 
       <Dialog open={zoomOpen} onOpenChange={setZoomOpen}>
         <DialogContent className="max-w-4xl overflow-hidden p-0">
