@@ -105,12 +105,12 @@ export function absoluteUrl(settings: SettingsMap, path: string) {
 export function buildMeta(settings: SettingsMap, input: MetaInput) {
   const seo = group(settings, "seo", seoDefaults);
   const adv = group(settings, "seo", advancedSeoDefaults);
-  const security = group(settings, "security", securityDefaults);
   const rawImage = input.image || seo.ogImage;
   const image = rawImage ? absoluteUrl(settings, rawImage) : "";
   const url = absoluteUrl(settings, input.path);
   const description = input.description || seo.defaultDescription;
-  const robots = security.noindexSite ? "noindex, nofollow" : input.robots || adv.defaultRobots;
+  const robots = resolveRobots(settings, input.robots);
+
 
   const meta: Array<Record<string, string>> = [
     { title: input.title },
