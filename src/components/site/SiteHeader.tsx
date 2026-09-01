@@ -28,6 +28,7 @@ export function SiteHeader({ config }: { config: SiteConfig }) {
   const [dismissed, setDismissed] = useState(false);
   const [term, setTerm] = useState("");
   const navigate = useNavigate();
+  const wishlistCount = useWishlistStore((s) => s.handles.length);
 
   const store = group(config.settings, "store", storeDefaults);
   const header = group(config.settings, "header", {
@@ -35,8 +36,15 @@ export function SiteHeader({ config }: { config: SiteConfig }) {
     showSearch: true,
     showAccount: true,
     showCart: true,
+    showWishlist: true,
+    showIcons: true,
+    megaMenu: true,
+    activeUnderline: true,
+    topBarEnabled: false,
+    topBarText: "",
     logoHeight: "32px",
   });
+
   const announcement = group(config.settings, "announcement", {
     enabled: false,
     text: "",
