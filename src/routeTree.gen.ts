@@ -21,6 +21,7 @@ import { Route as SiteFaqRouteImport } from './routes/_site.faq'
 import { Route as SiteSearchRouteImport } from './routes/_site.search'
 import { Route as SiteShopRouteImport } from './routes/_site.shop'
 import { Route as AuthenticatedAdminIndexRouteImport } from './routes/_authenticated/admin.index'
+import { Route as AuthenticatedAdminActivityRouteImport } from './routes/_authenticated/admin.activity'
 import { Route as AuthenticatedAdminBlogRouteImport } from './routes/_authenticated/admin.blog'
 import { Route as AuthenticatedAdminFaqRouteImport } from './routes/_authenticated/admin.faq'
 import { Route as AuthenticatedAdminHomepageRouteImport } from './routes/_authenticated/admin.homepage'
@@ -97,6 +98,12 @@ const AuthenticatedAdminIndexRoute = AuthenticatedAdminIndexRouteImport.update({
   path: '/',
   getParentRoute: () => AuthenticatedAdminRoute,
 } as any)
+const AuthenticatedAdminActivityRoute =
+  AuthenticatedAdminActivityRouteImport.update({
+    id: '/activity',
+    path: '/activity',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
 const AuthenticatedAdminBlogRoute = AuthenticatedAdminBlogRouteImport.update({
   id: '/blog',
   path: '/blog',
@@ -198,6 +205,7 @@ export interface FileRoutesByFullPath {
   '/faq': typeof SiteFaqRoute
   '/search': typeof SiteSearchRoute
   '/shop': typeof SiteShopRoute
+  '/admin/activity': typeof AuthenticatedAdminActivityRoute
   '/admin/blog': typeof AuthenticatedAdminBlogRoute
   '/admin/faq': typeof AuthenticatedAdminFaqRoute
   '/admin/homepage': typeof AuthenticatedAdminHomepageRoute
@@ -226,6 +234,7 @@ export interface FileRoutesByTo {
   '/faq': typeof SiteFaqRoute
   '/search': typeof SiteSearchRoute
   '/shop': typeof SiteShopRoute
+  '/admin/activity': typeof AuthenticatedAdminActivityRoute
   '/admin/blog': typeof AuthenticatedAdminBlogRoute
   '/admin/faq': typeof AuthenticatedAdminFaqRoute
   '/admin/homepage': typeof AuthenticatedAdminHomepageRoute
@@ -258,6 +267,7 @@ export interface FileRoutesById {
   '/_site/search': typeof SiteSearchRoute
   '/_site/shop': typeof SiteShopRoute
   '/_site/': typeof SiteIndexRoute
+  '/_authenticated/admin/activity': typeof AuthenticatedAdminActivityRoute
   '/_authenticated/admin/blog': typeof AuthenticatedAdminBlogRoute
   '/_authenticated/admin/faq': typeof AuthenticatedAdminFaqRoute
   '/_authenticated/admin/homepage': typeof AuthenticatedAdminHomepageRoute
@@ -289,6 +299,7 @@ export interface FileRouteTypes {
     | '/faq'
     | '/search'
     | '/shop'
+    | '/admin/activity'
     | '/admin/blog'
     | '/admin/faq'
     | '/admin/homepage'
@@ -317,6 +328,7 @@ export interface FileRouteTypes {
     | '/faq'
     | '/search'
     | '/shop'
+    | '/admin/activity'
     | '/admin/blog'
     | '/admin/faq'
     | '/admin/homepage'
@@ -348,6 +360,7 @@ export interface FileRouteTypes {
     | '/_site/search'
     | '/_site/shop'
     | '/_site/'
+    | '/_authenticated/admin/activity'
     | '/_authenticated/admin/blog'
     | '/_authenticated/admin/faq'
     | '/_authenticated/admin/homepage'
@@ -458,6 +471,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/admin/'
       preLoaderRoute: typeof AuthenticatedAdminIndexRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
+    '/_authenticated/admin/activity': {
+      id: '/_authenticated/admin/activity'
+      path: '/activity'
+      fullPath: '/admin/activity'
+      preLoaderRoute: typeof AuthenticatedAdminActivityRouteImport
       parentRoute: typeof AuthenticatedAdminRoute
     }
     '/_authenticated/admin/blog': {
@@ -583,6 +603,7 @@ declare module '@tanstack/react-router' {
 }
 
 interface AuthenticatedAdminRouteChildren {
+  AuthenticatedAdminActivityRoute: typeof AuthenticatedAdminActivityRoute
   AuthenticatedAdminBlogRoute: typeof AuthenticatedAdminBlogRoute
   AuthenticatedAdminFaqRoute: typeof AuthenticatedAdminFaqRoute
   AuthenticatedAdminHomepageRoute: typeof AuthenticatedAdminHomepageRoute
@@ -599,6 +620,7 @@ interface AuthenticatedAdminRouteChildren {
 }
 
 const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
+  AuthenticatedAdminActivityRoute: AuthenticatedAdminActivityRoute,
   AuthenticatedAdminBlogRoute: AuthenticatedAdminBlogRoute,
   AuthenticatedAdminFaqRoute: AuthenticatedAdminFaqRoute,
   AuthenticatedAdminHomepageRoute: AuthenticatedAdminHomepageRoute,
