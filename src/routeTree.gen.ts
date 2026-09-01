@@ -10,32 +10,72 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as SiteRouteImport } from './routes/_site'
+import { Route as SiteIndexRouteImport } from './routes/_site.index'
+import { Route as SiteShopRouteImport } from './routes/_site.shop'
+import { Route as SiteCollectionsHandleRouteImport } from './routes/_site.collections.$handle'
+import { Route as SiteProductHandleRouteImport } from './routes/_site.product.$handle'
 
 const SiteRoute = SiteRouteImport.update({
   id: '/_site',
   getParentRoute: () => rootRouteImport,
 } as any)
+const SiteIndexRoute = SiteIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => SiteRoute,
+} as any)
+const SiteShopRoute = SiteShopRouteImport.update({
+  id: '/shop',
+  path: '/shop',
+  getParentRoute: () => SiteRoute,
+} as any)
+const SiteCollectionsHandleRoute = SiteCollectionsHandleRouteImport.update({
+  id: '/collections/$handle',
+  path: '/collections/$handle',
+  getParentRoute: () => SiteRoute,
+} as any)
+const SiteProductHandleRoute = SiteProductHandleRouteImport.update({
+  id: '/product/$handle',
+  path: '/product/$handle',
+  getParentRoute: () => SiteRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
-  '/': typeof SiteRoute
+  '/': typeof SiteIndexRoute
+  '/shop': typeof SiteShopRoute
+  '/collections/$handle': typeof SiteCollectionsHandleRoute
+  '/product/$handle': typeof SiteProductHandleRoute
 }
 export interface FileRoutesByTo {
-  '/': typeof SiteRoute
+  '/shop': typeof SiteShopRoute
+  '/': typeof SiteIndexRoute
+  '/collections/$handle': typeof SiteCollectionsHandleRoute
+  '/product/$handle': typeof SiteProductHandleRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
-  '/_site': typeof SiteRoute
+  '/_site': typeof SiteRouteWithChildren
+  '/_site/shop': typeof SiteShopRoute
+  '/_site/': typeof SiteIndexRoute
+  '/_site/collections/$handle': typeof SiteCollectionsHandleRoute
+  '/_site/product/$handle': typeof SiteProductHandleRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths: '/' | '/shop' | '/collections/$handle' | '/product/$handle'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/_site'
+  to: '/shop' | '/' | '/collections/$handle' | '/product/$handle'
+  id:
+    | '__root__'
+    | '/_site'
+    | '/_site/shop'
+    | '/_site/'
+    | '/_site/collections/$handle'
+    | '/_site/product/$handle'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
-  SiteRoute: typeof SiteRoute
+  SiteRoute: typeof SiteRouteWithChildren
 }
 
 declare module '@tanstack/react-router' {
@@ -47,11 +87,55 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SiteRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_site/': {
+      id: '/_site/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof SiteIndexRouteImport
+      parentRoute: typeof SiteRoute
+    }
+    '/_site/shop': {
+      id: '/_site/shop'
+      path: '/shop'
+      fullPath: '/shop'
+      preLoaderRoute: typeof SiteShopRouteImport
+      parentRoute: typeof SiteRoute
+    }
+    '/_site/collections/$handle': {
+      id: '/_site/collections/$handle'
+      path: '/collections/$handle'
+      fullPath: '/collections/$handle'
+      preLoaderRoute: typeof SiteCollectionsHandleRouteImport
+      parentRoute: typeof SiteRoute
+    }
+    '/_site/product/$handle': {
+      id: '/_site/product/$handle'
+      path: '/product/$handle'
+      fullPath: '/product/$handle'
+      preLoaderRoute: typeof SiteProductHandleRouteImport
+      parentRoute: typeof SiteRoute
+    }
   }
 }
 
+interface SiteRouteChildren {
+  SiteShopRoute: typeof SiteShopRoute
+  SiteIndexRoute: typeof SiteIndexRoute
+  SiteCollectionsHandleRoute: typeof SiteCollectionsHandleRoute
+  SiteProductHandleRoute: typeof SiteProductHandleRoute
+}
+
+const SiteRouteChildren: SiteRouteChildren = {
+  SiteShopRoute: SiteShopRoute,
+  SiteIndexRoute: SiteIndexRoute,
+  SiteCollectionsHandleRoute: SiteCollectionsHandleRoute,
+  SiteProductHandleRoute: SiteProductHandleRoute,
+}
+
+const SiteRouteWithChildren = SiteRoute._addFileChildren(SiteRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
-  SiteRoute: SiteRoute,
+  SiteRoute: SiteRouteWithChildren,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
