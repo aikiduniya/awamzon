@@ -10,6 +10,7 @@ export interface ShopifyProduct {
     id: string;
     title: string;
     description: string;
+    descriptionHtml?: string;
     handle: string;
     vendor?: string;
     tags?: string[];
@@ -38,6 +39,7 @@ const PRODUCT_FRAGMENT = `
   id
   title
   description
+  descriptionHtml
   handle
   vendor
   tags
@@ -53,7 +55,6 @@ const PRODUCT_FRAGMENT = `
         price { amount currencyCode }
         compareAtPrice { amount currencyCode }
         availableForSale
-        quantityAvailable
         selectedOptions { name value }
       }
     }

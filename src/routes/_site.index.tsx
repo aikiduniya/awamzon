@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { Sections } from "@/components/site/Sections";
 import { getBlogPosts, getSiteConfig } from "@/lib/cms.functions";
-import { fetchProducts } from "@/lib/shopify";
+import { fetchCollections, fetchProducts } from "@/lib/shopify";
 import { buildMeta, seoDefaults } from "@/lib/seo";
 import { group } from "@/lib/cms-types";
 
@@ -9,11 +9,12 @@ export const Route = createFileRoute("/_site/")({
   loader: async () => {
     const config = await getSiteConfig();
     const shop = group(config.settings, "shop", { collectionQuery: "" });
-    const [products, posts] = await Promise.all([
-      fetchProducts({ first: 12, query: String(shop.collectionQuery ?? "") }).catch(() => []),
+    const [products, posts, collections] = await Promise.all([
+      fetchProducts({ first: 50, query: String(shop.collectionQuery ?? "") }).catch(() => []),
       getBlogPosts().catch(() => []),
+      fetchCollections(12).catch(() => []),
     ]);
-    return { config, products, posts };
+    return { config, products, posts, collections };
   },
   head: ({ loaderData }) => {
     if (!loaderData) return { meta: [{ title: "Home" }] };
@@ -29,7 +30,7 @@ export const Route = createFileRoute("/_site/")({
 });
 
 function Home() {
-  const { config, products, posts } = Route.useLoaderData();
+  const { config, products, posts, collections } = Route.useLoaderData();
   const messages = group(config.settings, "messages", { noProducts: "No products found" });
 
   return (
@@ -38,6 +39,7 @@ function Home() {
       config={config}
       products={products}
       posts={posts}
+      collections={collections}
       noProductsMessage={String(messages.noProducts)}
     />
   );

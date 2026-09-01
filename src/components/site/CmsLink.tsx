@@ -23,7 +23,7 @@ export function CmsLink({
       </a>
     );
   }
-  if (to.startsWith("#")) {
+  if (to.startsWith("#") || to.includes("?")) {
     return (
       <a href={to} className={className} onClick={onClick}>
         {children}
