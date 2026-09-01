@@ -57,6 +57,7 @@ export type Database = {
           created_at: string
           excerpt: string | null
           id: string
+          is_demo: boolean
           published_at: string | null
           seo: Json
           slug: string
@@ -74,6 +75,7 @@ export type Database = {
           created_at?: string
           excerpt?: string | null
           id?: string
+          is_demo?: boolean
           published_at?: string | null
           seo?: Json
           slug: string
@@ -91,6 +93,7 @@ export type Database = {
           created_at?: string
           excerpt?: string | null
           id?: string
+          is_demo?: boolean
           published_at?: string | null
           seo?: Json
           slug?: string
@@ -106,6 +109,7 @@ export type Database = {
           created_at: string
           email: string
           id: string
+          is_demo: boolean
           message: string
           name: string
           status: string
@@ -115,6 +119,7 @@ export type Database = {
           created_at?: string
           email: string
           id?: string
+          is_demo?: boolean
           message: string
           name: string
           status?: string
@@ -124,10 +129,95 @@ export type Database = {
           created_at?: string
           email?: string
           id?: string
+          is_demo?: boolean
           message?: string
           name?: string
           status?: string
           subject?: string | null
+        }
+        Relationships: []
+      }
+      demo_customers: {
+        Row: {
+          city: string | null
+          country: string | null
+          created_at: string
+          email: string
+          id: string
+          is_demo: boolean
+          name: string
+          orders_count: number
+          tags: string[]
+          total_spent: number
+        }
+        Insert: {
+          city?: string | null
+          country?: string | null
+          created_at?: string
+          email: string
+          id?: string
+          is_demo?: boolean
+          name: string
+          orders_count?: number
+          tags?: string[]
+          total_spent?: number
+        }
+        Update: {
+          city?: string | null
+          country?: string | null
+          created_at?: string
+          email?: string
+          id?: string
+          is_demo?: boolean
+          name?: string
+          orders_count?: number
+          tags?: string[]
+          total_spent?: number
+        }
+        Relationships: []
+      }
+      demo_orders: {
+        Row: {
+          channel: string
+          created_at: string
+          currency: string
+          customer_email: string
+          customer_name: string
+          financial_status: string
+          fulfillment_status: string
+          id: string
+          is_demo: boolean
+          items: number
+          order_number: string
+          total: number
+        }
+        Insert: {
+          channel?: string
+          created_at?: string
+          currency?: string
+          customer_email: string
+          customer_name: string
+          financial_status?: string
+          fulfillment_status?: string
+          id?: string
+          is_demo?: boolean
+          items?: number
+          order_number: string
+          total?: number
+        }
+        Update: {
+          channel?: string
+          created_at?: string
+          currency?: string
+          customer_email?: string
+          customer_name?: string
+          financial_status?: string
+          fulfillment_status?: string
+          id?: string
+          is_demo?: boolean
+          items?: number
+          order_number?: string
+          total?: number
         }
         Relationships: []
       }
@@ -138,6 +228,7 @@ export type Database = {
           created_at: string
           enabled: boolean
           id: string
+          is_demo: boolean
           position: number
           question: string
         }
@@ -147,6 +238,7 @@ export type Database = {
           created_at?: string
           enabled?: boolean
           id?: string
+          is_demo?: boolean
           position?: number
           question: string
         }
@@ -156,6 +248,7 @@ export type Database = {
           created_at?: string
           enabled?: boolean
           id?: string
+          is_demo?: boolean
           position?: number
           question?: string
         }
@@ -168,6 +261,7 @@ export type Database = {
           enabled: boolean
           ends_at: string | null
           id: string
+          is_demo: boolean
           position: number
           starts_at: string | null
           title: string | null
@@ -180,6 +274,7 @@ export type Database = {
           enabled?: boolean
           ends_at?: string | null
           id?: string
+          is_demo?: boolean
           position?: number
           starts_at?: string | null
           title?: string | null
@@ -192,6 +287,7 @@ export type Database = {
           enabled?: boolean
           ends_at?: string | null
           id?: string
+          is_demo?: boolean
           position?: number
           starts_at?: string | null
           title?: string | null
@@ -207,6 +303,7 @@ export type Database = {
           category: string | null
           created_at: string
           id: string
+          is_demo: boolean
           title: string | null
           url: string
         }
@@ -216,6 +313,7 @@ export type Database = {
           category?: string | null
           created_at?: string
           id?: string
+          is_demo?: boolean
           title?: string | null
           url: string
         }
@@ -225,6 +323,7 @@ export type Database = {
           category?: string | null
           created_at?: string
           id?: string
+          is_demo?: boolean
           title?: string | null
           url?: string
         }
@@ -236,6 +335,7 @@ export type Database = {
           created_at: string
           enabled: boolean
           id: string
+          is_demo: boolean
           label: string
           location: string
           position: number
@@ -246,6 +346,7 @@ export type Database = {
           created_at?: string
           enabled?: boolean
           id?: string
+          is_demo?: boolean
           label: string
           location?: string
           position?: number
@@ -256,10 +357,44 @@ export type Database = {
           created_at?: string
           enabled?: boolean
           id?: string
+          is_demo?: boolean
           label?: string
           location?: string
           position?: number
           url?: string
+        }
+        Relationships: []
+      }
+      notifications: {
+        Row: {
+          body: string | null
+          created_at: string
+          id: string
+          is_demo: boolean
+          level: string
+          link: string | null
+          read: boolean
+          title: string
+        }
+        Insert: {
+          body?: string | null
+          created_at?: string
+          id?: string
+          is_demo?: boolean
+          level?: string
+          link?: string | null
+          read?: boolean
+          title: string
+        }
+        Update: {
+          body?: string | null
+          created_at?: string
+          id?: string
+          is_demo?: boolean
+          level?: string
+          link?: string | null
+          read?: boolean
+          title?: string
         }
         Relationships: []
       }
@@ -268,6 +403,7 @@ export type Database = {
           content: string
           created_at: string
           id: string
+          is_demo: boolean
           published_at: string | null
           seo: Json
           slug: string
@@ -279,6 +415,7 @@ export type Database = {
           content?: string
           created_at?: string
           id?: string
+          is_demo?: boolean
           published_at?: string | null
           seo?: Json
           slug: string
@@ -290,6 +427,7 @@ export type Database = {
           content?: string
           created_at?: string
           id?: string
+          is_demo?: boolean
           published_at?: string | null
           seo?: Json
           slug?: string
@@ -326,6 +464,7 @@ export type Database = {
           created_at: string
           from_path: string
           id: string
+          is_demo: boolean
           status_code: number
           to_path: string
         }
@@ -334,6 +473,7 @@ export type Database = {
           created_at?: string
           from_path: string
           id?: string
+          is_demo?: boolean
           status_code?: number
           to_path: string
         }
@@ -342,6 +482,7 @@ export type Database = {
           created_at?: string
           from_path?: string
           id?: string
+          is_demo?: boolean
           status_code?: number
           to_path?: string
         }
@@ -379,6 +520,7 @@ export type Database = {
           created_at: string
           email: string
           id: string
+          is_demo: boolean
           source: string | null
           status: string
         }
@@ -386,6 +528,7 @@ export type Database = {
           created_at?: string
           email: string
           id?: string
+          is_demo?: boolean
           source?: string | null
           status?: string
         }
@@ -393,6 +536,7 @@ export type Database = {
           created_at?: string
           email?: string
           id?: string
+          is_demo?: boolean
           source?: string | null
           status?: string
         }
