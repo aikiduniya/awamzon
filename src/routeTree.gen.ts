@@ -34,6 +34,7 @@ import { Route as AuthenticatedAdminSeoRouteImport } from './routes/_authenticat
 import { Route as AuthenticatedAdminSettingsRouteImport } from './routes/_authenticated/admin.settings'
 import { Route as AuthenticatedAdminSubscribersRouteImport } from './routes/_authenticated/admin.subscribers'
 import { Route as AuthenticatedAdminThemeRouteImport } from './routes/_authenticated/admin.theme'
+import { Route as AuthenticatedAdminUsersRouteImport } from './routes/_authenticated/admin.users'
 import { Route as SiteBlogIndexRouteImport } from './routes/_site.blog.index'
 import { Route as SiteBlogSlugRouteImport } from './routes/_site.blog.$slug'
 import { Route as SiteCollectionsHandleRouteImport } from './routes/_site.collections.$handle'
@@ -169,6 +170,11 @@ const AuthenticatedAdminThemeRoute = AuthenticatedAdminThemeRouteImport.update({
   path: '/theme',
   getParentRoute: () => AuthenticatedAdminRoute,
 } as any)
+const AuthenticatedAdminUsersRoute = AuthenticatedAdminUsersRouteImport.update({
+  id: '/users',
+  path: '/users',
+  getParentRoute: () => AuthenticatedAdminRoute,
+} as any)
 const SiteBlogIndexRoute = SiteBlogIndexRouteImport.update({
   id: '/blog/',
   path: '/blog/',
@@ -218,6 +224,7 @@ export interface FileRoutesByFullPath {
   '/admin/settings': typeof AuthenticatedAdminSettingsRoute
   '/admin/subscribers': typeof AuthenticatedAdminSubscribersRoute
   '/admin/theme': typeof AuthenticatedAdminThemeRoute
+  '/admin/users': typeof AuthenticatedAdminUsersRoute
   '/blog/$slug': typeof SiteBlogSlugRoute
   '/collections/$handle': typeof SiteCollectionsHandleRoute
   '/pages/$slug': typeof SitePagesSlugRoute
@@ -247,6 +254,7 @@ export interface FileRoutesByTo {
   '/admin/settings': typeof AuthenticatedAdminSettingsRoute
   '/admin/subscribers': typeof AuthenticatedAdminSubscribersRoute
   '/admin/theme': typeof AuthenticatedAdminThemeRoute
+  '/admin/users': typeof AuthenticatedAdminUsersRoute
   '/blog/$slug': typeof SiteBlogSlugRoute
   '/collections/$handle': typeof SiteCollectionsHandleRoute
   '/pages/$slug': typeof SitePagesSlugRoute
@@ -280,6 +288,7 @@ export interface FileRoutesById {
   '/_authenticated/admin/settings': typeof AuthenticatedAdminSettingsRoute
   '/_authenticated/admin/subscribers': typeof AuthenticatedAdminSubscribersRoute
   '/_authenticated/admin/theme': typeof AuthenticatedAdminThemeRoute
+  '/_authenticated/admin/users': typeof AuthenticatedAdminUsersRoute
   '/_site/blog/$slug': typeof SiteBlogSlugRoute
   '/_site/collections/$handle': typeof SiteCollectionsHandleRoute
   '/_site/pages/$slug': typeof SitePagesSlugRoute
@@ -312,6 +321,7 @@ export interface FileRouteTypes {
     | '/admin/settings'
     | '/admin/subscribers'
     | '/admin/theme'
+    | '/admin/users'
     | '/blog/$slug'
     | '/collections/$handle'
     | '/pages/$slug'
@@ -341,6 +351,7 @@ export interface FileRouteTypes {
     | '/admin/settings'
     | '/admin/subscribers'
     | '/admin/theme'
+    | '/admin/users'
     | '/blog/$slug'
     | '/collections/$handle'
     | '/pages/$slug'
@@ -373,6 +384,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/settings'
     | '/_authenticated/admin/subscribers'
     | '/_authenticated/admin/theme'
+    | '/_authenticated/admin/users'
     | '/_site/blog/$slug'
     | '/_site/collections/$handle'
     | '/_site/pages/$slug'
@@ -564,6 +576,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminThemeRouteImport
       parentRoute: typeof AuthenticatedAdminRoute
     }
+    '/_authenticated/admin/users': {
+      id: '/_authenticated/admin/users'
+      path: '/users'
+      fullPath: '/admin/users'
+      preLoaderRoute: typeof AuthenticatedAdminUsersRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
     '/_site/blog/': {
       id: '/_site/blog/'
       path: '/blog'
@@ -616,6 +635,7 @@ interface AuthenticatedAdminRouteChildren {
   AuthenticatedAdminSettingsRoute: typeof AuthenticatedAdminSettingsRoute
   AuthenticatedAdminSubscribersRoute: typeof AuthenticatedAdminSubscribersRoute
   AuthenticatedAdminThemeRoute: typeof AuthenticatedAdminThemeRoute
+  AuthenticatedAdminUsersRoute: typeof AuthenticatedAdminUsersRoute
   AuthenticatedAdminIndexRoute: typeof AuthenticatedAdminIndexRoute
 }
 
@@ -633,6 +653,7 @@ const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
   AuthenticatedAdminSettingsRoute: AuthenticatedAdminSettingsRoute,
   AuthenticatedAdminSubscribersRoute: AuthenticatedAdminSubscribersRoute,
   AuthenticatedAdminThemeRoute: AuthenticatedAdminThemeRoute,
+  AuthenticatedAdminUsersRoute: AuthenticatedAdminUsersRoute,
   AuthenticatedAdminIndexRoute: AuthenticatedAdminIndexRoute,
 }
 
