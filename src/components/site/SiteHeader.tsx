@@ -10,6 +10,7 @@ import { useWishlist } from "@/stores/wishlistStore";
 import { group, type SiteConfig, type StoreSettings } from "@/lib/cms-types";
 
 
+
 const storeDefaults: StoreSettings = {
   name: "Store",
   tagline: "",
