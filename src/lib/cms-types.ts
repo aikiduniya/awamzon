@@ -48,13 +48,30 @@ export interface MenuItem {
   column_group: string | null;
 }
 
+export type JsonValue = string | number | boolean | null | JsonValue[] | { [key: string]: JsonValue };
+
+export interface SectionData {
+  heading?: JsonValue;
+  subheading?: JsonValue;
+  text?: JsonValue;
+  image?: JsonValue;
+  imageAlt?: JsonValue;
+  buttonLabel?: JsonValue;
+  buttonLink?: JsonValue;
+  items?: JsonValue;
+  count?: JsonValue;
+  limit?: JsonValue;
+  url?: JsonValue;
+  [key: string]: JsonValue | undefined;
+}
+
 export interface HomepageSection {
   id: string;
   type: string;
   title: string | null;
   position: number;
   enabled: boolean;
-  data: Record<string, unknown>;
+  data: SectionData;
   starts_at: string | null;
   ends_at: string | null;
 }
@@ -68,7 +85,8 @@ export interface FaqRow {
   enabled: boolean;
 }
 
-export type SettingsMap = Record<string, Record<string, unknown>>;
+export type SettingsGroup = { [key: string]: JsonValue };
+export type SettingsMap = { [key: string]: SettingsGroup };
 
 export interface SiteConfig {
   settings: SettingsMap;
@@ -77,9 +95,10 @@ export interface SiteConfig {
   faqs: FaqRow[];
 }
 
-export function group<T extends Record<string, unknown>>(settings: SettingsMap, key: string, fallback: T): T {
+export function group<T extends object>(settings: SettingsMap, key: string, fallback: T): T {
   return { ...fallback, ...((settings[key] ?? {}) as Partial<T>) } as T;
 }
+
 
 export const HOMEPAGE_SECTION_TYPES = [
   "hero",
