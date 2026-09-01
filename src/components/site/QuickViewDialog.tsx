@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link } from "@tanstack/react-router";
-import { ArrowRight, Loader2, Minus, Plus, ShoppingBag } from "lucide-react";
+import { ArrowRight, Loader2, Minus, Plus } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogTitle } from "@/components/ui/dialog";
@@ -22,6 +22,7 @@ export function QuickViewDialog({
   const variants = node.variants.edges.map((e) => e.node);
   const [variantId, setVariantId] = useState(variants.find((v) => v.availableForSale)?.id ?? variants[0]?.id);
   const [qty, setQty] = useState(1);
+  const buttons = useSiteButtons();
   const variant = variants.find((v) => v.id === variantId) ?? variants[0];
   const addItem = useCartStore((s) => s.addItem);
   const isLoading = useCartStore((s) => s.isLoading);
