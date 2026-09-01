@@ -28,6 +28,7 @@ import { Route as AuthenticatedAdminHomepageRouteImport } from './routes/_authen
 import { Route as AuthenticatedAdminMediaRouteImport } from './routes/_authenticated/admin.media'
 import { Route as AuthenticatedAdminMenusRouteImport } from './routes/_authenticated/admin.menus'
 import { Route as AuthenticatedAdminMessagesRouteImport } from './routes/_authenticated/admin.messages'
+import { Route as AuthenticatedAdminOrdersRouteImport } from './routes/_authenticated/admin.orders'
 import { Route as AuthenticatedAdminPagesRouteImport } from './routes/_authenticated/admin.pages'
 import { Route as AuthenticatedAdminProductsRouteImport } from './routes/_authenticated/admin.products'
 import { Route as AuthenticatedAdminRedirectsRouteImport } from './routes/_authenticated/admin.redirects'
@@ -138,6 +139,12 @@ const AuthenticatedAdminMessagesRoute =
     path: '/messages',
     getParentRoute: () => AuthenticatedAdminRoute,
   } as any)
+const AuthenticatedAdminOrdersRoute =
+  AuthenticatedAdminOrdersRouteImport.update({
+    id: '/orders',
+    path: '/orders',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
 const AuthenticatedAdminPagesRoute = AuthenticatedAdminPagesRouteImport.update({
   id: '/pages',
   path: '/pages',
@@ -225,6 +232,7 @@ export interface FileRoutesByFullPath {
   '/admin/media': typeof AuthenticatedAdminMediaRoute
   '/admin/menus': typeof AuthenticatedAdminMenusRoute
   '/admin/messages': typeof AuthenticatedAdminMessagesRoute
+  '/admin/orders': typeof AuthenticatedAdminOrdersRoute
   '/admin/pages': typeof AuthenticatedAdminPagesRoute
   '/admin/products': typeof AuthenticatedAdminProductsRoute
   '/admin/redirects': typeof AuthenticatedAdminRedirectsRoute
@@ -256,6 +264,7 @@ export interface FileRoutesByTo {
   '/admin/media': typeof AuthenticatedAdminMediaRoute
   '/admin/menus': typeof AuthenticatedAdminMenusRoute
   '/admin/messages': typeof AuthenticatedAdminMessagesRoute
+  '/admin/orders': typeof AuthenticatedAdminOrdersRoute
   '/admin/pages': typeof AuthenticatedAdminPagesRoute
   '/admin/products': typeof AuthenticatedAdminProductsRoute
   '/admin/redirects': typeof AuthenticatedAdminRedirectsRoute
@@ -291,6 +300,7 @@ export interface FileRoutesById {
   '/_authenticated/admin/media': typeof AuthenticatedAdminMediaRoute
   '/_authenticated/admin/menus': typeof AuthenticatedAdminMenusRoute
   '/_authenticated/admin/messages': typeof AuthenticatedAdminMessagesRoute
+  '/_authenticated/admin/orders': typeof AuthenticatedAdminOrdersRoute
   '/_authenticated/admin/pages': typeof AuthenticatedAdminPagesRoute
   '/_authenticated/admin/products': typeof AuthenticatedAdminProductsRoute
   '/_authenticated/admin/redirects': typeof AuthenticatedAdminRedirectsRoute
@@ -325,6 +335,7 @@ export interface FileRouteTypes {
     | '/admin/media'
     | '/admin/menus'
     | '/admin/messages'
+    | '/admin/orders'
     | '/admin/pages'
     | '/admin/products'
     | '/admin/redirects'
@@ -356,6 +367,7 @@ export interface FileRouteTypes {
     | '/admin/media'
     | '/admin/menus'
     | '/admin/messages'
+    | '/admin/orders'
     | '/admin/pages'
     | '/admin/products'
     | '/admin/redirects'
@@ -390,6 +402,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/media'
     | '/_authenticated/admin/menus'
     | '/_authenticated/admin/messages'
+    | '/_authenticated/admin/orders'
     | '/_authenticated/admin/pages'
     | '/_authenticated/admin/products'
     | '/_authenticated/admin/redirects'
@@ -547,6 +560,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminMessagesRouteImport
       parentRoute: typeof AuthenticatedAdminRoute
     }
+    '/_authenticated/admin/orders': {
+      id: '/_authenticated/admin/orders'
+      path: '/orders'
+      fullPath: '/admin/orders'
+      preLoaderRoute: typeof AuthenticatedAdminOrdersRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
     '/_authenticated/admin/pages': {
       id: '/_authenticated/admin/pages'
       path: '/pages'
@@ -649,6 +669,7 @@ interface AuthenticatedAdminRouteChildren {
   AuthenticatedAdminMediaRoute: typeof AuthenticatedAdminMediaRoute
   AuthenticatedAdminMenusRoute: typeof AuthenticatedAdminMenusRoute
   AuthenticatedAdminMessagesRoute: typeof AuthenticatedAdminMessagesRoute
+  AuthenticatedAdminOrdersRoute: typeof AuthenticatedAdminOrdersRoute
   AuthenticatedAdminPagesRoute: typeof AuthenticatedAdminPagesRoute
   AuthenticatedAdminProductsRoute: typeof AuthenticatedAdminProductsRoute
   AuthenticatedAdminRedirectsRoute: typeof AuthenticatedAdminRedirectsRoute
@@ -668,6 +689,7 @@ const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
   AuthenticatedAdminMediaRoute: AuthenticatedAdminMediaRoute,
   AuthenticatedAdminMenusRoute: AuthenticatedAdminMenusRoute,
   AuthenticatedAdminMessagesRoute: AuthenticatedAdminMessagesRoute,
+  AuthenticatedAdminOrdersRoute: AuthenticatedAdminOrdersRoute,
   AuthenticatedAdminPagesRoute: AuthenticatedAdminPagesRoute,
   AuthenticatedAdminProductsRoute: AuthenticatedAdminProductsRoute,
   AuthenticatedAdminRedirectsRoute: AuthenticatedAdminRedirectsRoute,
