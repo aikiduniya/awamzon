@@ -1,4 +1,15 @@
 import {
+  BadgeCheck,
+  Headset,
+  Quote,
+  RefreshCw,
+  ShieldCheck,
+  Sparkles,
+  Truck,
+  ArrowRight,
+  Mail,
+} from "lucide-react";
+import {
   Accordion,
   AccordionContent,
   AccordionItem,
@@ -46,20 +57,47 @@ function SectionBody({ section, config, products, posts, noProductsMessage }: Om
     case "hero":
       return (
         <div className="grid items-center gap-10 md:grid-cols-2">
-          <div className="space-y-5">
-            <h1 className="text-4xl leading-tight md:text-6xl">{str(d.heading)}</h1>
-            <p className="text-lg text-muted-foreground">{str(d.subheading)}</p>
-            {str(d.buttonLabel) && (
-              <Button asChild size="lg">
-                <CmsLink to={str(d.buttonLink, "/shop")}>{str(d.buttonLabel)}</CmsLink>
-              </Button>
-            )}
+          <div className="space-y-6">
+            {str(d.eyebrow) ? (
+              <span className="inline-flex items-center gap-1.5 rounded-full border bg-muted/60 px-3 py-1 text-xs font-medium">
+                <Sparkles className="size-3.5 text-primary" aria-hidden />
+                {str(d.eyebrow)}
+              </span>
+            ) : null}
+            <h1 className="text-4xl font-semibold leading-[1.05] tracking-tight md:text-6xl">{str(d.heading)}</h1>
+            <p className="max-w-prose text-lg text-muted-foreground">{str(d.subheading)}</p>
+            <div className="flex flex-wrap items-center gap-3">
+              {str(d.buttonLabel) && (
+                <Button asChild size="lg" className="gap-1.5">
+                  <CmsLink to={str(d.buttonLink, "/shop")}>
+                    {str(d.buttonLabel)}
+                    <ArrowRight className="size-4" aria-hidden />
+                  </CmsLink>
+                </Button>
+              )}
+              {str(d.secondaryButtonLabel) && (
+                <Button asChild size="lg" variant="outline">
+                  <CmsLink to={str(d.secondaryButtonLink, "/pages/about-us")}>{str(d.secondaryButtonLabel)}</CmsLink>
+                </Button>
+              )}
+            </div>
+            <ul className="flex flex-wrap gap-x-6 gap-y-2 pt-2 text-sm text-muted-foreground">
+              <li className="flex items-center gap-1.5">
+                <Truck className="size-4 text-primary" aria-hidden /> Fast nationwide delivery
+              </li>
+              <li className="flex items-center gap-1.5">
+                <RefreshCw className="size-4 text-primary" aria-hidden /> Easy returns
+              </li>
+              <li className="flex items-center gap-1.5">
+                <ShieldCheck className="size-4 text-primary" aria-hidden /> Secure checkout
+              </li>
+            </ul>
           </div>
           {str(d.image) ? (
             <img
               src={str(d.image)}
               alt={str(d.imageAlt)}
-              className="aspect-[4/3] w-full rounded-xl object-cover"
+              className="aspect-[4/3] w-full rounded-2xl object-cover shadow-xl ring-1 ring-border"
               fetchPriority="high"
             />
           ) : (
@@ -74,7 +112,15 @@ function SectionBody({ section, config, products, posts, noProductsMessage }: Om
       const list = products.slice(0, count);
       return (
         <div className="space-y-6">
-          <h2 className="text-3xl">{str(d.heading, section.title ?? "Products")}</h2>
+          <div className="flex flex-wrap items-end justify-between gap-3">
+            <h2 className="text-3xl font-semibold tracking-tight">{str(d.heading, section.title ?? "Products")}</h2>
+            <Button asChild variant="ghost" size="sm" className="gap-1">
+              <CmsLink to={str(d.linkTo, "/shop")}>
+                {str(d.linkLabel, "View all")}
+                <ArrowRight className="size-4" aria-hidden />
+              </CmsLink>
+            </Button>
+          </div>
           {list.length === 0 ? (
             <p className="text-muted-foreground">{noProductsMessage}</p>
           ) : (
@@ -118,9 +164,10 @@ function SectionBody({ section, config, products, posts, noProductsMessage }: Om
 
     case "promo_banner":
       return (
-        <div className="rounded-xl bg-primary px-8 py-12 text-primary-foreground">
-          <h2 className="text-3xl">{str(d.heading)}</h2>
-          <p className="mt-2 opacity-90">{str(d.text)}</p>
+        <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-primary to-primary/80 px-8 py-14 text-primary-foreground shadow-lg">
+          <Sparkles className="pointer-events-none absolute -right-6 -top-6 size-40 opacity-15" aria-hidden />
+          <h2 className="max-w-2xl text-3xl font-semibold tracking-tight">{str(d.heading)}</h2>
+          <p className="mt-2 max-w-xl opacity-90">{str(d.text)}</p>
           {str(d.buttonLabel) && (
             <Button asChild variant="secondary" className="mt-5">
               <CmsLink to={str(d.buttonLink, "/shop")}>{str(d.buttonLabel)}</CmsLink>
@@ -131,14 +178,26 @@ function SectionBody({ section, config, products, posts, noProductsMessage }: Om
 
     case "trust_badges": {
       const items = Array.isArray(d.items) ? (d.items as Array<{ title: string; text: string }>) : [];
+      const icons = [Truck, RefreshCw, ShieldCheck, Headset, BadgeCheck];
       return (
-        <div className="grid gap-6 sm:grid-cols-3">
-          {items.map((item, i) => (
-            <div key={i} className="rounded-lg border p-6">
-              <h3 className="font-medium">{item.title}</h3>
-              <p className="mt-1 text-sm text-muted-foreground">{item.text}</p>
-            </div>
-          ))}
+        <div className="grid gap-4 sm:grid-cols-3">
+          {items.map((item, i) => {
+            const Icon = icons[i % icons.length]!;
+            return (
+              <div
+                key={i}
+                className="flex items-start gap-4 rounded-2xl border bg-card p-6 transition-shadow hover:shadow-md"
+              >
+                <span className="grid size-11 shrink-0 place-items-center rounded-xl bg-primary/10 text-primary">
+                  <Icon className="size-5" aria-hidden />
+                </span>
+                <div>
+                  <h3 className="font-medium">{item.title}</h3>
+                  <p className="mt-1 text-sm text-muted-foreground">{item.text}</p>
+                </div>
+              </div>
+            );
+          })}
         </div>
       );
     }
@@ -148,12 +207,18 @@ function SectionBody({ section, config, products, posts, noProductsMessage }: Om
       if (items.length === 0) return null;
       return (
         <div className="space-y-6">
-          <h2 className="text-3xl">{str(d.heading, "What customers say")}</h2>
+          <h2 className="text-3xl font-semibold tracking-tight">{str(d.heading, "What customers say")}</h2>
           <div className="grid gap-6 md:grid-cols-3">
             {items.map((item, i) => (
-              <blockquote key={i} className="rounded-lg border p-6 text-sm">
-                <p>{item.quote}</p>
-                <footer className="mt-3 text-muted-foreground">{item.author}</footer>
+              <blockquote key={i} className="rounded-2xl border bg-card p-6 text-sm shadow-sm">
+                <Quote className="size-6 text-primary/40" aria-hidden />
+                <p className="mt-3 leading-relaxed">{item.quote}</p>
+                <footer className="mt-4 flex items-center gap-2 text-muted-foreground">
+                  <span className="grid size-8 place-items-center rounded-full bg-primary/10 text-[11px] font-semibold text-primary">
+                    {item.author.slice(0, 2).toUpperCase()}
+                  </span>
+                  {item.author}
+                </footer>
               </blockquote>
             ))}
           </div>
@@ -167,7 +232,7 @@ function SectionBody({ section, config, products, posts, noProductsMessage }: Om
       if (faqs.length === 0) return null;
       return (
         <div className="mx-auto max-w-3xl space-y-6">
-          <h2 className="text-3xl text-center">{str(d.heading, "FAQ")}</h2>
+          <h2 className="text-center text-3xl font-semibold tracking-tight">{str(d.heading, "FAQ")}</h2>
           <Accordion type="single" collapsible>
             {faqs.map((faq) => (
               <AccordionItem key={faq.id} value={faq.id}>
@@ -185,15 +250,29 @@ function SectionBody({ section, config, products, posts, noProductsMessage }: Om
       if (list.length === 0) return null;
       return (
         <div className="space-y-6">
-          <h2 className="text-3xl">{str(d.heading, "From the journal")}</h2>
+          <h2 className="text-3xl font-semibold tracking-tight">{str(d.heading, "From the journal")}</h2>
           <div className="grid gap-6 md:grid-cols-3">
             {list.map((post) => (
-              <CmsLink key={post.id} to={`/blog/${post.slug}`} className="group block">
+              <CmsLink
+                key={post.id}
+                to={`/blog/${post.slug}`}
+                className="group block overflow-hidden rounded-2xl border bg-card transition-all hover:-translate-y-1 hover:shadow-lg"
+              >
                 {post.cover_image && (
-                  <img src={post.cover_image} alt="" loading="lazy" className="mb-3 aspect-video w-full rounded-lg object-cover" />
+                  <img
+                    src={post.cover_image}
+                    alt=""
+                    loading="lazy"
+                    className="aspect-video w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                  />
                 )}
-                <h3 className="font-medium group-hover:underline">{post.title}</h3>
-                <p className="mt-1 text-sm text-muted-foreground">{post.excerpt}</p>
+                <div className="p-5">
+                  <h3 className="font-medium group-hover:text-primary">{post.title}</h3>
+                  <p className="mt-1 line-clamp-2 text-sm text-muted-foreground">{post.excerpt}</p>
+                  <span className="mt-3 inline-flex items-center gap-1 text-sm font-medium text-primary">
+                    Read more <ArrowRight className="size-3.5" aria-hidden />
+                  </span>
+                </div>
               </CmsLink>
             ))}
           </div>
@@ -203,8 +282,11 @@ function SectionBody({ section, config, products, posts, noProductsMessage }: Om
 
     case "newsletter":
       return (
-        <div className="flex flex-col items-center gap-4 rounded-xl bg-muted px-6 py-14 text-center">
-          <h2 className="text-3xl">{str(d.heading, "Join the list")}</h2>
+        <div className="flex flex-col items-center gap-4 rounded-2xl border bg-muted/60 px-6 py-14 text-center">
+          <span className="grid size-12 place-items-center rounded-2xl bg-primary/10 text-primary">
+            <Mail className="size-5" aria-hidden />
+          </span>
+          <h2 className="text-3xl font-semibold tracking-tight">{str(d.heading, "Join the list")}</h2>
           <p className="max-w-md text-muted-foreground">{str(d.text)}</p>
           <NewsletterForm buttonLabel={str(d.buttonLabel, "Subscribe")} />
         </div>
