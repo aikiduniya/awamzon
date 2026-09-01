@@ -9,7 +9,10 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as SiteRouteImport } from './routes/_site'
+import { Route as AuthRouteImport } from './routes/auth'
+import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
 import { Route as SiteIndexRouteImport } from './routes/_site.index'
 import { Route as SiteAccountRouteImport } from './routes/_site.account'
 import { Route as SiteCartRouteImport } from './routes/_site.cart'
@@ -17,15 +20,46 @@ import { Route as SiteContactRouteImport } from './routes/_site.contact'
 import { Route as SiteFaqRouteImport } from './routes/_site.faq'
 import { Route as SiteSearchRouteImport } from './routes/_site.search'
 import { Route as SiteShopRouteImport } from './routes/_site.shop'
+import { Route as AuthenticatedAdminIndexRouteImport } from './routes/_authenticated/admin.index'
+import { Route as AuthenticatedAdminActivityRouteImport } from './routes/_authenticated/admin.activity'
+import { Route as AuthenticatedAdminBlogRouteImport } from './routes/_authenticated/admin.blog'
+import { Route as AuthenticatedAdminFaqRouteImport } from './routes/_authenticated/admin.faq'
+import { Route as AuthenticatedAdminHomepageRouteImport } from './routes/_authenticated/admin.homepage'
+import { Route as AuthenticatedAdminMediaRouteImport } from './routes/_authenticated/admin.media'
+import { Route as AuthenticatedAdminMenusRouteImport } from './routes/_authenticated/admin.menus'
+import { Route as AuthenticatedAdminMessagesRouteImport } from './routes/_authenticated/admin.messages'
+import { Route as AuthenticatedAdminOrdersRouteImport } from './routes/_authenticated/admin.orders'
+import { Route as AuthenticatedAdminPagesRouteImport } from './routes/_authenticated/admin.pages'
+import { Route as AuthenticatedAdminProductsRouteImport } from './routes/_authenticated/admin.products'
+import { Route as AuthenticatedAdminRedirectsRouteImport } from './routes/_authenticated/admin.redirects'
+import { Route as AuthenticatedAdminSeoRouteImport } from './routes/_authenticated/admin.seo'
+import { Route as AuthenticatedAdminSettingsRouteImport } from './routes/_authenticated/admin.settings'
+import { Route as AuthenticatedAdminSubscribersRouteImport } from './routes/_authenticated/admin.subscribers'
+import { Route as AuthenticatedAdminThemeRouteImport } from './routes/_authenticated/admin.theme'
+import { Route as AuthenticatedAdminUsersRouteImport } from './routes/_authenticated/admin.users'
 import { Route as SiteBlogIndexRouteImport } from './routes/_site.blog.index'
 import { Route as SiteBlogSlugRouteImport } from './routes/_site.blog.$slug'
 import { Route as SiteCollectionsHandleRouteImport } from './routes/_site.collections.$handle'
 import { Route as SitePagesSlugRouteImport } from './routes/_site.pages.$slug'
 import { Route as SiteProductHandleRouteImport } from './routes/_site.product.$handle'
 
+const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
+  id: '/_authenticated',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const SiteRoute = SiteRouteImport.update({
   id: '/_site',
   getParentRoute: () => rootRouteImport,
+} as any)
+const AuthRoute = AuthRouteImport.update({
+  id: '/auth',
+  path: '/auth',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthenticatedAdminRoute = AuthenticatedAdminRouteImport.update({
+  id: '/admin',
+  path: '/admin',
+  getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
 const SiteIndexRoute = SiteIndexRouteImport.update({
   id: '/',
@@ -62,6 +96,99 @@ const SiteShopRoute = SiteShopRouteImport.update({
   path: '/shop',
   getParentRoute: () => SiteRoute,
 } as any)
+const AuthenticatedAdminIndexRoute = AuthenticatedAdminIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AuthenticatedAdminRoute,
+} as any)
+const AuthenticatedAdminActivityRoute =
+  AuthenticatedAdminActivityRouteImport.update({
+    id: '/activity',
+    path: '/activity',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
+const AuthenticatedAdminBlogRoute = AuthenticatedAdminBlogRouteImport.update({
+  id: '/blog',
+  path: '/blog',
+  getParentRoute: () => AuthenticatedAdminRoute,
+} as any)
+const AuthenticatedAdminFaqRoute = AuthenticatedAdminFaqRouteImport.update({
+  id: '/faq',
+  path: '/faq',
+  getParentRoute: () => AuthenticatedAdminRoute,
+} as any)
+const AuthenticatedAdminHomepageRoute =
+  AuthenticatedAdminHomepageRouteImport.update({
+    id: '/homepage',
+    path: '/homepage',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
+const AuthenticatedAdminMediaRoute = AuthenticatedAdminMediaRouteImport.update({
+  id: '/media',
+  path: '/media',
+  getParentRoute: () => AuthenticatedAdminRoute,
+} as any)
+const AuthenticatedAdminMenusRoute = AuthenticatedAdminMenusRouteImport.update({
+  id: '/menus',
+  path: '/menus',
+  getParentRoute: () => AuthenticatedAdminRoute,
+} as any)
+const AuthenticatedAdminMessagesRoute =
+  AuthenticatedAdminMessagesRouteImport.update({
+    id: '/messages',
+    path: '/messages',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
+const AuthenticatedAdminOrdersRoute =
+  AuthenticatedAdminOrdersRouteImport.update({
+    id: '/orders',
+    path: '/orders',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
+const AuthenticatedAdminPagesRoute = AuthenticatedAdminPagesRouteImport.update({
+  id: '/pages',
+  path: '/pages',
+  getParentRoute: () => AuthenticatedAdminRoute,
+} as any)
+const AuthenticatedAdminProductsRoute =
+  AuthenticatedAdminProductsRouteImport.update({
+    id: '/products',
+    path: '/products',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
+const AuthenticatedAdminRedirectsRoute =
+  AuthenticatedAdminRedirectsRouteImport.update({
+    id: '/redirects',
+    path: '/redirects',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
+const AuthenticatedAdminSeoRoute = AuthenticatedAdminSeoRouteImport.update({
+  id: '/seo',
+  path: '/seo',
+  getParentRoute: () => AuthenticatedAdminRoute,
+} as any)
+const AuthenticatedAdminSettingsRoute =
+  AuthenticatedAdminSettingsRouteImport.update({
+    id: '/settings',
+    path: '/settings',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
+const AuthenticatedAdminSubscribersRoute =
+  AuthenticatedAdminSubscribersRouteImport.update({
+    id: '/subscribers',
+    path: '/subscribers',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
+const AuthenticatedAdminThemeRoute = AuthenticatedAdminThemeRouteImport.update({
+  id: '/theme',
+  path: '/theme',
+  getParentRoute: () => AuthenticatedAdminRoute,
+} as any)
+const AuthenticatedAdminUsersRoute = AuthenticatedAdminUsersRouteImport.update({
+  id: '/users',
+  path: '/users',
+  getParentRoute: () => AuthenticatedAdminRoute,
+} as any)
 const SiteBlogIndexRoute = SiteBlogIndexRouteImport.update({
   id: '/blog/',
   path: '/blog/',
@@ -90,35 +217,75 @@ const SiteProductHandleRoute = SiteProductHandleRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof SiteIndexRoute
+  '/auth': typeof AuthRoute
+  '/admin': typeof AuthenticatedAdminRouteWithChildren
   '/account': typeof SiteAccountRoute
   '/cart': typeof SiteCartRoute
   '/contact': typeof SiteContactRoute
   '/faq': typeof SiteFaqRoute
   '/search': typeof SiteSearchRoute
   '/shop': typeof SiteShopRoute
+  '/admin/activity': typeof AuthenticatedAdminActivityRoute
+  '/admin/blog': typeof AuthenticatedAdminBlogRoute
+  '/admin/faq': typeof AuthenticatedAdminFaqRoute
+  '/admin/homepage': typeof AuthenticatedAdminHomepageRoute
+  '/admin/media': typeof AuthenticatedAdminMediaRoute
+  '/admin/menus': typeof AuthenticatedAdminMenusRoute
+  '/admin/messages': typeof AuthenticatedAdminMessagesRoute
+  '/admin/orders': typeof AuthenticatedAdminOrdersRoute
+  '/admin/pages': typeof AuthenticatedAdminPagesRoute
+  '/admin/products': typeof AuthenticatedAdminProductsRoute
+  '/admin/redirects': typeof AuthenticatedAdminRedirectsRoute
+  '/admin/seo': typeof AuthenticatedAdminSeoRoute
+  '/admin/settings': typeof AuthenticatedAdminSettingsRoute
+  '/admin/subscribers': typeof AuthenticatedAdminSubscribersRoute
+  '/admin/theme': typeof AuthenticatedAdminThemeRoute
+  '/admin/users': typeof AuthenticatedAdminUsersRoute
   '/blog/$slug': typeof SiteBlogSlugRoute
   '/collections/$handle': typeof SiteCollectionsHandleRoute
   '/pages/$slug': typeof SitePagesSlugRoute
   '/product/$handle': typeof SiteProductHandleRoute
+  '/admin/': typeof AuthenticatedAdminIndexRoute
   '/blog/': typeof SiteBlogIndexRoute
 }
 export interface FileRoutesByTo {
+  '/': typeof SiteIndexRoute
+  '/auth': typeof AuthRoute
   '/account': typeof SiteAccountRoute
   '/cart': typeof SiteCartRoute
   '/contact': typeof SiteContactRoute
   '/faq': typeof SiteFaqRoute
   '/search': typeof SiteSearchRoute
   '/shop': typeof SiteShopRoute
-  '/': typeof SiteIndexRoute
+  '/admin/activity': typeof AuthenticatedAdminActivityRoute
+  '/admin/blog': typeof AuthenticatedAdminBlogRoute
+  '/admin/faq': typeof AuthenticatedAdminFaqRoute
+  '/admin/homepage': typeof AuthenticatedAdminHomepageRoute
+  '/admin/media': typeof AuthenticatedAdminMediaRoute
+  '/admin/menus': typeof AuthenticatedAdminMenusRoute
+  '/admin/messages': typeof AuthenticatedAdminMessagesRoute
+  '/admin/orders': typeof AuthenticatedAdminOrdersRoute
+  '/admin/pages': typeof AuthenticatedAdminPagesRoute
+  '/admin/products': typeof AuthenticatedAdminProductsRoute
+  '/admin/redirects': typeof AuthenticatedAdminRedirectsRoute
+  '/admin/seo': typeof AuthenticatedAdminSeoRoute
+  '/admin/settings': typeof AuthenticatedAdminSettingsRoute
+  '/admin/subscribers': typeof AuthenticatedAdminSubscribersRoute
+  '/admin/theme': typeof AuthenticatedAdminThemeRoute
+  '/admin/users': typeof AuthenticatedAdminUsersRoute
   '/blog/$slug': typeof SiteBlogSlugRoute
   '/collections/$handle': typeof SiteCollectionsHandleRoute
   '/pages/$slug': typeof SitePagesSlugRoute
   '/product/$handle': typeof SiteProductHandleRoute
+  '/admin': typeof AuthenticatedAdminIndexRoute
   '/blog': typeof SiteBlogIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
+  '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/_site': typeof SiteRouteWithChildren
+  '/auth': typeof AuthRoute
+  '/_authenticated/admin': typeof AuthenticatedAdminRouteWithChildren
   '/_site/account': typeof SiteAccountRoute
   '/_site/cart': typeof SiteCartRoute
   '/_site/contact': typeof SiteContactRoute
@@ -126,44 +293,101 @@ export interface FileRoutesById {
   '/_site/search': typeof SiteSearchRoute
   '/_site/shop': typeof SiteShopRoute
   '/_site/': typeof SiteIndexRoute
+  '/_authenticated/admin/activity': typeof AuthenticatedAdminActivityRoute
+  '/_authenticated/admin/blog': typeof AuthenticatedAdminBlogRoute
+  '/_authenticated/admin/faq': typeof AuthenticatedAdminFaqRoute
+  '/_authenticated/admin/homepage': typeof AuthenticatedAdminHomepageRoute
+  '/_authenticated/admin/media': typeof AuthenticatedAdminMediaRoute
+  '/_authenticated/admin/menus': typeof AuthenticatedAdminMenusRoute
+  '/_authenticated/admin/messages': typeof AuthenticatedAdminMessagesRoute
+  '/_authenticated/admin/orders': typeof AuthenticatedAdminOrdersRoute
+  '/_authenticated/admin/pages': typeof AuthenticatedAdminPagesRoute
+  '/_authenticated/admin/products': typeof AuthenticatedAdminProductsRoute
+  '/_authenticated/admin/redirects': typeof AuthenticatedAdminRedirectsRoute
+  '/_authenticated/admin/seo': typeof AuthenticatedAdminSeoRoute
+  '/_authenticated/admin/settings': typeof AuthenticatedAdminSettingsRoute
+  '/_authenticated/admin/subscribers': typeof AuthenticatedAdminSubscribersRoute
+  '/_authenticated/admin/theme': typeof AuthenticatedAdminThemeRoute
+  '/_authenticated/admin/users': typeof AuthenticatedAdminUsersRoute
   '/_site/blog/$slug': typeof SiteBlogSlugRoute
   '/_site/collections/$handle': typeof SiteCollectionsHandleRoute
   '/_site/pages/$slug': typeof SitePagesSlugRoute
   '/_site/product/$handle': typeof SiteProductHandleRoute
+  '/_authenticated/admin/': typeof AuthenticatedAdminIndexRoute
   '/_site/blog/': typeof SiteBlogIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/auth'
+    | '/admin'
     | '/account'
     | '/cart'
     | '/contact'
     | '/faq'
     | '/search'
     | '/shop'
+    | '/admin/activity'
+    | '/admin/blog'
+    | '/admin/faq'
+    | '/admin/homepage'
+    | '/admin/media'
+    | '/admin/menus'
+    | '/admin/messages'
+    | '/admin/orders'
+    | '/admin/pages'
+    | '/admin/products'
+    | '/admin/redirects'
+    | '/admin/seo'
+    | '/admin/settings'
+    | '/admin/subscribers'
+    | '/admin/theme'
+    | '/admin/users'
     | '/blog/$slug'
     | '/collections/$handle'
     | '/pages/$slug'
     | '/product/$handle'
+    | '/admin/'
     | '/blog/'
   fileRoutesByTo: FileRoutesByTo
   to:
+    | '/'
+    | '/auth'
     | '/account'
     | '/cart'
     | '/contact'
     | '/faq'
     | '/search'
     | '/shop'
-    | '/'
+    | '/admin/activity'
+    | '/admin/blog'
+    | '/admin/faq'
+    | '/admin/homepage'
+    | '/admin/media'
+    | '/admin/menus'
+    | '/admin/messages'
+    | '/admin/orders'
+    | '/admin/pages'
+    | '/admin/products'
+    | '/admin/redirects'
+    | '/admin/seo'
+    | '/admin/settings'
+    | '/admin/subscribers'
+    | '/admin/theme'
+    | '/admin/users'
     | '/blog/$slug'
     | '/collections/$handle'
     | '/pages/$slug'
     | '/product/$handle'
+    | '/admin'
     | '/blog'
   id:
     | '__root__'
+    | '/_authenticated'
     | '/_site'
+    | '/auth'
+    | '/_authenticated/admin'
     | '/_site/account'
     | '/_site/cart'
     | '/_site/contact'
@@ -171,25 +395,65 @@ export interface FileRouteTypes {
     | '/_site/search'
     | '/_site/shop'
     | '/_site/'
+    | '/_authenticated/admin/activity'
+    | '/_authenticated/admin/blog'
+    | '/_authenticated/admin/faq'
+    | '/_authenticated/admin/homepage'
+    | '/_authenticated/admin/media'
+    | '/_authenticated/admin/menus'
+    | '/_authenticated/admin/messages'
+    | '/_authenticated/admin/orders'
+    | '/_authenticated/admin/pages'
+    | '/_authenticated/admin/products'
+    | '/_authenticated/admin/redirects'
+    | '/_authenticated/admin/seo'
+    | '/_authenticated/admin/settings'
+    | '/_authenticated/admin/subscribers'
+    | '/_authenticated/admin/theme'
+    | '/_authenticated/admin/users'
     | '/_site/blog/$slug'
     | '/_site/collections/$handle'
     | '/_site/pages/$slug'
     | '/_site/product/$handle'
+    | '/_authenticated/admin/'
     | '/_site/blog/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
+  AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   SiteRoute: typeof SiteRouteWithChildren
+  AuthRoute: typeof AuthRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/_authenticated': {
+      id: '/_authenticated'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof AuthenticatedRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/_site': {
       id: '/_site'
       path: ''
       fullPath: '/'
       preLoaderRoute: typeof SiteRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/auth': {
+      id: '/auth'
+      path: '/auth'
+      fullPath: '/auth'
+      preLoaderRoute: typeof AuthRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated/admin': {
+      id: '/_authenticated/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AuthenticatedAdminRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_site/': {
       id: '/_site/'
@@ -240,6 +504,125 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SiteShopRouteImport
       parentRoute: typeof SiteRoute
     }
+    '/_authenticated/admin/': {
+      id: '/_authenticated/admin/'
+      path: '/'
+      fullPath: '/admin/'
+      preLoaderRoute: typeof AuthenticatedAdminIndexRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
+    '/_authenticated/admin/activity': {
+      id: '/_authenticated/admin/activity'
+      path: '/activity'
+      fullPath: '/admin/activity'
+      preLoaderRoute: typeof AuthenticatedAdminActivityRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
+    '/_authenticated/admin/blog': {
+      id: '/_authenticated/admin/blog'
+      path: '/blog'
+      fullPath: '/admin/blog'
+      preLoaderRoute: typeof AuthenticatedAdminBlogRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
+    '/_authenticated/admin/faq': {
+      id: '/_authenticated/admin/faq'
+      path: '/faq'
+      fullPath: '/admin/faq'
+      preLoaderRoute: typeof AuthenticatedAdminFaqRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
+    '/_authenticated/admin/homepage': {
+      id: '/_authenticated/admin/homepage'
+      path: '/homepage'
+      fullPath: '/admin/homepage'
+      preLoaderRoute: typeof AuthenticatedAdminHomepageRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
+    '/_authenticated/admin/media': {
+      id: '/_authenticated/admin/media'
+      path: '/media'
+      fullPath: '/admin/media'
+      preLoaderRoute: typeof AuthenticatedAdminMediaRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
+    '/_authenticated/admin/menus': {
+      id: '/_authenticated/admin/menus'
+      path: '/menus'
+      fullPath: '/admin/menus'
+      preLoaderRoute: typeof AuthenticatedAdminMenusRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
+    '/_authenticated/admin/messages': {
+      id: '/_authenticated/admin/messages'
+      path: '/messages'
+      fullPath: '/admin/messages'
+      preLoaderRoute: typeof AuthenticatedAdminMessagesRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
+    '/_authenticated/admin/orders': {
+      id: '/_authenticated/admin/orders'
+      path: '/orders'
+      fullPath: '/admin/orders'
+      preLoaderRoute: typeof AuthenticatedAdminOrdersRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
+    '/_authenticated/admin/pages': {
+      id: '/_authenticated/admin/pages'
+      path: '/pages'
+      fullPath: '/admin/pages'
+      preLoaderRoute: typeof AuthenticatedAdminPagesRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
+    '/_authenticated/admin/products': {
+      id: '/_authenticated/admin/products'
+      path: '/products'
+      fullPath: '/admin/products'
+      preLoaderRoute: typeof AuthenticatedAdminProductsRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
+    '/_authenticated/admin/redirects': {
+      id: '/_authenticated/admin/redirects'
+      path: '/redirects'
+      fullPath: '/admin/redirects'
+      preLoaderRoute: typeof AuthenticatedAdminRedirectsRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
+    '/_authenticated/admin/seo': {
+      id: '/_authenticated/admin/seo'
+      path: '/seo'
+      fullPath: '/admin/seo'
+      preLoaderRoute: typeof AuthenticatedAdminSeoRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
+    '/_authenticated/admin/settings': {
+      id: '/_authenticated/admin/settings'
+      path: '/settings'
+      fullPath: '/admin/settings'
+      preLoaderRoute: typeof AuthenticatedAdminSettingsRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
+    '/_authenticated/admin/subscribers': {
+      id: '/_authenticated/admin/subscribers'
+      path: '/subscribers'
+      fullPath: '/admin/subscribers'
+      preLoaderRoute: typeof AuthenticatedAdminSubscribersRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
+    '/_authenticated/admin/theme': {
+      id: '/_authenticated/admin/theme'
+      path: '/theme'
+      fullPath: '/admin/theme'
+      preLoaderRoute: typeof AuthenticatedAdminThemeRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
+    '/_authenticated/admin/users': {
+      id: '/_authenticated/admin/users'
+      path: '/users'
+      fullPath: '/admin/users'
+      preLoaderRoute: typeof AuthenticatedAdminUsersRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
     '/_site/blog/': {
       id: '/_site/blog/'
       path: '/blog'
@@ -278,6 +661,60 @@ declare module '@tanstack/react-router' {
   }
 }
 
+interface AuthenticatedAdminRouteChildren {
+  AuthenticatedAdminActivityRoute: typeof AuthenticatedAdminActivityRoute
+  AuthenticatedAdminBlogRoute: typeof AuthenticatedAdminBlogRoute
+  AuthenticatedAdminFaqRoute: typeof AuthenticatedAdminFaqRoute
+  AuthenticatedAdminHomepageRoute: typeof AuthenticatedAdminHomepageRoute
+  AuthenticatedAdminMediaRoute: typeof AuthenticatedAdminMediaRoute
+  AuthenticatedAdminMenusRoute: typeof AuthenticatedAdminMenusRoute
+  AuthenticatedAdminMessagesRoute: typeof AuthenticatedAdminMessagesRoute
+  AuthenticatedAdminOrdersRoute: typeof AuthenticatedAdminOrdersRoute
+  AuthenticatedAdminPagesRoute: typeof AuthenticatedAdminPagesRoute
+  AuthenticatedAdminProductsRoute: typeof AuthenticatedAdminProductsRoute
+  AuthenticatedAdminRedirectsRoute: typeof AuthenticatedAdminRedirectsRoute
+  AuthenticatedAdminSeoRoute: typeof AuthenticatedAdminSeoRoute
+  AuthenticatedAdminSettingsRoute: typeof AuthenticatedAdminSettingsRoute
+  AuthenticatedAdminSubscribersRoute: typeof AuthenticatedAdminSubscribersRoute
+  AuthenticatedAdminThemeRoute: typeof AuthenticatedAdminThemeRoute
+  AuthenticatedAdminUsersRoute: typeof AuthenticatedAdminUsersRoute
+  AuthenticatedAdminIndexRoute: typeof AuthenticatedAdminIndexRoute
+}
+
+const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
+  AuthenticatedAdminActivityRoute: AuthenticatedAdminActivityRoute,
+  AuthenticatedAdminBlogRoute: AuthenticatedAdminBlogRoute,
+  AuthenticatedAdminFaqRoute: AuthenticatedAdminFaqRoute,
+  AuthenticatedAdminHomepageRoute: AuthenticatedAdminHomepageRoute,
+  AuthenticatedAdminMediaRoute: AuthenticatedAdminMediaRoute,
+  AuthenticatedAdminMenusRoute: AuthenticatedAdminMenusRoute,
+  AuthenticatedAdminMessagesRoute: AuthenticatedAdminMessagesRoute,
+  AuthenticatedAdminOrdersRoute: AuthenticatedAdminOrdersRoute,
+  AuthenticatedAdminPagesRoute: AuthenticatedAdminPagesRoute,
+  AuthenticatedAdminProductsRoute: AuthenticatedAdminProductsRoute,
+  AuthenticatedAdminRedirectsRoute: AuthenticatedAdminRedirectsRoute,
+  AuthenticatedAdminSeoRoute: AuthenticatedAdminSeoRoute,
+  AuthenticatedAdminSettingsRoute: AuthenticatedAdminSettingsRoute,
+  AuthenticatedAdminSubscribersRoute: AuthenticatedAdminSubscribersRoute,
+  AuthenticatedAdminThemeRoute: AuthenticatedAdminThemeRoute,
+  AuthenticatedAdminUsersRoute: AuthenticatedAdminUsersRoute,
+  AuthenticatedAdminIndexRoute: AuthenticatedAdminIndexRoute,
+}
+
+const AuthenticatedAdminRouteWithChildren =
+  AuthenticatedAdminRoute._addFileChildren(AuthenticatedAdminRouteChildren)
+
+interface AuthenticatedRouteRouteChildren {
+  AuthenticatedAdminRoute: typeof AuthenticatedAdminRouteWithChildren
+}
+
+const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
+  AuthenticatedAdminRoute: AuthenticatedAdminRouteWithChildren,
+}
+
+const AuthenticatedRouteRouteWithChildren =
+  AuthenticatedRouteRoute._addFileChildren(AuthenticatedRouteRouteChildren)
+
 interface SiteRouteChildren {
   SiteAccountRoute: typeof SiteAccountRoute
   SiteCartRoute: typeof SiteCartRoute
@@ -311,7 +748,9 @@ const SiteRouteChildren: SiteRouteChildren = {
 const SiteRouteWithChildren = SiteRoute._addFileChildren(SiteRouteChildren)
 
 const rootRouteChildren: RootRouteChildren = {
+  AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   SiteRoute: SiteRouteWithChildren,
+  AuthRoute: AuthRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
