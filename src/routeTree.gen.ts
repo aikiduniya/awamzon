@@ -20,6 +20,7 @@ import { Route as SiteContactRouteImport } from './routes/_site.contact'
 import { Route as SiteFaqRouteImport } from './routes/_site.faq'
 import { Route as SiteSearchRouteImport } from './routes/_site.search'
 import { Route as SiteShopRouteImport } from './routes/_site.shop'
+import { Route as AuthenticatedAdminIndexRouteImport } from './routes/_authenticated/admin.index'
 import { Route as SiteBlogIndexRouteImport } from './routes/_site.blog.index'
 import { Route as SiteBlogSlugRouteImport } from './routes/_site.blog.$slug'
 import { Route as SiteCollectionsHandleRouteImport } from './routes/_site.collections.$handle'
@@ -79,6 +80,11 @@ const SiteShopRoute = SiteShopRouteImport.update({
   path: '/shop',
   getParentRoute: () => SiteRoute,
 } as any)
+const AuthenticatedAdminIndexRoute = AuthenticatedAdminIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AuthenticatedAdminRoute,
+} as any)
 const SiteBlogIndexRoute = SiteBlogIndexRouteImport.update({
   id: '/blog/',
   path: '/blog/',
@@ -108,7 +114,7 @@ const SiteProductHandleRoute = SiteProductHandleRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof SiteIndexRoute
   '/auth': typeof AuthRoute
-  '/admin': typeof AuthenticatedAdminRoute
+  '/admin': typeof AuthenticatedAdminRouteWithChildren
   '/account': typeof SiteAccountRoute
   '/cart': typeof SiteCartRoute
   '/contact': typeof SiteContactRoute
@@ -119,12 +125,12 @@ export interface FileRoutesByFullPath {
   '/collections/$handle': typeof SiteCollectionsHandleRoute
   '/pages/$slug': typeof SitePagesSlugRoute
   '/product/$handle': typeof SiteProductHandleRoute
+  '/admin/': typeof AuthenticatedAdminIndexRoute
   '/blog/': typeof SiteBlogIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof SiteIndexRoute
   '/auth': typeof AuthRoute
-  '/admin': typeof AuthenticatedAdminRoute
   '/account': typeof SiteAccountRoute
   '/cart': typeof SiteCartRoute
   '/contact': typeof SiteContactRoute
@@ -135,6 +141,7 @@ export interface FileRoutesByTo {
   '/collections/$handle': typeof SiteCollectionsHandleRoute
   '/pages/$slug': typeof SitePagesSlugRoute
   '/product/$handle': typeof SiteProductHandleRoute
+  '/admin': typeof AuthenticatedAdminIndexRoute
   '/blog': typeof SiteBlogIndexRoute
 }
 export interface FileRoutesById {
@@ -142,7 +149,7 @@ export interface FileRoutesById {
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/_site': typeof SiteRouteWithChildren
   '/auth': typeof AuthRoute
-  '/_authenticated/admin': typeof AuthenticatedAdminRoute
+  '/_authenticated/admin': typeof AuthenticatedAdminRouteWithChildren
   '/_site/account': typeof SiteAccountRoute
   '/_site/cart': typeof SiteCartRoute
   '/_site/contact': typeof SiteContactRoute
@@ -154,6 +161,7 @@ export interface FileRoutesById {
   '/_site/collections/$handle': typeof SiteCollectionsHandleRoute
   '/_site/pages/$slug': typeof SitePagesSlugRoute
   '/_site/product/$handle': typeof SiteProductHandleRoute
+  '/_authenticated/admin/': typeof AuthenticatedAdminIndexRoute
   '/_site/blog/': typeof SiteBlogIndexRoute
 }
 export interface FileRouteTypes {
@@ -172,12 +180,12 @@ export interface FileRouteTypes {
     | '/collections/$handle'
     | '/pages/$slug'
     | '/product/$handle'
+    | '/admin/'
     | '/blog/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/auth'
-    | '/admin'
     | '/account'
     | '/cart'
     | '/contact'
@@ -188,6 +196,7 @@ export interface FileRouteTypes {
     | '/collections/$handle'
     | '/pages/$slug'
     | '/product/$handle'
+    | '/admin'
     | '/blog'
   id:
     | '__root__'
@@ -206,6 +215,7 @@ export interface FileRouteTypes {
     | '/_site/collections/$handle'
     | '/_site/pages/$slug'
     | '/_site/product/$handle'
+    | '/_authenticated/admin/'
     | '/_site/blog/'
   fileRoutesById: FileRoutesById
 }
@@ -294,6 +304,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SiteShopRouteImport
       parentRoute: typeof SiteRoute
     }
+    '/_authenticated/admin/': {
+      id: '/_authenticated/admin/'
+      path: '/'
+      fullPath: '/admin/'
+      preLoaderRoute: typeof AuthenticatedAdminIndexRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
     '/_site/blog/': {
       id: '/_site/blog/'
       path: '/blog'
@@ -332,12 +349,23 @@ declare module '@tanstack/react-router' {
   }
 }
 
+interface AuthenticatedAdminRouteChildren {
+  AuthenticatedAdminIndexRoute: typeof AuthenticatedAdminIndexRoute
+}
+
+const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
+  AuthenticatedAdminIndexRoute: AuthenticatedAdminIndexRoute,
+}
+
+const AuthenticatedAdminRouteWithChildren =
+  AuthenticatedAdminRoute._addFileChildren(AuthenticatedAdminRouteChildren)
+
 interface AuthenticatedRouteRouteChildren {
-  AuthenticatedAdminRoute: typeof AuthenticatedAdminRoute
+  AuthenticatedAdminRoute: typeof AuthenticatedAdminRouteWithChildren
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
-  AuthenticatedAdminRoute: AuthenticatedAdminRoute,
+  AuthenticatedAdminRoute: AuthenticatedAdminRouteWithChildren,
 }
 
 const AuthenticatedRouteRouteWithChildren =
