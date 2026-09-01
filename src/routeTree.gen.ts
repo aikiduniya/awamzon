@@ -11,7 +11,11 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as SiteRouteImport } from './routes/_site'
 import { Route as SiteIndexRouteImport } from './routes/_site.index'
+import { Route as SiteCartRouteImport } from './routes/_site.cart'
+import { Route as SiteSearchRouteImport } from './routes/_site.search'
 import { Route as SiteShopRouteImport } from './routes/_site.shop'
+import { Route as SiteBlogIndexRouteImport } from './routes/_site.blog.index'
+import { Route as SiteBlogSlugRouteImport } from './routes/_site.blog.$slug'
 import { Route as SiteCollectionsHandleRouteImport } from './routes/_site.collections.$handle'
 import { Route as SiteProductHandleRouteImport } from './routes/_site.product.$handle'
 
@@ -24,9 +28,29 @@ const SiteIndexRoute = SiteIndexRouteImport.update({
   path: '/',
   getParentRoute: () => SiteRoute,
 } as any)
+const SiteCartRoute = SiteCartRouteImport.update({
+  id: '/cart',
+  path: '/cart',
+  getParentRoute: () => SiteRoute,
+} as any)
+const SiteSearchRoute = SiteSearchRouteImport.update({
+  id: '/search',
+  path: '/search',
+  getParentRoute: () => SiteRoute,
+} as any)
 const SiteShopRoute = SiteShopRouteImport.update({
   id: '/shop',
   path: '/shop',
+  getParentRoute: () => SiteRoute,
+} as any)
+const SiteBlogIndexRoute = SiteBlogIndexRouteImport.update({
+  id: '/blog/',
+  path: '/blog/',
+  getParentRoute: () => SiteRoute,
+} as any)
+const SiteBlogSlugRoute = SiteBlogSlugRouteImport.update({
+  id: '/blog/$slug',
+  path: '/blog/$slug',
   getParentRoute: () => SiteRoute,
 } as any)
 const SiteCollectionsHandleRoute = SiteCollectionsHandleRouteImport.update({
@@ -42,36 +66,68 @@ const SiteProductHandleRoute = SiteProductHandleRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof SiteIndexRoute
+  '/cart': typeof SiteCartRoute
+  '/search': typeof SiteSearchRoute
   '/shop': typeof SiteShopRoute
+  '/blog/$slug': typeof SiteBlogSlugRoute
   '/collections/$handle': typeof SiteCollectionsHandleRoute
   '/product/$handle': typeof SiteProductHandleRoute
+  '/blog/': typeof SiteBlogIndexRoute
 }
 export interface FileRoutesByTo {
+  '/cart': typeof SiteCartRoute
+  '/search': typeof SiteSearchRoute
   '/shop': typeof SiteShopRoute
   '/': typeof SiteIndexRoute
+  '/blog/$slug': typeof SiteBlogSlugRoute
   '/collections/$handle': typeof SiteCollectionsHandleRoute
   '/product/$handle': typeof SiteProductHandleRoute
+  '/blog': typeof SiteBlogIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/_site': typeof SiteRouteWithChildren
+  '/_site/cart': typeof SiteCartRoute
+  '/_site/search': typeof SiteSearchRoute
   '/_site/shop': typeof SiteShopRoute
   '/_site/': typeof SiteIndexRoute
+  '/_site/blog/$slug': typeof SiteBlogSlugRoute
   '/_site/collections/$handle': typeof SiteCollectionsHandleRoute
   '/_site/product/$handle': typeof SiteProductHandleRoute
+  '/_site/blog/': typeof SiteBlogIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/shop' | '/collections/$handle' | '/product/$handle'
+  fullPaths:
+    | '/'
+    | '/cart'
+    | '/search'
+    | '/shop'
+    | '/blog/$slug'
+    | '/collections/$handle'
+    | '/product/$handle'
+    | '/blog/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/shop' | '/' | '/collections/$handle' | '/product/$handle'
+  to:
+    | '/cart'
+    | '/search'
+    | '/shop'
+    | '/'
+    | '/blog/$slug'
+    | '/collections/$handle'
+    | '/product/$handle'
+    | '/blog'
   id:
     | '__root__'
     | '/_site'
+    | '/_site/cart'
+    | '/_site/search'
     | '/_site/shop'
     | '/_site/'
+    | '/_site/blog/$slug'
     | '/_site/collections/$handle'
     | '/_site/product/$handle'
+    | '/_site/blog/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -94,11 +150,39 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SiteIndexRouteImport
       parentRoute: typeof SiteRoute
     }
+    '/_site/cart': {
+      id: '/_site/cart'
+      path: '/cart'
+      fullPath: '/cart'
+      preLoaderRoute: typeof SiteCartRouteImport
+      parentRoute: typeof SiteRoute
+    }
+    '/_site/search': {
+      id: '/_site/search'
+      path: '/search'
+      fullPath: '/search'
+      preLoaderRoute: typeof SiteSearchRouteImport
+      parentRoute: typeof SiteRoute
+    }
     '/_site/shop': {
       id: '/_site/shop'
       path: '/shop'
       fullPath: '/shop'
       preLoaderRoute: typeof SiteShopRouteImport
+      parentRoute: typeof SiteRoute
+    }
+    '/_site/blog/': {
+      id: '/_site/blog/'
+      path: '/blog'
+      fullPath: '/blog/'
+      preLoaderRoute: typeof SiteBlogIndexRouteImport
+      parentRoute: typeof SiteRoute
+    }
+    '/_site/blog/$slug': {
+      id: '/_site/blog/$slug'
+      path: '/blog/$slug'
+      fullPath: '/blog/$slug'
+      preLoaderRoute: typeof SiteBlogSlugRouteImport
       parentRoute: typeof SiteRoute
     }
     '/_site/collections/$handle': {
@@ -119,17 +203,25 @@ declare module '@tanstack/react-router' {
 }
 
 interface SiteRouteChildren {
+  SiteCartRoute: typeof SiteCartRoute
+  SiteSearchRoute: typeof SiteSearchRoute
   SiteShopRoute: typeof SiteShopRoute
   SiteIndexRoute: typeof SiteIndexRoute
+  SiteBlogSlugRoute: typeof SiteBlogSlugRoute
   SiteCollectionsHandleRoute: typeof SiteCollectionsHandleRoute
   SiteProductHandleRoute: typeof SiteProductHandleRoute
+  SiteBlogIndexRoute: typeof SiteBlogIndexRoute
 }
 
 const SiteRouteChildren: SiteRouteChildren = {
+  SiteCartRoute: SiteCartRoute,
+  SiteSearchRoute: SiteSearchRoute,
   SiteShopRoute: SiteShopRoute,
   SiteIndexRoute: SiteIndexRoute,
+  SiteBlogSlugRoute: SiteBlogSlugRoute,
   SiteCollectionsHandleRoute: SiteCollectionsHandleRoute,
   SiteProductHandleRoute: SiteProductHandleRoute,
+  SiteBlogIndexRoute: SiteBlogIndexRoute,
 }
 
 const SiteRouteWithChildren = SiteRoute._addFileChildren(SiteRouteChildren)
