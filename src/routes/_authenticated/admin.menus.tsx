@@ -103,6 +103,27 @@ function MenuRow({
             onChange={(e) => setDraft({ ...draft, column_group: e.target.value || null })}
           />
         </Field>
+        <Field label="Icon (Lucide name)">
+          <Input
+            placeholder="ShoppingBag"
+            value={String(draft["icon"] ?? "")}
+            onChange={(e) => setDraft({ ...draft, icon: e.target.value || null })}
+          />
+        </Field>
+        <Field label="Description (mega menu)">
+          <Input
+            value={String(draft["description"] ?? "")}
+            onChange={(e) => setDraft({ ...draft, description: e.target.value || null })}
+          />
+        </Field>
+        <Field label="Badge">
+          <Input
+            placeholder="New"
+            value={String(draft["badge"] ?? "")}
+            onChange={(e) => setDraft({ ...draft, badge: e.target.value || null })}
+          />
+        </Field>
+
         <div className="flex items-end gap-2">
           <div className="flex flex-col items-center">
             <Switch
