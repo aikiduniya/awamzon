@@ -35,7 +35,8 @@ export const WRITE_TABLES = [
 
 export type ReadTable = (typeof READ_TABLES)[number];
 export type WriteTable = (typeof WRITE_TABLES)[number];
-export type Row = Record<string, unknown>;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export type Row = Record<string, any>;
 
 function db(client: unknown): SupabaseClient {
   return client as SupabaseClient;
