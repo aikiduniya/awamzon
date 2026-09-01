@@ -58,10 +58,10 @@ function SectionBody({ section, config, products, posts, noProductsMessage }: Om
       return (
         <div className="grid items-center gap-10 md:grid-cols-2">
           <div className="space-y-6">
-            {str(d.eyebrow) ? (
+            {str(d['eyebrow']) ? (
               <span className="inline-flex items-center gap-1.5 rounded-full border bg-muted/60 px-3 py-1 text-xs font-medium">
                 <Sparkles className="size-3.5 text-primary" aria-hidden />
-                {str(d.eyebrow)}
+                {str(d['eyebrow'])}
               </span>
             ) : null}
             <h1 className="text-4xl font-semibold leading-[1.05] tracking-tight md:text-6xl">{str(d.heading)}</h1>
@@ -75,9 +75,9 @@ function SectionBody({ section, config, products, posts, noProductsMessage }: Om
                   </CmsLink>
                 </Button>
               )}
-              {str(d.secondaryButtonLabel) && (
+              {str(d['secondaryButtonLabel']) && (
                 <Button asChild size="lg" variant="outline">
-                  <CmsLink to={str(d.secondaryButtonLink, "/pages/about-us")}>{str(d.secondaryButtonLabel)}</CmsLink>
+                  <CmsLink to={str(d['secondaryButtonLink'], "/pages/about-us")}>{str(d['secondaryButtonLabel'])}</CmsLink>
                 </Button>
               )}
             </div>
@@ -115,8 +115,8 @@ function SectionBody({ section, config, products, posts, noProductsMessage }: Om
           <div className="flex flex-wrap items-end justify-between gap-3">
             <h2 className="text-3xl font-semibold tracking-tight">{str(d.heading, section.title ?? "Products")}</h2>
             <Button asChild variant="ghost" size="sm" className="gap-1">
-              <CmsLink to={str(d.linkTo, "/shop")}>
-                {str(d.linkLabel, "View all")}
+              <CmsLink to={str(d['linkTo'], "/shop")}>
+                {str(d['linkLabel'], "View all")}
                 <ArrowRight className="size-4" aria-hidden />
               </CmsLink>
             </Button>
