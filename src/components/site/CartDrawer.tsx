@@ -10,7 +10,9 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import { ShoppingBag, Minus, Plus, Trash2, ExternalLink, Loader2 } from "lucide-react";
+import { ShoppingBag, Minus, Plus, Trash2, Loader2 } from "lucide-react";
+import { CmsIcon } from "./Icon";
+import { useSiteButtons } from "@/hooks/useSiteButtons";
 import { useCartStore } from "@/stores/cartStore";
 import { formatMoney } from "@/lib/shopify";
 
@@ -21,6 +23,7 @@ interface Props {
 }
 
 export function CartDrawer({ emptyMessage, freeShippingThreshold = 0, showFreeShippingBar = false }: Props) {
+  const buttons = useSiteButtons();
   const { items, isLoading, isSyncing, isOpen, setOpen, updateQuantity, removeItem, getCheckoutUrl, syncCart } =
     useCartStore();
   const totalItems = items.reduce((sum, item) => sum + item.quantity, 0);
@@ -148,8 +151,8 @@ export function CartDrawer({ emptyMessage, freeShippingThreshold = 0, showFreeSh
                     <Loader2 className="w-4 h-4 animate-spin" />
                   ) : (
                     <>
-                      <ExternalLink className="w-4 h-4 mr-2" />
-                      Checkout with Shopify
+                      {buttons.showIcons ? <CmsIcon name={buttons.checkoutIcon} className="w-4 h-4 mr-2" /> : null}
+                      {buttons.checkoutLabel}
                     </>
                   )}
                 </Button>
