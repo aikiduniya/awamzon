@@ -63,7 +63,7 @@ function SettingsAdmin() {
       description="Store identity, header, footer, announcement bar, popups, chat widget, cookie banner, analytics, ads, social links and storefront copy."
     >
       {groupNames.length ? (
-        <Tabs defaultValue={groupNames[0]}>
+        <Tabs defaultValue={groupNames[0] ?? "general"}>
           <TabsList className="flex h-auto flex-wrap justify-start">
             {groupNames.map((g) => (
               <TabsTrigger key={g} value={g}>
