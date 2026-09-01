@@ -229,7 +229,7 @@ function SectionBody({ section, config, products, posts, noProductsMessage }: Om
     }
 
     case "spacer":
-      return <div style={{ height: str(d.height, "2rem") }} aria-hidden="true" />;
+      return <div style={{ height: str(d['height'], "2rem") }} aria-hidden="true" />;
 
     default:
       return null;

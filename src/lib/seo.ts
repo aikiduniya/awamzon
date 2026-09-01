@@ -17,9 +17,9 @@ export interface MetaInput {
   title: string;
   description: string;
   path: string;
-  image?: string;
-  type?: string;
-  robots?: string;
+  image?: string | undefined;
+  type?: string | undefined;
+  robots?: string | undefined;
 }
 
 export function buildMeta(settings: SettingsMap, input: MetaInput) {
