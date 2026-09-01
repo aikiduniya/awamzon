@@ -2,7 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { Sections } from "@/components/site/Sections";
 import { getBlogPosts, getSiteConfig } from "@/lib/cms.functions";
 import { fetchProducts } from "@/lib/shopify";
-import { buildMeta, jsonLd, seoDefaults } from "@/lib/seo";
+import { buildMeta, seoDefaults } from "@/lib/seo";
 import { group } from "@/lib/cms-types";
 
 export const Route = createFileRoute("/_site/")({
@@ -18,24 +18,12 @@ export const Route = createFileRoute("/_site/")({
   head: ({ loaderData }) => {
     if (!loaderData) return { meta: [{ title: "Home" }] };
     const seo = group(loaderData.config.settings, "seo", seoDefaults);
-    const store = group(loaderData.config.settings, "store", { name: "Store", tagline: "" });
-    const base = buildMeta(loaderData.config.settings, {
+    // Organization + WebSite JSON-LD is emitted once by the /_site layout.
+    return buildMeta(loaderData.config.settings, {
       title: seo.defaultTitle,
       description: seo.defaultDescription,
       path: "/",
     });
-    return {
-      ...base,
-      scripts: [
-        jsonLd({
-          "@context": "https://schema.org",
-          "@type": "WebSite",
-          name: store.name,
-          description: store.tagline,
-          url: "/",
-        }),
-      ],
-    };
   },
   component: Home,
 });

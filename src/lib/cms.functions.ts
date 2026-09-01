@@ -112,11 +112,19 @@ export const sendContactMessage = createServerFn({ method: "POST" })
     const message = String(data.message ?? "").trim();
     if (!name || name.length > 100) throw new Error("Please enter your name");
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) || email.length > 255) throw new Error("Invalid email address");
-    if (!message || message.length > 2000) throw new Error("Message must be 1-2000 characters");
+    if (!message || message.length > 10000) throw new Error("Message is too long");
     return { name, email, message, subject: String(data.subject ?? "").slice(0, 150) };
   })
   .handler(async ({ data }) => {
     const supabase = publicClient();
+    const { data: securityRow } = await supabase
+      .from("site_settings")
+      .select("value")
+      .eq("key", "security")
+      .maybeSingle();
+    const security = (securityRow?.value ?? {}) as Record<string, unknown>;
+    const maxLength = Number(security["maxContactMessageLength"] ?? 2000) || 2000;
+    if (data.message.length > maxLength) throw new Error(`Message must be under ${maxLength} characters`);
     const { error } = await supabase.from("contact_messages").insert(data);
     if (error) throw new Error("Could not send message");
     return { ok: true };
@@ -133,5 +141,11 @@ export const getSettings = createServerFn({ method: "GET" }).handler(async () =>
 export const getFaqs = createServerFn({ method: "GET" }).handler(async () => {
   const supabase = publicClient();
   const { data } = await supabase.from("faqs").select("*").eq("enabled", true).order("position");
+  return data ?? [];
+});
+
+export const getRedirects = createServerFn({ method: "GET" }).handler(async () => {
+  const supabase = publicClient();
+  const { data } = await supabase.from("redirects").select("from_path,to_path,status_code").eq("active", true);
   return data ?? [];
 });

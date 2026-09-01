@@ -5,9 +5,28 @@ import { useSettings } from "./admin.settings";
 export const Route = createFileRoute("/_authenticated/admin/seo")({ component: SeoAdmin });
 
 const KEYS: Array<{ key: string; title: string; description: string }> = [
-  { key: "seo", title: "Global SEO", description: "Titles, descriptions, keywords, OG/Twitter images and title templates." },
-  { key: "schema", title: "Structured data (JSON-LD)", description: "Toggle organization, website, product, article, FAQ and breadcrumb schema." },
-  { key: "robots", title: "robots.txt", description: "Served at /robots.txt for crawlers." },
+  {
+    key: "seo",
+    title: "Global SEO",
+    description:
+      "Titles, descriptions, keywords, OG/Twitter images, title templates, default robots directive, canonical base URL (used for canonical tags, Open Graph URLs and the sitemap) and search-engine verification codes.",
+  },
+  {
+    key: "schema",
+    title: "Structured data (JSON-LD)",
+    description:
+      "Toggle organization, website, product, article, FAQ and breadcrumb schema. Paste extra JSON-LD in “custom json ld” to inject it site-wide.",
+  },
+  {
+    key: "robots",
+    title: "robots.txt",
+    description: "Served live at /robots.txt. The sitemap line is appended automatically.",
+  },
+  {
+    key: "cache",
+    title: "Cache controls",
+    description: "Cache lifetimes for /sitemap.xml, /robots.txt and static assets.",
+  },
 ];
 
 function SeoAdmin() {
