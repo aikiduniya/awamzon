@@ -14,16 +14,435 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      activity_logs: {
+        Row: {
+          action: string
+          created_at: string
+          id: string
+          meta: Json
+          module: string
+          record: string | null
+          user_email: string | null
+          user_id: string | null
+        }
+        Insert: {
+          action: string
+          created_at?: string
+          id?: string
+          meta?: Json
+          module: string
+          record?: string | null
+          user_email?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          action?: string
+          created_at?: string
+          id?: string
+          meta?: Json
+          module?: string
+          record?: string | null
+          user_email?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      blog_posts: {
+        Row: {
+          author: string | null
+          category: string | null
+          content: string
+          cover_alt: string | null
+          cover_image: string | null
+          created_at: string
+          excerpt: string | null
+          id: string
+          published_at: string | null
+          seo: Json
+          slug: string
+          status: string
+          tags: string[]
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          author?: string | null
+          category?: string | null
+          content?: string
+          cover_alt?: string | null
+          cover_image?: string | null
+          created_at?: string
+          excerpt?: string | null
+          id?: string
+          published_at?: string | null
+          seo?: Json
+          slug: string
+          status?: string
+          tags?: string[]
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          author?: string | null
+          category?: string | null
+          content?: string
+          cover_alt?: string | null
+          cover_image?: string | null
+          created_at?: string
+          excerpt?: string | null
+          id?: string
+          published_at?: string | null
+          seo?: Json
+          slug?: string
+          status?: string
+          tags?: string[]
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      contact_messages: {
+        Row: {
+          created_at: string
+          email: string
+          id: string
+          message: string
+          name: string
+          status: string
+          subject: string | null
+        }
+        Insert: {
+          created_at?: string
+          email: string
+          id?: string
+          message: string
+          name: string
+          status?: string
+          subject?: string | null
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          id?: string
+          message?: string
+          name?: string
+          status?: string
+          subject?: string | null
+        }
+        Relationships: []
+      }
+      faqs: {
+        Row: {
+          answer: string
+          category: string | null
+          created_at: string
+          enabled: boolean
+          id: string
+          position: number
+          question: string
+        }
+        Insert: {
+          answer: string
+          category?: string | null
+          created_at?: string
+          enabled?: boolean
+          id?: string
+          position?: number
+          question: string
+        }
+        Update: {
+          answer?: string
+          category?: string | null
+          created_at?: string
+          enabled?: boolean
+          id?: string
+          position?: number
+          question?: string
+        }
+        Relationships: []
+      }
+      homepage_sections: {
+        Row: {
+          created_at: string
+          data: Json
+          enabled: boolean
+          ends_at: string | null
+          id: string
+          position: number
+          starts_at: string | null
+          title: string | null
+          type: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          data?: Json
+          enabled?: boolean
+          ends_at?: string | null
+          id?: string
+          position?: number
+          starts_at?: string | null
+          title?: string | null
+          type: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          data?: Json
+          enabled?: boolean
+          ends_at?: string | null
+          id?: string
+          position?: number
+          starts_at?: string | null
+          title?: string | null
+          type?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      media: {
+        Row: {
+          alt: string | null
+          caption: string | null
+          category: string | null
+          created_at: string
+          id: string
+          title: string | null
+          url: string
+        }
+        Insert: {
+          alt?: string | null
+          caption?: string | null
+          category?: string | null
+          created_at?: string
+          id?: string
+          title?: string | null
+          url: string
+        }
+        Update: {
+          alt?: string | null
+          caption?: string | null
+          category?: string | null
+          created_at?: string
+          id?: string
+          title?: string | null
+          url?: string
+        }
+        Relationships: []
+      }
+      menu_items: {
+        Row: {
+          column_group: string | null
+          created_at: string
+          enabled: boolean
+          id: string
+          label: string
+          location: string
+          position: number
+          url: string
+        }
+        Insert: {
+          column_group?: string | null
+          created_at?: string
+          enabled?: boolean
+          id?: string
+          label: string
+          location?: string
+          position?: number
+          url?: string
+        }
+        Update: {
+          column_group?: string | null
+          created_at?: string
+          enabled?: boolean
+          id?: string
+          label?: string
+          location?: string
+          position?: number
+          url?: string
+        }
+        Relationships: []
+      }
+      pages: {
+        Row: {
+          content: string
+          created_at: string
+          id: string
+          published_at: string | null
+          seo: Json
+          slug: string
+          status: string
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          content?: string
+          created_at?: string
+          id?: string
+          published_at?: string | null
+          seo?: Json
+          slug: string
+          status?: string
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          content?: string
+          created_at?: string
+          id?: string
+          published_at?: string | null
+          seo?: Json
+          slug?: string
+          status?: string
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          created_at: string
+          email: string | null
+          full_name: string | null
+          id: string
+        }
+        Insert: {
+          created_at?: string
+          email?: string | null
+          full_name?: string | null
+          id: string
+        }
+        Update: {
+          created_at?: string
+          email?: string | null
+          full_name?: string | null
+          id?: string
+        }
+        Relationships: []
+      }
+      redirects: {
+        Row: {
+          active: boolean
+          created_at: string
+          from_path: string
+          id: string
+          status_code: number
+          to_path: string
+        }
+        Insert: {
+          active?: boolean
+          created_at?: string
+          from_path: string
+          id?: string
+          status_code?: number
+          to_path: string
+        }
+        Update: {
+          active?: boolean
+          created_at?: string
+          from_path?: string
+          id?: string
+          status_code?: number
+          to_path?: string
+        }
+        Relationships: []
+      }
+      site_settings: {
+        Row: {
+          description: string | null
+          group_name: string
+          key: string
+          type: string
+          updated_at: string
+          value: Json
+        }
+        Insert: {
+          description?: string | null
+          group_name?: string
+          key: string
+          type?: string
+          updated_at?: string
+          value?: Json
+        }
+        Update: {
+          description?: string | null
+          group_name?: string
+          key?: string
+          type?: string
+          updated_at?: string
+          value?: Json
+        }
+        Relationships: []
+      }
+      subscribers: {
+        Row: {
+          created_at: string
+          email: string
+          id: string
+          source: string | null
+          status: string
+        }
+        Insert: {
+          created_at?: string
+          email: string
+          id?: string
+          source?: string | null
+          status?: string
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          id?: string
+          source?: string | null
+          status?: string
+        }
+        Relationships: []
+      }
+      user_roles: {
+        Row: {
+          created_at: string
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
+      is_admin: { Args: { _user_id: string }; Returns: boolean }
+      is_staff: { Args: { _user_id: string }; Returns: boolean }
     }
     Enums: {
-      [_ in never]: never
+      app_role:
+        | "super_admin"
+        | "admin"
+        | "editor"
+        | "seo_manager"
+        | "content_manager"
+        | "order_manager"
+        | "support_manager"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +569,16 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      app_role: [
+        "super_admin",
+        "admin",
+        "editor",
+        "seo_manager",
+        "content_manager",
+        "order_manager",
+        "support_manager",
+      ],
+    },
   },
 } as const
