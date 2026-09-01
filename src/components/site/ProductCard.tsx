@@ -180,10 +180,12 @@ export function ProductCard({
             "Out of stock"
           ) : (
             <>
-              <ShoppingBag className="size-4" aria-hidden /> Add to cart
+              {buttons.showIcons ? <CmsIcon name={buttons.addToCartIcon} className="size-4" /> : null}
+              {buttons.addToCartLabel}
             </>
           )}
         </Button>
+
       </div>
 
       {features?.quickView !== false ? (
