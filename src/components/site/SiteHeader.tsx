@@ -221,6 +221,18 @@ export function SiteHeader({ config }: { config: SiteConfig }) {
                 </Button>
               </form>
             )}
+            {header.showWishlist && (
+              <Button variant="ghost" size="icon" asChild aria-label="Wishlist" className="relative">
+                <Link to="/account">
+                  <Heart className="h-5 w-5" />
+                  {wishlistCount > 0 ? (
+                    <span className="absolute -right-0.5 -top-0.5 grid size-4 place-items-center rounded-full bg-primary text-[10px] font-semibold text-primary-foreground">
+                      {wishlistCount}
+                    </span>
+                  ) : null}
+                </Link>
+              </Button>
+            )}
             {header.showAccount && (
               <Button variant="ghost" size="icon" asChild aria-label="Account">
                 <Link to="/account">
@@ -228,6 +240,7 @@ export function SiteHeader({ config }: { config: SiteConfig }) {
                 </Link>
               </Button>
             )}
+
             {header.showCart && (
               <CartDrawer
                 emptyMessage={messages.emptyCart as string}
