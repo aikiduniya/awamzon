@@ -13,11 +13,11 @@ export const Route = createFileRoute("/_site/pages/$slug")({
     if (!loaderData) return { meta: [{ title: "Page unavailable" }, { name: "robots", content: "noindex" }] };
     const seo = (loaderData.page.seo ?? {}) as Record<string, string>;
     return buildMeta(loaderData.settings, {
-      title: seo.metaTitle || loaderData.page.title,
-      description: seo.metaDescription || `${loaderData.page.title} — read more.`,
+      title: seo['metaTitle'] || loaderData.page.title,
+      description: seo['metaDescription'] || `${loaderData.page.title} — read more.`,
       path: `/pages/${params.slug}`,
-      image: seo.ogImage,
-      robots: seo.robots,
+      image: seo['ogImage'],
+      robots: seo['robots'],
     });
   },
   notFoundComponent: () => (

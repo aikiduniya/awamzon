@@ -6,7 +6,7 @@ import { buildMeta } from "@/lib/seo";
 import { group } from "@/lib/cms-types";
 
 export const Route = createFileRoute("/_site/search")({
-  validateSearch: (search: Record<string, unknown>) => ({ q: String(search.q ?? "") }),
+  validateSearch: (search: Record<string, unknown>) => ({ q: String(search['q'] ?? "") }),
   loaderDeps: ({ search }) => ({ q: search.q }),
   loader: async ({ deps }) => {
     const settings = await getSettings();

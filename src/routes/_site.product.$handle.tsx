@@ -84,7 +84,7 @@ function ProductPage() {
   const addItem = useCartStore((s) => s.addItem);
   const isLoading = useCartStore((s) => s.isLoading);
   const setOpen = useCartStore((s) => s.setOpen);
-  const messages = group(settings, "messages", {});
+  const messages = group(settings, "messages", { shippingNote: "" });
 
   const handleAdd = async () => {
     if (!variant) return;

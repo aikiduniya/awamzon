@@ -14,18 +14,18 @@ export const Route = createFileRoute("/_site/blog/$slug")({
     if (!loaderData) return { meta: [{ title: "Article unavailable" }, { name: "robots", content: "noindex" }] };
     const seo = group(loaderData.settings, "seo", seoDefaults);
     const custom = (loaderData.post.seo ?? {}) as Record<string, string>;
-    const title = custom.metaTitle || applyTemplate(seo.titleTemplateBlog, {
+    const title = custom['metaTitle'] || applyTemplate(seo.titleTemplateBlog, {
       post_title: loaderData.post.title,
       site_name: seo.siteTitle,
     });
-    const description = custom.metaDescription || loaderData.post.excerpt || seo.defaultDescription;
+    const description = custom['metaDescription'] || loaderData.post.excerpt || seo.defaultDescription;
     const base = buildMeta(loaderData.settings, {
       title,
       description,
       path: `/blog/${params.slug}`,
       image: loaderData.post.cover_image ?? undefined,
       type: "article",
-      robots: custom.robots,
+      robots: custom['robots'],
     });
     return {
       ...base,
