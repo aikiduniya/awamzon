@@ -8,6 +8,27 @@
       "when": 1788283979500,
       "tag": "0000_cms_foundation",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1788286051954,
+      "tag": "0001_harden_staff_role_checks",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1788286066160,
+      "tag": "0002_include_all_staff_roles",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1788286081595,
+      "tag": "0003_lock_trigger_function_execute",
+      "breakpoints": true
     }
   ]
 }

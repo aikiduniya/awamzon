@@ -54,6 +54,7 @@ const NAV: Array<{ group: string; items: Array<{ to: string; label: string }> }>
     items: [
       { to: "/admin/seo", label: "SEO manager" },
       { to: "/admin/redirects", label: "Redirects" },
+      { to: "/admin/security", label: "Security & performance" },
     ],
   },
   {
