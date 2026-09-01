@@ -103,7 +103,8 @@ export function HeroSlider({
                     aria-hidden
                   />
 
-                  <div className="container-site relative flex h-full items-center">
+                  <div className="container-site relative flex h-full items-center px-6 sm:px-10 lg:px-16">
+
                     <div
                       className={cn(
                         "max-w-xl space-y-5",
