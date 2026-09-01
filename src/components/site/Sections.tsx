@@ -9,18 +9,15 @@ import {
   ArrowRight,
   Mail,
 } from "lucide-react";
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@/components/ui/accordion";
 import { Button } from "@/components/ui/button";
 import { CmsLink } from "./CmsLink";
+import { CmsIcon } from "./Icon";
+import { FaqAccordion } from "./FaqAccordion";
 import { ProductCard, type ProductCardFeatures } from "./ProductCard";
 import { ProductCarousel } from "./ProductCarousel";
 import { HeroSlider, type HeroSlide } from "./HeroSlider";
 import { NewsletterForm } from "./NewsletterForm";
+
 import { group, type HomepageSection, type SiteConfig } from "@/lib/cms-types";
 import type { ShopifyCollection, ShopifyProduct } from "@/lib/shopify";
 
