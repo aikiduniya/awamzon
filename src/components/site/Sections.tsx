@@ -17,10 +17,12 @@ import {
 } from "@/components/ui/accordion";
 import { Button } from "@/components/ui/button";
 import { CmsLink } from "./CmsLink";
-import { ProductCard } from "./ProductCard";
+import { ProductCard, type ProductCardFeatures } from "./ProductCard";
+import { ProductCarousel } from "./ProductCarousel";
+import { HeroSlider, type HeroSlide } from "./HeroSlider";
 import { NewsletterForm } from "./NewsletterForm";
-import type { HomepageSection, SiteConfig } from "@/lib/cms-types";
-import type { ShopifyProduct } from "@/lib/shopify";
+import { group, type HomepageSection, type SiteConfig } from "@/lib/cms-types";
+import type { ShopifyCollection, ShopifyProduct } from "@/lib/shopify";
 
 interface Props {
   sections: HomepageSection[];
@@ -28,32 +30,210 @@ interface Props {
   products: ShopifyProduct[];
   posts: Array<{ id: string; slug: string; title: string; excerpt: string | null; cover_image: string | null }>;
   noProductsMessage: string;
+  collections?: ShopifyCollection[];
 }
 
 const str = (v: unknown, fallback = "") => (typeof v === "string" ? v : fallback);
+const FULL_BLEED = new Set(["hero_slider"]);
 
-export function Sections({ sections, config, products, posts, noProductsMessage }: Props) {
+/** Select products for a section: filter by tag/vendor/type keyword, then limit. */
+function pickProducts(products: ShopifyProduct[], d: Record<string, unknown>) {
+  const tag = str(d['tag']).trim().toLowerCase();
+  const limit = Number(d['count'] ?? d['limit'] ?? 8);
+  let list = products;
+  if (tag) {
+    const tagged = products.filter((p) => (p.node.tags ?? []).some((t) => t.toLowerCase() === tag));
+    if (tagged.length > 0) list = tagged;
+  }
+  if (str(d['sort']) === "price-asc") {
+    list = [...list].sort(
+      (a, b) =>
+        parseFloat(a.node.priceRange.minVariantPrice.amount) - parseFloat(b.node.priceRange.minVariantPrice.amount),
+    );
+  }
+  if (str(d['sort']) === "price-desc") {
+    list = [...list].sort(
+      (a, b) =>
+        parseFloat(b.node.priceRange.minVariantPrice.amount) - parseFloat(a.node.priceRange.minVariantPrice.amount),
+    );
+  }
+  return list.slice(0, Number.isFinite(limit) && limit > 0 ? limit : 8);
+}
+
+export function Sections({ sections, config, products, posts, noProductsMessage, collections = [] }: Props) {
   return (
     <>
-      {sections.map((section) => (
-        <section key={section.id} className="container-site" style={{ paddingBlock: "var(--section-spacing)" }}>
-          <SectionBody
-            section={section}
-            config={config}
-            products={products}
-            posts={posts}
-            noProductsMessage={noProductsMessage}
-          />
-        </section>
-      ))}
+      {sections.map((section) => {
+        const full = FULL_BLEED.has(section.type);
+        return (
+          <section
+            key={section.id}
+            className={full ? undefined : "container-site"}
+            style={full ? undefined : { paddingBlock: "var(--section-spacing)" }}
+          >
+            <SectionBody
+              section={section}
+              config={config}
+              products={products}
+              posts={posts}
+              collections={collections}
+              noProductsMessage={noProductsMessage}
+            />
+          </section>
+        );
+      })}
     </>
   );
 }
 
-function SectionBody({ section, config, products, posts, noProductsMessage }: Omit<Props, "sections"> & { section: HomepageSection }) {
+function SectionBody({
+  section,
+  config,
+  products,
+  posts,
+  noProductsMessage,
+  collections = [],
+}: Omit<Props, "sections"> & { section: HomepageSection }) {
   const d = section.data ?? {};
+  const flags = group(config.settings, "features", { wishlist: true, quickView: true });
+  const features: ProductCardFeatures = {
+    wishlist: flags.wishlist !== false,
+    quickView: flags.quickView !== false,
+  };
 
   switch (section.type) {
+    case "hero_slider": {
+      const slides = Array.isArray(d['slides']) ? (d['slides'] as unknown as HeroSlide[]) : [];
+      return (
+        <HeroSlider
+          slides={slides}
+          autoplay={d['autoplay'] !== false}
+          autoplayDelay={Number(d['autoplayDelay'] ?? 6000)}
+        />
+      );
+    }
+
+    case "product_carousel":
+      return (
+        <ProductCarousel
+          products={pickProducts(products, d)}
+          eyebrow={str(d['eyebrow'])}
+          heading={str(d.heading, section.title ?? "Products")}
+          subheading={str(d['subheading'])}
+          linkTo={str(d['linkTo'], "/shop")}
+          linkLabel={str(d['linkLabel'], "View all")}
+          autoplay={d['autoplay'] === true}
+          autoplayDelay={Number(d['autoplayDelay'] ?? 4500)}
+          features={features}
+          emptyMessage={noProductsMessage}
+        />
+      );
+
+    case "featured_collections": {
+      const configured = Array.isArray(d['items'])
+        ? (d['items'] as unknown as Array<{ handle: string; title?: string; image?: string; text?: string }>)
+        : [];
+      const items =
+        configured.length > 0
+          ? configured.map((item) => {
+              const match = collections.find((c) => c.handle === item.handle);
+              return {
+                handle: item.handle,
+                title: item.title ?? match?.title ?? item.handle,
+                text: item.text ?? match?.description ?? "",
+                image: item.image ?? match?.image?.url ?? "",
+              };
+            })
+          : collections.slice(0, Number(d['limit'] ?? 3)).map((c) => ({
+              handle: c.handle,
+              title: c.title,
+              text: c.description,
+              image: c.image?.url ?? "",
+            }));
+      if (items.length === 0) return null;
+      return (
+        <div className="space-y-6">
+          <div className="flex flex-wrap items-end justify-between gap-3">
+            <div className="space-y-1">
+              {str(d['eyebrow']) ? (
+                <p className="text-xs font-semibold uppercase tracking-[0.18em] text-primary">{str(d['eyebrow'])}</p>
+              ) : null}
+              <h2 className="text-3xl font-semibold tracking-tight">{str(d.heading, "Shop by collection")}</h2>
+            </div>
+            <Button asChild variant="ghost" size="sm" className="gap-1">
+              <CmsLink to="/shop">
+                Browse all <ArrowRight className="size-4" aria-hidden />
+              </CmsLink>
+            </Button>
+          </div>
+          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {items.map((item) => (
+              <CmsLink
+                key={item.handle}
+                to={`/collections/${item.handle}`}
+                className="group relative block aspect-[4/5] overflow-hidden rounded-2xl bg-muted"
+              >
+                {item.image ? (
+                  <img
+                    src={item.image}
+                    alt={item.title}
+                    loading="lazy"
+                    className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+                  />
+                ) : null}
+                <span className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/20 to-transparent" aria-hidden />
+                <span className="absolute inset-x-0 bottom-0 p-6 text-white">
+                  <span className="block text-xl font-semibold">{item.title}</span>
+                  {item.text ? <span className="mt-1 line-clamp-2 block text-sm opacity-85">{item.text}</span> : null}
+                  <span className="mt-3 inline-flex items-center gap-1 text-sm font-medium">
+                    Shop now <ArrowRight className="size-4 transition-transform group-hover:translate-x-1" aria-hidden />
+                  </span>
+                </span>
+              </CmsLink>
+            ))}
+          </div>
+        </div>
+      );
+    }
+
+    case "banner_grid": {
+      const items = Array.isArray(d['items'])
+        ? (d['items'] as unknown as Array<{ heading: string; text?: string; image?: string; link?: string; buttonLabel?: string }>)
+        : [];
+      if (items.length === 0) return null;
+      return (
+        <div className="grid gap-6 md:grid-cols-2">
+          {items.map((item, i) => (
+            <CmsLink
+              key={i}
+              to={item.link ?? "/shop"}
+              className="group relative flex min-h-[280px] flex-col justify-end overflow-hidden rounded-2xl bg-muted p-8"
+            >
+              {item.image ? (
+                <img
+                  src={item.image}
+                  alt=""
+                  loading="lazy"
+                  aria-hidden
+                  className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+                />
+              ) : null}
+              <span className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" aria-hidden />
+              <span className="relative text-white">
+                <span className="block text-2xl font-semibold tracking-tight">{item.heading}</span>
+                {item.text ? <span className="mt-1 block text-sm opacity-90">{item.text}</span> : null}
+                <span className="mt-4 inline-flex items-center gap-1.5 rounded-full bg-white px-4 py-2 text-sm font-medium text-black">
+                  {item.buttonLabel ?? "Shop now"}
+                  <ArrowRight className="size-4" aria-hidden />
+                </span>
+              </span>
+            </CmsLink>
+          ))}
+        </div>
+      );
+    }
+
+
     case "hero":
       return (
         <div className="grid items-center gap-10 md:grid-cols-2">
