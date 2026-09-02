@@ -29,6 +29,7 @@ import { Route as AuthenticatedAdminBlogRouteImport } from './routes/_authentica
 import { Route as AuthenticatedAdminCurrencyRouteImport } from './routes/_authenticated/admin.currency'
 import { Route as AuthenticatedAdminFaqRouteImport } from './routes/_authenticated/admin.faq'
 import { Route as AuthenticatedAdminHomepageRouteImport } from './routes/_authenticated/admin.homepage'
+import { Route as AuthenticatedAdminIntegrationsRouteImport } from './routes/_authenticated/admin.integrations'
 import { Route as AuthenticatedAdminMediaRouteImport } from './routes/_authenticated/admin.media'
 import { Route as AuthenticatedAdminMenusRouteImport } from './routes/_authenticated/admin.menus'
 import { Route as AuthenticatedAdminMessagesRouteImport } from './routes/_authenticated/admin.messages'
@@ -150,6 +151,12 @@ const AuthenticatedAdminHomepageRoute =
   AuthenticatedAdminHomepageRouteImport.update({
     id: '/homepage',
     path: '/homepage',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
+const AuthenticatedAdminIntegrationsRoute =
+  AuthenticatedAdminIntegrationsRouteImport.update({
+    id: '/integrations',
+    path: '/integrations',
     getParentRoute: () => AuthenticatedAdminRoute,
   } as any)
 const AuthenticatedAdminMediaRoute = AuthenticatedAdminMediaRouteImport.update({
@@ -283,6 +290,7 @@ export interface FileRoutesByFullPath {
   '/admin/currency': typeof AuthenticatedAdminCurrencyRoute
   '/admin/faq': typeof AuthenticatedAdminFaqRoute
   '/admin/homepage': typeof AuthenticatedAdminHomepageRoute
+  '/admin/integrations': typeof AuthenticatedAdminIntegrationsRoute
   '/admin/media': typeof AuthenticatedAdminMediaRoute
   '/admin/menus': typeof AuthenticatedAdminMenusRoute
   '/admin/messages': typeof AuthenticatedAdminMessagesRoute
@@ -323,6 +331,7 @@ export interface FileRoutesByTo {
   '/admin/currency': typeof AuthenticatedAdminCurrencyRoute
   '/admin/faq': typeof AuthenticatedAdminFaqRoute
   '/admin/homepage': typeof AuthenticatedAdminHomepageRoute
+  '/admin/integrations': typeof AuthenticatedAdminIntegrationsRoute
   '/admin/media': typeof AuthenticatedAdminMediaRoute
   '/admin/menus': typeof AuthenticatedAdminMenusRoute
   '/admin/messages': typeof AuthenticatedAdminMessagesRoute
@@ -367,6 +376,7 @@ export interface FileRoutesById {
   '/_authenticated/admin/currency': typeof AuthenticatedAdminCurrencyRoute
   '/_authenticated/admin/faq': typeof AuthenticatedAdminFaqRoute
   '/_authenticated/admin/homepage': typeof AuthenticatedAdminHomepageRoute
+  '/_authenticated/admin/integrations': typeof AuthenticatedAdminIntegrationsRoute
   '/_authenticated/admin/media': typeof AuthenticatedAdminMediaRoute
   '/_authenticated/admin/menus': typeof AuthenticatedAdminMenusRoute
   '/_authenticated/admin/messages': typeof AuthenticatedAdminMessagesRoute
@@ -410,6 +420,7 @@ export interface FileRouteTypes {
     | '/admin/currency'
     | '/admin/faq'
     | '/admin/homepage'
+    | '/admin/integrations'
     | '/admin/media'
     | '/admin/menus'
     | '/admin/messages'
@@ -450,6 +461,7 @@ export interface FileRouteTypes {
     | '/admin/currency'
     | '/admin/faq'
     | '/admin/homepage'
+    | '/admin/integrations'
     | '/admin/media'
     | '/admin/menus'
     | '/admin/messages'
@@ -493,6 +505,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/currency'
     | '/_authenticated/admin/faq'
     | '/_authenticated/admin/homepage'
+    | '/_authenticated/admin/integrations'
     | '/_authenticated/admin/media'
     | '/_authenticated/admin/menus'
     | '/_authenticated/admin/messages'
@@ -667,6 +680,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminHomepageRouteImport
       parentRoute: typeof AuthenticatedAdminRoute
     }
+    '/_authenticated/admin/integrations': {
+      id: '/_authenticated/admin/integrations'
+      path: '/integrations'
+      fullPath: '/admin/integrations'
+      preLoaderRoute: typeof AuthenticatedAdminIntegrationsRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
     '/_authenticated/admin/media': {
       id: '/_authenticated/admin/media'
       path: '/media'
@@ -823,6 +843,7 @@ interface AuthenticatedAdminRouteChildren {
   AuthenticatedAdminCurrencyRoute: typeof AuthenticatedAdminCurrencyRoute
   AuthenticatedAdminFaqRoute: typeof AuthenticatedAdminFaqRoute
   AuthenticatedAdminHomepageRoute: typeof AuthenticatedAdminHomepageRoute
+  AuthenticatedAdminIntegrationsRoute: typeof AuthenticatedAdminIntegrationsRoute
   AuthenticatedAdminMediaRoute: typeof AuthenticatedAdminMediaRoute
   AuthenticatedAdminMenusRoute: typeof AuthenticatedAdminMenusRoute
   AuthenticatedAdminMessagesRoute: typeof AuthenticatedAdminMessagesRoute
@@ -845,6 +866,7 @@ const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
   AuthenticatedAdminCurrencyRoute: AuthenticatedAdminCurrencyRoute,
   AuthenticatedAdminFaqRoute: AuthenticatedAdminFaqRoute,
   AuthenticatedAdminHomepageRoute: AuthenticatedAdminHomepageRoute,
+  AuthenticatedAdminIntegrationsRoute: AuthenticatedAdminIntegrationsRoute,
   AuthenticatedAdminMediaRoute: AuthenticatedAdminMediaRoute,
   AuthenticatedAdminMenusRoute: AuthenticatedAdminMenusRoute,
   AuthenticatedAdminMessagesRoute: AuthenticatedAdminMessagesRoute,
