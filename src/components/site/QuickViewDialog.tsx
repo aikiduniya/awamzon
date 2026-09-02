@@ -4,7 +4,7 @@ import { ArrowRight, Loader2, Minus, Plus } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogTitle } from "@/components/ui/dialog";
-import { formatMoney, type ShopifyProduct } from "@/lib/shopify";
+import { type ShopifyProduct } from "@/lib/shopify";
 import { useMoney } from "@/lib/currency";
 import { CmsIcon } from "./Icon";
 import { useSiteButtons } from "@/hooks/useSiteButtons";

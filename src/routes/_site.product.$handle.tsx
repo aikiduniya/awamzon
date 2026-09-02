@@ -24,7 +24,7 @@ import { useSiteButtons } from "@/hooks/useSiteButtons";
 import { siteRouteApi } from "@/routes/_site";
 import { ProductCarousel } from "@/components/site/ProductCarousel";
 import { getSettings } from "@/lib/cms.functions";
-import { fetchProductByHandle, fetchProducts, formatMoney } from "@/lib/shopify";
+import { fetchProductByHandle, fetchProducts } from "@/lib/shopify";
 import { useMoney } from "@/lib/currency";
 import { applyTemplate, buildMeta, jsonLd, seoDefaults } from "@/lib/seo";
 import { group } from "@/lib/cms-types";

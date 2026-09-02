@@ -9,7 +9,6 @@ import { siteRouteApi } from "@/routes/_site";
 import { getSettings } from "@/lib/cms.functions";
 import { buildMeta } from "@/lib/seo";
 import { group } from "@/lib/cms-types";
-import { formatMoney } from "@/lib/shopify";
 import { useMoney } from "@/lib/currency";
 import { useCartStore } from "@/stores/cartStore";
 

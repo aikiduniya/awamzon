@@ -14,7 +14,6 @@ import { ShoppingBag, Minus, Plus, Trash2, Loader2 } from "lucide-react";
 import { CmsIcon } from "./Icon";
 import { useSiteButtons } from "@/hooks/useSiteButtons";
 import { useCartStore } from "@/stores/cartStore";
-import { formatMoney } from "@/lib/shopify";
 import { useMoney } from "@/lib/currency";
 
 interface Props {

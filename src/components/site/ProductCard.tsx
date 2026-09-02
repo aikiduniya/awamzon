@@ -8,7 +8,7 @@ import { CmsIcon } from "./Icon";
 import { useSiteButtons } from "@/hooks/useSiteButtons";
 import { useCartStore } from "@/stores/cartStore";
 import { useWishlistStore } from "@/stores/wishlistStore";
-import { formatMoney, type ShopifyProduct } from "@/lib/shopify";
+import { type ShopifyProduct } from "@/lib/shopify";
 import { useMoney } from "@/lib/currency";
 import { cn } from "@/lib/utils";
 
