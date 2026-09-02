@@ -112,20 +112,42 @@ async function removeLineFromShopifyCart(cartId: string, lineId: string) {
   return { success: true };
 }
 
+export interface AddItemResult {
+  ok: boolean;
+  error?: string;
+}
+
 interface CartStore {
   items: CartItem[];
   cartId: string | null;
   checkoutUrl: string | null;
+  /** Per-variant in-flight state so each product button has its own spinner. */
+  pending: Record<string, boolean>;
   isLoading: boolean;
   isSyncing: boolean;
   isOpen: boolean;
   setOpen: (open: boolean) => void;
-  addItem: (item: Omit<CartItem, "lineId">) => Promise<void>;
+  addItem: (item: Omit<CartItem, "lineId">) => Promise<AddItemResult>;
   updateQuantity: (variantId: string, quantity: number) => Promise<void>;
   removeItem: (variantId: string) => Promise<void>;
   clearCart: () => void;
   syncCart: () => Promise<void>;
   getCheckoutUrl: () => string | null;
+}
+
+/**
+ * All cart mutations run through one queue. Without this, two quick clicks on
+ * different products both see `cartId === null` and create two separate Shopify
+ * carts — the second one silently replacing the first.
+ */
+let mutationQueue: Promise<unknown> = Promise.resolve();
+function enqueue<T>(task: () => Promise<T>): Promise<T> {
+  const run = mutationQueue.then(task, task);
+  mutationQueue = run.then(
+    () => undefined,
+    () => undefined,
+  );
+  return run;
 }
 
 export const useCartStore = create<CartStore>()(
@@ -134,54 +156,83 @@ export const useCartStore = create<CartStore>()(
       items: [],
       cartId: null,
       checkoutUrl: null,
+      pending: {},
       isLoading: false,
       isSyncing: false,
       isOpen: false,
       setOpen: (open) => set({ isOpen: open }),
 
       addItem: async (item) => {
-        const { items, cartId, clearCart } = get();
-        const existingItem = items.find((i) => i.variantId === item.variantId);
-        set({ isLoading: true });
-        try {
-          if (!cartId) {
-            const result = await createShopifyCart({ ...item, lineId: null });
-            if (result) {
+        if (!item.variantId || !item.variantId.startsWith("gid://shopify/ProductVariant/")) {
+          return { ok: false, error: "This product has no valid variant to purchase." };
+        }
+        // Duplicate-click guard: same variant already being added.
+        if (get().pending[item.variantId]) return { ok: false, error: "Already adding…" };
+        set({ pending: { ...get().pending, [item.variantId]: true } });
+
+        const finish = (result: AddItemResult): AddItemResult => {
+          const next = { ...get().pending };
+          delete next[item.variantId];
+          set({ pending: next });
+          return result;
+        };
+
+        return enqueue(async () => {
+          try {
+            const startFresh = async (): Promise<AddItemResult> => {
+              const created = await createShopifyCart({ ...item, lineId: null });
+              if (!created) return { ok: false, error: "Could not start a checkout cart. Please try again." };
               set({
-                cartId: result.cartId,
-                checkoutUrl: result.checkoutUrl,
-                items: [{ ...item, lineId: result.lineId }],
+                cartId: created.cartId,
+                checkoutUrl: created.checkoutUrl,
+                items: [{ ...item, lineId: created.lineId }],
               });
+              return { ok: true };
+            };
+
+            const cartId = get().cartId;
+            if (!cartId) return finish(await startFresh());
+
+            const existingItem = get().items.find((i) => i.variantId === item.variantId);
+
+            if (existingItem?.lineId) {
+              const newQuantity = existingItem.quantity + item.quantity;
+              const result = await updateShopifyCartLine(cartId, existingItem.lineId, newQuantity);
+              if (result.success) {
+                set({
+                  items: get().items.map((i) =>
+                    i.variantId === item.variantId ? { ...i, quantity: newQuantity } : i,
+                  ),
+                });
+                return finish({ ok: true });
+              }
+              if (result.cartNotFound) {
+                get().clearCart();
+                return finish(await startFresh());
+              }
+              return finish({ ok: false, error: "Could not update the quantity." });
             }
-          } else if (existingItem) {
-            const newQuantity = existingItem.quantity + item.quantity;
-            if (!existingItem.lineId) return;
-            const result = await updateShopifyCartLine(cartId, existingItem.lineId, newQuantity);
-            if (result.success) {
-              const currentItems = get().items;
-              set({
-                items: currentItems.map((i) =>
-                  i.variantId === item.variantId ? { ...i, quantity: newQuantity } : i,
-                ),
-              });
-            } else if (result.cartNotFound) {
-              clearCart();
-            }
-          } else {
+
             const result = await addLineToShopifyCart(cartId, { ...item, lineId: null });
             if (result.success) {
-              const currentItems = get().items;
-              set({ items: [...currentItems, { ...item, lineId: result.lineId ?? null }] });
-            } else if (result.cartNotFound) {
-              clearCart();
+              set({ items: [...get().items, { ...item, lineId: result.lineId ?? null }] });
+              return finish({ ok: true });
             }
+            if (result.cartNotFound) {
+              get().clearCart();
+              return finish(await startFresh());
+            }
+            return finish({ ok: false, error: "This item could not be added. It may be out of stock." });
+          } catch (error) {
+            console.error("Failed to add item:", error);
+            return finish({
+              ok: false,
+              error: error instanceof Error ? error.message : "Could not add to cart.",
+            });
           }
-        } catch (error) {
-          console.error("Failed to add item:", error);
-        } finally {
-          set({ isLoading: false });
-        }
+        });
       },
+
 
       updateQuantity: async (variantId, quantity) => {
         if (quantity <= 0) {

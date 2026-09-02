@@ -8,7 +8,8 @@ import { CmsIcon } from "./Icon";
 import { useSiteButtons } from "@/hooks/useSiteButtons";
 import { useCartStore } from "@/stores/cartStore";
 import { useWishlistStore } from "@/stores/wishlistStore";
-import { formatMoney, type ShopifyProduct } from "@/lib/shopify";
+import { type ShopifyProduct } from "@/lib/shopify";
+import { useMoney } from "@/lib/currency";
 import { cn } from "@/lib/utils";
 
 export interface ProductCardFeatures {
@@ -26,11 +27,13 @@ export function ProductCard({
   priority?: boolean | undefined;
 }) {
   const addItem = useCartStore((s) => s.addItem);
-  const isLoading = useCartStore((s) => s.isLoading);
+  const pending = useCartStore((s) => s.pending);
   const setOpen = useCartStore((s) => s.setOpen);
+
   const toggleWish = useWishlistStore((s) => s.toggle);
   const wishHandles = useWishlistStore((s) => s.handles);
   const [quickOpen, setQuickOpen] = useState(false);
+  const money = useMoney();
   const buttons = useSiteButtons();
 
   const node = product.node;
@@ -47,9 +50,11 @@ export function ProductCard({
       ? Math.round((1 - parseFloat(variant.price.amount) / parseFloat(compareAt.amount)) * 100)
       : 0;
 
+  const adding = variant ? Boolean(pending[variant.id]) : false;
+
   const handleAddToCart = async () => {
-    if (!variant) return;
-    await addItem({
+    if (!variant || adding) return;
+    const result = await addItem({
       product,
       variantId: variant.id,
       variantTitle: variant.title,
@@ -57,9 +62,14 @@ export function ProductCard({
       quantity: 1,
       selectedOptions: variant.selectedOptions ?? [],
     });
+    if (!result.ok) {
+      toast.error(result.error ?? "Could not add to cart", { position: "top-center" });
+      return;
+    }
     toast.success(`${node.title} added to cart`, { position: "top-center" });
     setOpen(true);
   };
+
 
   return (
     <article className="group relative flex h-full flex-col overflow-hidden rounded-2xl border bg-card transition-all duration-300 hover:-translate-y-1 hover:border-primary/30 hover:shadow-xl">
@@ -158,11 +168,11 @@ export function ProductCard({
         </Link>
         <div className="mt-2 flex items-baseline gap-2">
           <span className="font-semibold">
-            {formatMoney(node.priceRange.minVariantPrice.amount, node.priceRange.minVariantPrice.currencyCode)}
+            {money(node.priceRange.minVariantPrice.amount, node.priceRange.minVariantPrice.currencyCode)}
           </span>
           {discount > 0 && compareAt ? (
             <span className="text-sm text-muted-foreground line-through">
-              {formatMoney(compareAt.amount, compareAt.currencyCode)}
+              {money(compareAt.amount, compareAt.currencyCode)}
             </span>
           ) : null}
         </div>
@@ -173,11 +183,11 @@ export function ProductCard({
         ) : null}
         <Button
           onClick={handleAddToCart}
-          disabled={isLoading || !variant || soldOut}
+          disabled={adding || !variant || soldOut}
           variant="secondary"
           className="mt-4 w-full gap-1.5"
         >
-          {isLoading ? (
+          {adding ? (
             <Loader2 className="size-4 animate-spin" />
           ) : soldOut ? (
             "Out of stock"

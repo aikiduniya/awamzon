@@ -24,7 +24,8 @@ import { useSiteButtons } from "@/hooks/useSiteButtons";
 import { siteRouteApi } from "@/routes/_site";
 import { ProductCarousel } from "@/components/site/ProductCarousel";
 import { getSettings } from "@/lib/cms.functions";
-import { fetchProductByHandle, fetchProducts, formatMoney } from "@/lib/shopify";
+import { fetchProductByHandle, fetchProducts } from "@/lib/shopify";
+import { useMoney } from "@/lib/currency";
 import { applyTemplate, buildMeta, jsonLd, seoDefaults } from "@/lib/seo";
 import { group } from "@/lib/cms-types";
 import { useCartStore } from "@/stores/cartStore";
@@ -102,12 +103,13 @@ function ProductPage() {
   const [variantId, setVariantId] = useState(variants.find((v) => v.availableForSale)?.id ?? variants[0]?.id);
   const [activeImage, setActiveImage] = useState(0);
   const [qty, setQty] = useState(1);
+  const money = useMoney();
   const buttons = useSiteButtons();
   const siteConfig = siteRouteApi.useLoaderData();
   const [zoomOpen, setZoomOpen] = useState(false);
   const variant = variants.find((v) => v.id === variantId) ?? variants[0];
   const addItem = useCartStore((s) => s.addItem);
-  const isLoading = useCartStore((s) => s.isLoading);
+  const pendingMap = useCartStore((s) => s.pending);
   const setOpen = useCartStore((s) => s.setOpen);
   const getCheckoutUrl = useCartStore((s) => s.getCheckoutUrl);
   const toggleWish = useWishlistStore((s) => s.toggle);
@@ -122,10 +124,11 @@ function ProductPage() {
       ? Math.round((1 - parseFloat(variant.price.amount) / parseFloat(compareAt.amount)) * 100)
       : 0;
   const stock = variant?.quantityAvailable ?? null;
+  const adding = variant ? Boolean(pendingMap[variant.id]) : false;
 
   const addToCart = async () => {
-    if (!variant) return;
-    await addItem({
+    if (!variant) return false;
+    const result = await addItem({
       product,
       variantId: variant.id,
       variantTitle: variant.title,
@@ -133,20 +136,26 @@ function ProductPage() {
       quantity: qty,
       selectedOptions: variant.selectedOptions ?? [],
     });
+    if (!result.ok) {
+      toast.error(result.error ?? "Could not add to cart", { position: "top-center" });
+      return false;
+    }
+    return true;
   };
 
   const handleAdd = async () => {
-    await addToCart();
+    if (!(await addToCart())) return;
     toast.success("Added to cart", { position: "top-center" });
     setOpen(true);
   };
 
   const handleBuyNow = async () => {
-    await addToCart();
+    if (!(await addToCart())) return;
     const url = getCheckoutUrl();
     if (url) window.open(url, "_blank");
     else toast.error("Checkout is unavailable right now", { position: "top-center" });
   };
+
 
   return (
     <div className="container-site py-10">
@@ -227,12 +236,12 @@ function ProductPage() {
 
           <div className="flex flex-wrap items-baseline gap-3">
             <span className="text-3xl font-semibold">
-              {variant ? formatMoney(variant.price.amount, variant.price.currencyCode) : "—"}
+              {variant ? money(variant.price.amount, variant.price.currencyCode) : "—"}
             </span>
             {discount > 0 && compareAt ? (
               <>
                 <span className="text-lg text-muted-foreground line-through">
-                  {formatMoney(compareAt.amount, compareAt.currencyCode)}
+                  {money(compareAt.amount, compareAt.currencyCode)}
                 </span>
                 <span className="rounded-full bg-primary/10 px-2.5 py-1 text-xs font-semibold text-primary">
                   Save {discount}%
@@ -291,9 +300,9 @@ function ProductPage() {
               size="lg"
               className="flex-1 gap-1.5"
               onClick={handleAdd}
-              disabled={isLoading || !variant?.availableForSale}
+              disabled={adding || !variant?.availableForSale}
             >
-              {isLoading ? (
+              {adding ? (
                 <Loader2 className="size-4 animate-spin" />
               ) : buttons.showIcons ? (
                 <CmsIcon name={buttons.addToCartIcon} className="size-4" />
@@ -320,7 +329,7 @@ function ProductPage() {
             variant="secondary"
             className="w-full gap-1.5"
             onClick={handleBuyNow}
-            disabled={isLoading || !variant?.availableForSale}
+            disabled={adding || !variant?.availableForSale}
           >
             {buttons.showIcons ? <CmsIcon name={buttons.buyNowIcon} className="size-4" /> : null}
             {buttons.buyNowLabel}

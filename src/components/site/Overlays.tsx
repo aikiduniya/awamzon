@@ -60,21 +60,35 @@ export function ChatWidget({ config }: { config: SiteConfig }) {
     message: "",
     position: "right",
     color: "oklch(0.6 0.15 150)",
+    label: "",
+    showOnAllPages: true,
+    hideOnPaths: "",
   });
   const features = group(config.settings, "features", { chatWidget: false });
-  if (!chat.enabled || !features.chatWidget || !chat.number) return null;
+  const [path, setPath] = useState("/");
+  useEffect(() => setPath(window.location.pathname), []);
 
-  const href = `https://wa.me/${String(chat.number).replace(/\D/g, "")}?text=${encodeURIComponent(String(chat.message))}`;
+  if (!chat.enabled || !features.chatWidget || !chat.number) return null;
+  if (chat.showOnAllPages === false && path !== "/") return null;
+  const hidden = String(chat.hideOnPaths ?? "")
+    .split(",")
+    .map((p) => p.trim())
+    .filter(Boolean);
+  if (hidden.some((p) => path.startsWith(p))) return null;
+
+  const digits = String(chat.number).replace(/\D/g, "");
+  const href = `https://wa.me/${digits}?text=${encodeURIComponent(String(chat.message))}`;
   return (
     <a
       href={href}
       target="_blank"
       rel="noopener noreferrer"
       aria-label="Chat on WhatsApp"
-      className={`fixed bottom-5 ${chat.position === "left" ? "left-5" : "right-5"} z-40 flex h-12 w-12 items-center justify-center rounded-full shadow-lg`}
+      className={`fixed bottom-5 ${chat.position === "left" ? "left-5" : "right-5"} z-40 flex h-12 items-center gap-2 rounded-full px-3.5 shadow-lg transition-transform hover:scale-105`}
       style={{ background: chat.color as string }}
     >
       <MessageCircle className="h-6 w-6 text-white" />
+      {chat.label ? <span className="pr-1 text-sm font-medium text-white">{String(chat.label)}</span> : null}
     </a>
   );
 }
@@ -185,6 +199,64 @@ export function AnalyticsScripts({ config }: { config: SiteConfig }) {
     document.head.appendChild(s);
     return () => s.remove();
   }, [ads, features.ads]);
+
+  return null;
+}
+
+/** Injects Admin → Custom code snippets into head / body-start / body-end. */
+export function CustomCodeInjector({ config }: { config: SiteConfig }) {
+  const code = group(config.settings, "custom_code", {
+    enabled: false,
+    label: "",
+    head: "",
+    bodyStart: "",
+    bodyEnd: "",
+    pages: "*",
+    devices: "all",
+  });
+
+  useEffect(() => {
+    if (!code.enabled) return;
+
+    const pages = String(code.pages ?? "*").trim();
+    if (pages && pages !== "*") {
+      const allowed = pages
+        .split(",")
+        .map((p) => p.trim().replace(/\/+$/, "") || "/")
+        .filter(Boolean);
+      const current = window.location.pathname.replace(/\/+$/, "") || "/";
+      const matches = allowed.some((p) => (p.endsWith("*") ? current.startsWith(p.slice(0, -1)) : p === current));
+      if (!matches) return;
+    }
+
+    const devices = String(code.devices ?? "all");
+    const isMobile = window.matchMedia("(max-width: 767px)").matches;
+    if (devices === "mobile" && !isMobile) return;
+    if (devices === "desktop" && isMobile) return;
+
+    const mounted: Element[] = [];
+    const inject = (html: string, target: Element, position: InsertPosition) => {
+      if (!html.trim()) return;
+      const holder = document.createElement("div");
+      holder.setAttribute("data-cms-custom-code", "");
+      holder.innerHTML = html;
+      // Inline <script> tags inserted via innerHTML never execute — recreate them.
+      holder.querySelectorAll("script").forEach((old) => {
+        const fresh = document.createElement("script");
+        for (const attr of Array.from(old.attributes)) fresh.setAttribute(attr.name, attr.value);
+        fresh.text = old.text;
+        old.replaceWith(fresh);
+      });
+      target.insertAdjacentElement(position, holder);
+      mounted.push(holder);
+    };
+
+    inject(String(code.head ?? ""), document.head, "beforeend");
+    inject(String(code.bodyStart ?? ""), document.body, "afterbegin");
+    inject(String(code.bodyEnd ?? ""), document.body, "beforeend");
+
+    return () => mounted.forEach((el) => el.remove());
+  }, [code.enabled, code.head, code.bodyStart, code.bodyEnd, code.pages, code.devices]);
 
   return null;
 }
