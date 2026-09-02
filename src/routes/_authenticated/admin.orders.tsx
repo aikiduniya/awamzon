@@ -2,7 +2,8 @@ import { useEffect, useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { ExternalLink, Info, Receipt, ShieldCheck, Users } from "lucide-react";
 import { adminList, type Row } from "@/lib/admin.functions";
-import { AdminPage, EmptyState } from "@/components/admin/AdminUI";
+import { AdminPage } from "@/components/admin/AdminUI";
+import { DataTable, type DataColumn } from "@/components/admin/DataTable";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -25,6 +26,113 @@ function OrdersAdmin() {
       () => setCustomers([]),
     );
   }, []);
+
+  const orderColumns: Array<DataColumn<Row>> = [
+    {
+      key: "order_number",
+      header: "Order",
+      value: (o) => String(o["order_number"] ?? ""),
+      render: (o) => (
+        <span className="font-medium">
+          {String(o["order_number"])}
+          {o["is_demo"] ? (
+            <Badge variant="outline" className="ml-2 h-5 text-[10px]">
+              demo
+            </Badge>
+          ) : null}
+        </span>
+      ),
+    },
+    {
+      key: "created_at",
+      header: "Date",
+      value: (o) => String(o["created_at"] ?? ""),
+      render: (o) => (
+        <span className="whitespace-nowrap text-muted-foreground">
+          {new Date(String(o["created_at"])).toLocaleDateString()}
+        </span>
+      ),
+    },
+    {
+      key: "customer_name",
+      header: "Customer",
+      value: (o) => String(o["customer_name"] ?? ""),
+      render: (o) => (
+        <div>
+          <span className="block">{String(o["customer_name"])}</span>
+          <span className="block text-xs text-muted-foreground">{String(o["customer_email"])}</span>
+        </div>
+      ),
+    },
+    {
+      key: "financial_status",
+      header: "Payment",
+      value: (o) => String(o["financial_status"] ?? ""),
+      render: (o) => <Pill value={String(o["financial_status"])} />,
+    },
+    {
+      key: "fulfillment_status",
+      header: "Fulfilment",
+      value: (o) => String(o["fulfillment_status"] ?? ""),
+      render: (o) => <Pill value={String(o["fulfillment_status"])} />,
+    },
+    { key: "channel", header: "Channel", hidden: true, value: (o) => String(o["channel"] ?? "") },
+    { key: "items", header: "Items", value: (o) => Number(o["items"] ?? 0) },
+    {
+      key: "total",
+      header: "Total",
+      className: "text-right",
+      value: (o) => Number(o["total"] ?? 0),
+      render: (o) => (
+        <span className="block text-right font-medium tabular-nums">
+          {money(Number(o["total"]), String(o["currency"] ?? "PKR"))}
+        </span>
+      ),
+    },
+  ];
+
+  const customerColumns: Array<DataColumn<Row>> = [
+    {
+      key: "name",
+      header: "Customer",
+      value: (c) => String(c["name"] ?? ""),
+      render: (c) => (
+        <div className="flex items-center gap-3">
+          <span className="grid size-9 shrink-0 place-items-center rounded-full bg-primary/10 text-xs font-semibold text-primary">
+            {String(c["name"]).slice(0, 2).toUpperCase()}
+          </span>
+          <div className="min-w-0">
+            <p className="truncate font-medium">{String(c["name"])}</p>
+            <p className="truncate text-xs text-muted-foreground">{String(c["email"])}</p>
+          </div>
+        </div>
+      ),
+    },
+    { key: "city", header: "City", value: (c) => String(c["city"] ?? "—") },
+    { key: "country", header: "Country", hidden: true, value: (c) => String(c["country"] ?? "—") },
+    { key: "orders_count", header: "Orders", value: (c) => Number(c["orders_count"] ?? 0) },
+    {
+      key: "total_spent",
+      header: "Total spent",
+      className: "text-right",
+      value: (c) => Number(c["total_spent"] ?? 0),
+      render: (c) => <span className="block text-right font-medium tabular-nums">{money(Number(c["total_spent"]))}</span>,
+    },
+    {
+      key: "tags",
+      header: "Tags",
+      value: (c) => ((c["tags"] as string[] | null) ?? []).join(", "),
+      render: (c) => (
+        <div className="flex flex-wrap gap-1">
+          {((c["tags"] as string[] | null) ?? []).map((t) => (
+            <Badge key={t} variant="outline" className="text-[10px]">
+              {t}
+            </Badge>
+          ))}
+        </div>
+      ),
+    },
+  ];
 
   return (
     <AdminPage
@@ -62,99 +170,60 @@ function OrdersAdmin() {
         </TabsList>
 
         <TabsContent value="orders" className="mt-4">
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-base">Orders</CardTitle>
-              <CardDescription>{orders.length} records</CardDescription>
-            </CardHeader>
-            <CardContent className="px-0">
-              {orders.length === 0 ? (
-                <div className="px-6">
-                  <EmptyState text="No orders to show" />
-                </div>
-              ) : (
-                <div className="overflow-x-auto">
-                  <table className="w-full text-sm">
-                    <thead>
-                      <tr className="border-y bg-muted/50 text-left text-xs uppercase tracking-wide text-muted-foreground">
-                        <th className="px-6 py-2.5 font-medium">Order</th>
-                        <th className="px-3 py-2.5 font-medium">Date</th>
-                        <th className="px-3 py-2.5 font-medium">Customer</th>
-                        <th className="px-3 py-2.5 font-medium">Payment</th>
-                        <th className="px-3 py-2.5 font-medium">Fulfilment</th>
-                        <th className="px-3 py-2.5 font-medium">Items</th>
-                        <th className="px-6 py-2.5 text-right font-medium">Total</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {orders.map((o) => (
-                        <tr key={String(o["id"])} className="border-b last:border-0 hover:bg-muted/40">
-                          <td className="px-6 py-3 font-medium">
-                            {String(o["order_number"])}
-                            {o["is_demo"] ? (
-                              <Badge variant="outline" className="ml-2 h-5 text-[10px]">
-                                demo
-                              </Badge>
-                            ) : null}
-                          </td>
-                          <td className="px-3 py-3 text-muted-foreground">
-                            {new Date(String(o["created_at"])).toLocaleDateString()}
-                          </td>
-                          <td className="px-3 py-3">
-                            <span className="block">{String(o["customer_name"])}</span>
-                            <span className="block text-xs text-muted-foreground">{String(o["customer_email"])}</span>
-                          </td>
-                          <td className="px-3 py-3">
-                            <Pill value={String(o["financial_status"])} />
-                          </td>
-                          <td className="px-3 py-3">
-                            <Pill value={String(o["fulfillment_status"])} />
-                          </td>
-                          <td className="px-3 py-3 tabular-nums">{String(o["items"])}</td>
-                          <td className="px-6 py-3 text-right font-medium tabular-nums">
-                            {money(Number(o["total"]), String(o["currency"] ?? "PKR"))}
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-              )}
-            </CardContent>
-          </Card>
+          <DataTable
+            rows={orders}
+            columns={orderColumns}
+            getId={(o) => String(o["id"])}
+            searchPlaceholder="Search orders…"
+            csvName="orders"
+            emptyText="No orders to show"
+            dateValue={(o) => String(o["created_at"] ?? "")}
+            filters={[
+              {
+                key: "financial_status",
+                label: "Payment",
+                options: [
+                  { value: "paid", label: "Paid" },
+                  { value: "pending", label: "Pending" },
+                  { value: "refunded", label: "Refunded" },
+                ],
+                match: (o, v) => String(o["financial_status"] ?? "") === v,
+              },
+              {
+                key: "fulfillment_status",
+                label: "Fulfilment",
+                options: [
+                  { value: "fulfilled", label: "Fulfilled" },
+                  { value: "unfulfilled", label: "Unfulfilled" },
+                  { value: "returned", label: "Returned" },
+                ],
+                match: (o, v) => String(o["fulfillment_status"] ?? "") === v,
+              },
+            ]}
+          />
         </TabsContent>
 
         <TabsContent value="customers" className="mt-4">
-          <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
-            {customers.length === 0 ? <EmptyState text="No customers to show" /> : null}
-            {customers.map((c) => (
-              <Card key={String(c["id"])}>
-                <CardContent className="flex items-start gap-3 p-5">
-                  <span className="grid size-11 shrink-0 place-items-center rounded-full bg-primary/10 text-sm font-semibold text-primary">
-                    {String(c["name"]).slice(0, 2).toUpperCase()}
-                  </span>
-                  <div className="min-w-0 flex-1">
-                    <p className="truncate font-medium">{String(c["name"])}</p>
-                    <p className="truncate text-xs text-muted-foreground">{String(c["email"])}</p>
-                    <p className="mt-2 text-sm">
-                      <span className="font-medium tabular-nums">{money(Number(c["total_spent"]))}</span>{" "}
-                      <span className="text-muted-foreground">· {String(c["orders_count"])} orders</span>
-                    </p>
-                    <div className="mt-2 flex flex-wrap gap-1">
-                      <Badge variant="secondary" className="text-[10px]">
-                        {String(c["city"] ?? "—")}
-                      </Badge>
-                      {((c["tags"] as string[] | null) ?? []).map((t) => (
-                        <Badge key={t} variant="outline" className="text-[10px]">
-                          {t}
-                        </Badge>
-                      ))}
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
+          <DataTable
+            rows={customers}
+            columns={customerColumns}
+            getId={(c) => String(c["id"])}
+            searchPlaceholder="Search customers…"
+            csvName="customers"
+            emptyText="No customers to show"
+            dateValue={(c) => String(c["created_at"] ?? "")}
+            filters={[
+              {
+                key: "city",
+                label: "Cities",
+                options: Array.from(new Set(customers.map((c) => String(c["city"] ?? "")).filter(Boolean))).map((c) => ({
+                  value: c,
+                  label: c,
+                })),
+                match: (c, v) => String(c["city"] ?? "") === v,
+              },
+            ]}
+          />
         </TabsContent>
 
         <TabsContent value="how" className="mt-4">
