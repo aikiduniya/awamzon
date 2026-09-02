@@ -60,7 +60,7 @@ export interface BulkAction<T> {
   label: string;
   destructive?: boolean;
   confirm?: string;
-  run: (rows: T[]) => void | Promise<void>;
+  run: (rows: T[]) => unknown;
 }
 
 interface Props<T> {
