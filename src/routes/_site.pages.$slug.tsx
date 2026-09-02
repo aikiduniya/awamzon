@@ -43,6 +43,17 @@ function CmsPage() {
   const { page } = Route.useLoaderData();
   return (
     <article className="container-site max-w-3xl py-12">
+      <nav aria-label="Breadcrumb" className="mb-6 text-sm text-muted-foreground">
+        <ol className="flex flex-wrap items-center gap-1.5">
+          <li>
+            <CmsLink to="/" className="hover:text-foreground">
+              Home
+            </CmsLink>
+          </li>
+          <li aria-hidden>/</li>
+          <li className="text-foreground">{page.title}</li>
+        </ol>
+      </nav>
       <h1 className="text-4xl">{page.title}</h1>
       <div className="mt-8 whitespace-pre-line leading-relaxed">{page.content}</div>
       <CtaSection config={siteConfig} location="page" />
@@ -50,3 +61,4 @@ function CmsPage() {
     </article>
   );
 }
+
