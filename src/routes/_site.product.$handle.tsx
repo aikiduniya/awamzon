@@ -124,8 +124,8 @@ function ProductPage() {
   const stock = variant?.quantityAvailable ?? null;
 
   const addToCart = async () => {
-    if (!variant) return;
-    await addItem({
+    if (!variant) return false;
+    const result = await addItem({
       product,
       variantId: variant.id,
       variantTitle: variant.title,
@@ -133,20 +133,26 @@ function ProductPage() {
       quantity: qty,
       selectedOptions: variant.selectedOptions ?? [],
     });
+    if (!result.ok) {
+      toast.error(result.error ?? "Could not add to cart", { position: "top-center" });
+      return false;
+    }
+    return true;
   };
 
   const handleAdd = async () => {
-    await addToCart();
+    if (!(await addToCart())) return;
     toast.success("Added to cart", { position: "top-center" });
     setOpen(true);
   };
 
   const handleBuyNow = async () => {
-    await addToCart();
+    if (!(await addToCart())) return;
     const url = getCheckoutUrl();
     if (url) window.open(url, "_blank");
     else toast.error("Checkout is unavailable right now", { position: "top-center" });
   };
+
 
   return (
     <div className="container-site py-10">
