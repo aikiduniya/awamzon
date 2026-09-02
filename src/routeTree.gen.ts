@@ -26,6 +26,7 @@ import { Route as SiteShopRouteImport } from './routes/_site.shop'
 import { Route as AuthenticatedAdminIndexRouteImport } from './routes/_authenticated/admin.index'
 import { Route as AuthenticatedAdminActivityRouteImport } from './routes/_authenticated/admin.activity'
 import { Route as AuthenticatedAdminBlogRouteImport } from './routes/_authenticated/admin.blog'
+import { Route as AuthenticatedAdminCodeRouteImport } from './routes/_authenticated/admin.code'
 import { Route as AuthenticatedAdminCurrencyRouteImport } from './routes/_authenticated/admin.currency'
 import { Route as AuthenticatedAdminFaqRouteImport } from './routes/_authenticated/admin.faq'
 import { Route as AuthenticatedAdminHomepageRouteImport } from './routes/_authenticated/admin.homepage'
@@ -134,6 +135,11 @@ const AuthenticatedAdminActivityRoute =
 const AuthenticatedAdminBlogRoute = AuthenticatedAdminBlogRouteImport.update({
   id: '/blog',
   path: '/blog',
+  getParentRoute: () => AuthenticatedAdminRoute,
+} as any)
+const AuthenticatedAdminCodeRoute = AuthenticatedAdminCodeRouteImport.update({
+  id: '/code',
+  path: '/code',
   getParentRoute: () => AuthenticatedAdminRoute,
 } as any)
 const AuthenticatedAdminCurrencyRoute =
@@ -287,6 +293,7 @@ export interface FileRoutesByFullPath {
   '/shop': typeof SiteShopRoute
   '/admin/activity': typeof AuthenticatedAdminActivityRoute
   '/admin/blog': typeof AuthenticatedAdminBlogRoute
+  '/admin/code': typeof AuthenticatedAdminCodeRoute
   '/admin/currency': typeof AuthenticatedAdminCurrencyRoute
   '/admin/faq': typeof AuthenticatedAdminFaqRoute
   '/admin/homepage': typeof AuthenticatedAdminHomepageRoute
@@ -328,6 +335,7 @@ export interface FileRoutesByTo {
   '/shop': typeof SiteShopRoute
   '/admin/activity': typeof AuthenticatedAdminActivityRoute
   '/admin/blog': typeof AuthenticatedAdminBlogRoute
+  '/admin/code': typeof AuthenticatedAdminCodeRoute
   '/admin/currency': typeof AuthenticatedAdminCurrencyRoute
   '/admin/faq': typeof AuthenticatedAdminFaqRoute
   '/admin/homepage': typeof AuthenticatedAdminHomepageRoute
@@ -373,6 +381,7 @@ export interface FileRoutesById {
   '/_site/': typeof SiteIndexRoute
   '/_authenticated/admin/activity': typeof AuthenticatedAdminActivityRoute
   '/_authenticated/admin/blog': typeof AuthenticatedAdminBlogRoute
+  '/_authenticated/admin/code': typeof AuthenticatedAdminCodeRoute
   '/_authenticated/admin/currency': typeof AuthenticatedAdminCurrencyRoute
   '/_authenticated/admin/faq': typeof AuthenticatedAdminFaqRoute
   '/_authenticated/admin/homepage': typeof AuthenticatedAdminHomepageRoute
@@ -417,6 +426,7 @@ export interface FileRouteTypes {
     | '/shop'
     | '/admin/activity'
     | '/admin/blog'
+    | '/admin/code'
     | '/admin/currency'
     | '/admin/faq'
     | '/admin/homepage'
@@ -458,6 +468,7 @@ export interface FileRouteTypes {
     | '/shop'
     | '/admin/activity'
     | '/admin/blog'
+    | '/admin/code'
     | '/admin/currency'
     | '/admin/faq'
     | '/admin/homepage'
@@ -502,6 +513,7 @@ export interface FileRouteTypes {
     | '/_site/'
     | '/_authenticated/admin/activity'
     | '/_authenticated/admin/blog'
+    | '/_authenticated/admin/code'
     | '/_authenticated/admin/currency'
     | '/_authenticated/admin/faq'
     | '/_authenticated/admin/homepage'
@@ -657,6 +669,13 @@ declare module '@tanstack/react-router' {
       path: '/blog'
       fullPath: '/admin/blog'
       preLoaderRoute: typeof AuthenticatedAdminBlogRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
+    '/_authenticated/admin/code': {
+      id: '/_authenticated/admin/code'
+      path: '/code'
+      fullPath: '/admin/code'
+      preLoaderRoute: typeof AuthenticatedAdminCodeRouteImport
       parentRoute: typeof AuthenticatedAdminRoute
     }
     '/_authenticated/admin/currency': {
@@ -840,6 +859,7 @@ declare module '@tanstack/react-router' {
 interface AuthenticatedAdminRouteChildren {
   AuthenticatedAdminActivityRoute: typeof AuthenticatedAdminActivityRoute
   AuthenticatedAdminBlogRoute: typeof AuthenticatedAdminBlogRoute
+  AuthenticatedAdminCodeRoute: typeof AuthenticatedAdminCodeRoute
   AuthenticatedAdminCurrencyRoute: typeof AuthenticatedAdminCurrencyRoute
   AuthenticatedAdminFaqRoute: typeof AuthenticatedAdminFaqRoute
   AuthenticatedAdminHomepageRoute: typeof AuthenticatedAdminHomepageRoute
@@ -863,6 +883,7 @@ interface AuthenticatedAdminRouteChildren {
 const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
   AuthenticatedAdminActivityRoute: AuthenticatedAdminActivityRoute,
   AuthenticatedAdminBlogRoute: AuthenticatedAdminBlogRoute,
+  AuthenticatedAdminCodeRoute: AuthenticatedAdminCodeRoute,
   AuthenticatedAdminCurrencyRoute: AuthenticatedAdminCurrencyRoute,
   AuthenticatedAdminFaqRoute: AuthenticatedAdminFaqRoute,
   AuthenticatedAdminHomepageRoute: AuthenticatedAdminHomepageRoute,
