@@ -10,6 +10,8 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 import {
+  Code2,
+  Coins,
   FileText,
   HelpCircle,
   History,
@@ -19,11 +21,13 @@ import {
   LogOut,
   Megaphone,
   Menu,
+  MessageCircle,
   MessageSquare,
   Newspaper,
   Package,
   Palette,
   PanelsTopLeft,
+  PlugZap,
   Route as RouteIcon,
   Search,
   ShieldCheck,
@@ -47,6 +51,7 @@ const NAV: Array<{ group: string; items: Array<{ to: string; label: string; icon
       { to: "/admin", label: "Dashboard", icon: LayoutDashboard },
       { to: "/admin/products", label: "Products & inventory", icon: Package },
       { to: "/admin/orders", label: "Orders & customers", icon: ShoppingCart },
+      { to: "/admin/currency", label: "Currency management", icon: Coins },
     ],
   },
   {
@@ -72,6 +77,7 @@ const NAV: Array<{ group: string; items: Array<{ to: string; label: string; icon
       { to: "/admin/settings", label: "Settings & banners", icon: Megaphone },
       { to: "/admin/subscribers", label: "Subscribers", icon: Users },
       { to: "/admin/messages", label: "Contact messages", icon: MessageSquare },
+      { to: "/admin/whatsapp", label: "WhatsApp", icon: MessageCircle },
     ],
   },
   {
@@ -85,6 +91,8 @@ const NAV: Array<{ group: string; items: Array<{ to: string; label: string; icon
   {
     group: "Administration",
     items: [
+      { to: "/admin/integrations", label: "Integrations & tracking", icon: PlugZap },
+      { to: "/admin/code", label: "Custom code", icon: Code2 },
       { to: "/admin/users", label: "Users & roles", icon: UserCog },
       { to: "/admin/activity", label: "Activity log", icon: History },
     ],
