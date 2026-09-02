@@ -60,21 +60,35 @@ export function ChatWidget({ config }: { config: SiteConfig }) {
     message: "",
     position: "right",
     color: "oklch(0.6 0.15 150)",
+    label: "",
+    showOnAllPages: true,
+    hideOnPaths: "",
   });
   const features = group(config.settings, "features", { chatWidget: false });
-  if (!chat.enabled || !features.chatWidget || !chat.number) return null;
+  const [path, setPath] = useState("/");
+  useEffect(() => setPath(window.location.pathname), []);
 
-  const href = `https://wa.me/${String(chat.number).replace(/\D/g, "")}?text=${encodeURIComponent(String(chat.message))}`;
+  if (!chat.enabled || !features.chatWidget || !chat.number) return null;
+  if (chat.showOnAllPages === false && path !== "/") return null;
+  const hidden = String(chat.hideOnPaths ?? "")
+    .split(",")
+    .map((p) => p.trim())
+    .filter(Boolean);
+  if (hidden.some((p) => path.startsWith(p))) return null;
+
+  const digits = String(chat.number).replace(/\D/g, "");
+  const href = `https://wa.me/${digits}?text=${encodeURIComponent(String(chat.message))}`;
   return (
     <a
       href={href}
       target="_blank"
       rel="noopener noreferrer"
       aria-label="Chat on WhatsApp"
-      className={`fixed bottom-5 ${chat.position === "left" ? "left-5" : "right-5"} z-40 flex h-12 w-12 items-center justify-center rounded-full shadow-lg`}
+      className={`fixed bottom-5 ${chat.position === "left" ? "left-5" : "right-5"} z-40 flex h-12 items-center gap-2 rounded-full px-3.5 shadow-lg transition-transform hover:scale-105`}
       style={{ background: chat.color as string }}
     >
       <MessageCircle className="h-6 w-6 text-white" />
+      {chat.label ? <span className="pr-1 text-sm font-medium text-white">{String(chat.label)}</span> : null}
     </a>
   );
 }

@@ -3,7 +3,14 @@ import { Toaster } from "@/components/ui/sonner";
 import { SiteHeader } from "@/components/site/SiteHeader";
 import { SiteFooter } from "@/components/site/SiteFooter";
 import { ThemeStyle } from "@/components/site/ThemeStyle";
-import { AnalyticsScripts, ChatWidget, CookieBanner, SitePopup } from "@/components/site/Overlays";
+import {
+  AnalyticsScripts,
+  ChatWidget,
+  CookieBanner,
+  CustomCodeInjector,
+  SitePopup,
+} from "@/components/site/Overlays";
+import { CurrencyProvider } from "@/lib/currency";
 import { getRedirects, getSiteConfig } from "@/lib/cms.functions";
 import { group, type ThemeSettings } from "@/lib/cms-types";
 import { securityDefaults, siteJsonLdScripts } from "@/lib/seo";
@@ -62,7 +69,12 @@ export const Route = createFileRoute("/_site")({
       links.push({ rel: "dns-prefetch", href: `https://${SHOPIFY_STORE_PERMANENT_DOMAIN}` });
     }
     if (store.faviconUrl) links.push({ rel: "icon", href: String(store.faviconUrl) });
-    return { links, scripts: siteJsonLdScripts(loaderData.settings) };
+    const analytics = group(loaderData.settings, "analytics", { searchConsoleVerification: "" });
+    const meta: Array<Record<string, string>> = [];
+    if (analytics.searchConsoleVerification) {
+      meta.push({ name: "google-site-verification", content: String(analytics.searchConsoleVerification) });
+    }
+    return { links, meta, scripts: siteJsonLdScripts(loaderData.settings) };
   },
   component: SiteLayout,
 });
@@ -86,6 +98,7 @@ function SiteLayout() {
   }
 
   return (
+    <CurrencyProvider settings={config.settings}>
     <div className="flex min-h-screen flex-col">
       <ThemeStyle theme={theme} />
       <a
@@ -103,7 +116,9 @@ function SiteLayout() {
       <SitePopup config={config} />
       <ChatWidget config={config} />
       <AnalyticsScripts config={config} />
+      <CustomCodeInjector config={config} />
       <Toaster position="top-center" />
     </div>
+    </CurrencyProvider>
   );
 }
