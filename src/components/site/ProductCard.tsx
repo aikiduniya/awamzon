@@ -48,9 +48,11 @@ export function ProductCard({
       ? Math.round((1 - parseFloat(variant.price.amount) / parseFloat(compareAt.amount)) * 100)
       : 0;
 
+  const adding = variant ? Boolean(pending[variant.id]) : false;
+
   const handleAddToCart = async () => {
-    if (!variant) return;
-    await addItem({
+    if (!variant || adding) return;
+    const result = await addItem({
       product,
       variantId: variant.id,
       variantTitle: variant.title,
@@ -58,9 +60,14 @@ export function ProductCard({
       quantity: 1,
       selectedOptions: variant.selectedOptions ?? [],
     });
+    if (!result.ok) {
+      toast.error(result.error ?? "Could not add to cart", { position: "top-center" });
+      return;
+    }
     toast.success(`${node.title} added to cart`, { position: "top-center" });
     setOpen(true);
   };
+
 
   return (
     <article className="group relative flex h-full flex-col overflow-hidden rounded-2xl border bg-card transition-all duration-300 hover:-translate-y-1 hover:border-primary/30 hover:shadow-xl">
