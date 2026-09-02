@@ -25,6 +25,7 @@ import { siteRouteApi } from "@/routes/_site";
 import { ProductCarousel } from "@/components/site/ProductCarousel";
 import { getSettings } from "@/lib/cms.functions";
 import { fetchProductByHandle, fetchProducts, formatMoney } from "@/lib/shopify";
+import { useMoney } from "@/lib/currency";
 import { applyTemplate, buildMeta, jsonLd, seoDefaults } from "@/lib/seo";
 import { group } from "@/lib/cms-types";
 import { useCartStore } from "@/stores/cartStore";
@@ -102,6 +103,7 @@ function ProductPage() {
   const [variantId, setVariantId] = useState(variants.find((v) => v.availableForSale)?.id ?? variants[0]?.id);
   const [activeImage, setActiveImage] = useState(0);
   const [qty, setQty] = useState(1);
+  const money = useMoney();
   const buttons = useSiteButtons();
   const siteConfig = siteRouteApi.useLoaderData();
   const [zoomOpen, setZoomOpen] = useState(false);
@@ -234,12 +236,12 @@ function ProductPage() {
 
           <div className="flex flex-wrap items-baseline gap-3">
             <span className="text-3xl font-semibold">
-              {variant ? formatMoney(variant.price.amount, variant.price.currencyCode) : "—"}
+              {variant ? money(variant.price.amount, variant.price.currencyCode) : "—"}
             </span>
             {discount > 0 && compareAt ? (
               <>
                 <span className="text-lg text-muted-foreground line-through">
-                  {formatMoney(compareAt.amount, compareAt.currencyCode)}
+                  {money(compareAt.amount, compareAt.currencyCode)}
                 </span>
                 <span className="rounded-full bg-primary/10 px-2.5 py-1 text-xs font-semibold text-primary">
                   Save {discount}%

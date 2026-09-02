@@ -9,6 +9,7 @@ import { useSiteButtons } from "@/hooks/useSiteButtons";
 import { useCartStore } from "@/stores/cartStore";
 import { useWishlistStore } from "@/stores/wishlistStore";
 import { formatMoney, type ShopifyProduct } from "@/lib/shopify";
+import { useMoney } from "@/lib/currency";
 import { cn } from "@/lib/utils";
 
 export interface ProductCardFeatures {
@@ -32,6 +33,7 @@ export function ProductCard({
   const toggleWish = useWishlistStore((s) => s.toggle);
   const wishHandles = useWishlistStore((s) => s.handles);
   const [quickOpen, setQuickOpen] = useState(false);
+  const money = useMoney();
   const buttons = useSiteButtons();
 
   const node = product.node;
@@ -166,11 +168,11 @@ export function ProductCard({
         </Link>
         <div className="mt-2 flex items-baseline gap-2">
           <span className="font-semibold">
-            {formatMoney(node.priceRange.minVariantPrice.amount, node.priceRange.minVariantPrice.currencyCode)}
+            {money(node.priceRange.minVariantPrice.amount, node.priceRange.minVariantPrice.currencyCode)}
           </span>
           {discount > 0 && compareAt ? (
             <span className="text-sm text-muted-foreground line-through">
-              {formatMoney(compareAt.amount, compareAt.currencyCode)}
+              {money(compareAt.amount, compareAt.currencyCode)}
             </span>
           ) : null}
         </div>

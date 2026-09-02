@@ -10,6 +10,7 @@ import { getSettings } from "@/lib/cms.functions";
 import { buildMeta } from "@/lib/seo";
 import { group } from "@/lib/cms-types";
 import { formatMoney } from "@/lib/shopify";
+import { useMoney } from "@/lib/currency";
 import { useCartStore } from "@/stores/cartStore";
 
 export const Route = createFileRoute("/_site/cart")({
@@ -30,6 +31,7 @@ export const Route = createFileRoute("/_site/cart")({
 function CartPage() {
   const settings = Route.useLoaderData();
   const messages = group(settings, "messages", { emptyCart: "Your cart is empty" });
+  const money = useMoney();
   const { items, isLoading, updateQuantity, removeItem, getCheckoutUrl } = useCartStore();
   const buttons = useSiteButtons();
   const config = siteRouteApi.useLoaderData();
@@ -104,7 +106,7 @@ function CartPage() {
                     </Button>
                   </div>
                 </div>
-                <div className="font-semibold">{formatMoney(parseFloat(item.price.amount) * item.quantity, currency)}</div>
+                <div className="font-semibold">{money(parseFloat(item.price.amount) * item.quantity, currency)}</div>
               </li>
             ))}
           </ul>
@@ -113,7 +115,7 @@ function CartPage() {
             <h2 className="text-lg font-medium">Order summary</h2>
             <div className="mt-4 flex justify-between">
               <span>Subtotal</span>
-              <span className="font-semibold">{formatMoney(total, currency)}</span>
+              <span className="font-semibold">{money(total, currency)}</span>
             </div>
             <p className="mt-2 text-xs text-muted-foreground">Taxes, shipping and discounts are applied at checkout.</p>
             <Button className="mt-5 w-full" size="lg" onClick={checkout} disabled={isLoading}>

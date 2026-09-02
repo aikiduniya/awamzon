@@ -5,6 +5,7 @@ import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogTitle } from "@/components/ui/dialog";
 import { formatMoney, type ShopifyProduct } from "@/lib/shopify";
+import { useMoney } from "@/lib/currency";
 import { CmsIcon } from "./Icon";
 import { useSiteButtons } from "@/hooks/useSiteButtons";
 import { useCartStore } from "@/stores/cartStore";
@@ -22,6 +23,7 @@ export function QuickViewDialog({
   const variants = node.variants.edges.map((e) => e.node);
   const [variantId, setVariantId] = useState(variants.find((v) => v.availableForSale)?.id ?? variants[0]?.id);
   const [qty, setQty] = useState(1);
+  const money = useMoney();
   const buttons = useSiteButtons();
   const variant = variants.find((v) => v.id === variantId) ?? variants[0];
   const addItem = useCartStore((s) => s.addItem);
@@ -65,11 +67,11 @@ export function QuickViewDialog({
             </div>
             <div className="flex items-baseline gap-2">
               <span className="text-lg font-semibold">
-                {variant ? formatMoney(variant.price.amount, variant.price.currencyCode) : "—"}
+                {variant ? money(variant.price.amount, variant.price.currencyCode) : "—"}
               </span>
               {variant?.compareAtPrice && parseFloat(variant.compareAtPrice.amount) > parseFloat(variant.price.amount) ? (
                 <span className="text-sm text-muted-foreground line-through">
-                  {formatMoney(variant.compareAtPrice.amount, variant.compareAtPrice.currencyCode)}
+                  {money(variant.compareAtPrice.amount, variant.compareAtPrice.currencyCode)}
                 </span>
               ) : null}
             </div>

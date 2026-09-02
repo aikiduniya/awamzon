@@ -15,6 +15,7 @@ import { CmsIcon } from "./Icon";
 import { useSiteButtons } from "@/hooks/useSiteButtons";
 import { useCartStore } from "@/stores/cartStore";
 import { formatMoney } from "@/lib/shopify";
+import { useMoney } from "@/lib/currency";
 
 interface Props {
   emptyMessage: string;
@@ -24,6 +25,7 @@ interface Props {
 
 export function CartDrawer({ emptyMessage, freeShippingThreshold = 0, showFreeShippingBar = false }: Props) {
   const buttons = useSiteButtons();
+  const money = useMoney();
   const { items, isLoading, isSyncing, isOpen, setOpen, updateQuantity, removeItem, getCheckoutUrl, syncCart } =
     useCartStore();
   const totalItems = items.reduce((sum, item) => sum + item.quantity, 0);
@@ -77,7 +79,7 @@ export function CartDrawer({ emptyMessage, freeShippingThreshold = 0, showFreeSh
                 <div className="mb-4">
                   <p className="text-xs text-muted-foreground mb-1">
                     {remaining > 0
-                      ? `${formatMoney(remaining, currency)} away from free shipping`
+                      ? `${money(remaining, currency)} away from free shipping`
                       : "You have unlocked free shipping"}
                   </p>
                   <Progress value={Math.min((totalPrice / freeShippingThreshold) * 100, 100)} />
@@ -102,7 +104,7 @@ export function CartDrawer({ emptyMessage, freeShippingThreshold = 0, showFreeSh
                         <p className="text-xs text-muted-foreground">
                           {item.selectedOptions.map((o) => o.value).join(" • ")}
                         </p>
-                        <p className="font-semibold text-sm mt-1">{formatMoney(item.price.amount, item.price.currencyCode)}</p>
+                        <p className="font-semibold text-sm mt-1">{money(item.price.amount, item.price.currencyCode)}</p>
                       </div>
                       <div className="flex flex-col items-end gap-2">
                         <Button
@@ -143,7 +145,7 @@ export function CartDrawer({ emptyMessage, freeShippingThreshold = 0, showFreeSh
               <div className="flex-shrink-0 space-y-3 py-4 border-t mt-4">
                 <div className="flex justify-between items-center">
                   <span className="font-medium">Subtotal</span>
-                  <span className="text-lg font-semibold">{formatMoney(totalPrice, currency)}</span>
+                  <span className="text-lg font-semibold">{money(totalPrice, currency)}</span>
                 </div>
                 <p className="text-xs text-muted-foreground">Taxes and shipping calculated at checkout.</p>
                 <Button onClick={handleCheckout} className="w-full" size="lg" disabled={isLoading || isSyncing}>
