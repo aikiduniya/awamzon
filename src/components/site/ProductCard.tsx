@@ -26,8 +26,9 @@ export function ProductCard({
   priority?: boolean | undefined;
 }) {
   const addItem = useCartStore((s) => s.addItem);
-  const isLoading = useCartStore((s) => s.isLoading);
+  const pending = useCartStore((s) => s.pending);
   const setOpen = useCartStore((s) => s.setOpen);
+
   const toggleWish = useWishlistStore((s) => s.toggle);
   const wishHandles = useWishlistStore((s) => s.handles);
   const [quickOpen, setQuickOpen] = useState(false);
