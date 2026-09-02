@@ -44,6 +44,7 @@ import { Route as AuthenticatedAdminSettingsRouteImport } from './routes/_authen
 import { Route as AuthenticatedAdminSubscribersRouteImport } from './routes/_authenticated/admin.subscribers'
 import { Route as AuthenticatedAdminThemeRouteImport } from './routes/_authenticated/admin.theme'
 import { Route as AuthenticatedAdminUsersRouteImport } from './routes/_authenticated/admin.users'
+import { Route as AuthenticatedAdminWhatsappRouteImport } from './routes/_authenticated/admin.whatsapp'
 import { Route as SiteBlogIndexRouteImport } from './routes/_site.blog.index'
 import { Route as SiteBlogSlugRouteImport } from './routes/_site.blog.$slug'
 import { Route as SiteCollectionsHandleRouteImport } from './routes/_site.collections.$handle'
@@ -237,6 +238,12 @@ const AuthenticatedAdminUsersRoute = AuthenticatedAdminUsersRouteImport.update({
   path: '/users',
   getParentRoute: () => AuthenticatedAdminRoute,
 } as any)
+const AuthenticatedAdminWhatsappRoute =
+  AuthenticatedAdminWhatsappRouteImport.update({
+    id: '/whatsapp',
+    path: '/whatsapp',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
 const SiteBlogIndexRoute = SiteBlogIndexRouteImport.update({
   id: '/blog/',
   path: '/blog/',
@@ -311,6 +318,7 @@ export interface FileRoutesByFullPath {
   '/admin/subscribers': typeof AuthenticatedAdminSubscribersRoute
   '/admin/theme': typeof AuthenticatedAdminThemeRoute
   '/admin/users': typeof AuthenticatedAdminUsersRoute
+  '/admin/whatsapp': typeof AuthenticatedAdminWhatsappRoute
   '/blog/$slug': typeof SiteBlogSlugRoute
   '/collections/$handle': typeof SiteCollectionsHandleRoute
   '/pages/$slug': typeof SitePagesSlugRoute
@@ -353,6 +361,7 @@ export interface FileRoutesByTo {
   '/admin/subscribers': typeof AuthenticatedAdminSubscribersRoute
   '/admin/theme': typeof AuthenticatedAdminThemeRoute
   '/admin/users': typeof AuthenticatedAdminUsersRoute
+  '/admin/whatsapp': typeof AuthenticatedAdminWhatsappRoute
   '/blog/$slug': typeof SiteBlogSlugRoute
   '/collections/$handle': typeof SiteCollectionsHandleRoute
   '/pages/$slug': typeof SitePagesSlugRoute
@@ -399,6 +408,7 @@ export interface FileRoutesById {
   '/_authenticated/admin/subscribers': typeof AuthenticatedAdminSubscribersRoute
   '/_authenticated/admin/theme': typeof AuthenticatedAdminThemeRoute
   '/_authenticated/admin/users': typeof AuthenticatedAdminUsersRoute
+  '/_authenticated/admin/whatsapp': typeof AuthenticatedAdminWhatsappRoute
   '/_site/blog/$slug': typeof SiteBlogSlugRoute
   '/_site/collections/$handle': typeof SiteCollectionsHandleRoute
   '/_site/pages/$slug': typeof SitePagesSlugRoute
@@ -444,6 +454,7 @@ export interface FileRouteTypes {
     | '/admin/subscribers'
     | '/admin/theme'
     | '/admin/users'
+    | '/admin/whatsapp'
     | '/blog/$slug'
     | '/collections/$handle'
     | '/pages/$slug'
@@ -486,6 +497,7 @@ export interface FileRouteTypes {
     | '/admin/subscribers'
     | '/admin/theme'
     | '/admin/users'
+    | '/admin/whatsapp'
     | '/blog/$slug'
     | '/collections/$handle'
     | '/pages/$slug'
@@ -531,6 +543,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/subscribers'
     | '/_authenticated/admin/theme'
     | '/_authenticated/admin/users'
+    | '/_authenticated/admin/whatsapp'
     | '/_site/blog/$slug'
     | '/_site/collections/$handle'
     | '/_site/pages/$slug'
@@ -797,6 +810,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminUsersRouteImport
       parentRoute: typeof AuthenticatedAdminRoute
     }
+    '/_authenticated/admin/whatsapp': {
+      id: '/_authenticated/admin/whatsapp'
+      path: '/whatsapp'
+      fullPath: '/admin/whatsapp'
+      preLoaderRoute: typeof AuthenticatedAdminWhatsappRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
     '/_site/blog/': {
       id: '/_site/blog/'
       path: '/blog'
@@ -877,6 +897,7 @@ interface AuthenticatedAdminRouteChildren {
   AuthenticatedAdminSubscribersRoute: typeof AuthenticatedAdminSubscribersRoute
   AuthenticatedAdminThemeRoute: typeof AuthenticatedAdminThemeRoute
   AuthenticatedAdminUsersRoute: typeof AuthenticatedAdminUsersRoute
+  AuthenticatedAdminWhatsappRoute: typeof AuthenticatedAdminWhatsappRoute
   AuthenticatedAdminIndexRoute: typeof AuthenticatedAdminIndexRoute
 }
 
@@ -901,6 +922,7 @@ const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
   AuthenticatedAdminSubscribersRoute: AuthenticatedAdminSubscribersRoute,
   AuthenticatedAdminThemeRoute: AuthenticatedAdminThemeRoute,
   AuthenticatedAdminUsersRoute: AuthenticatedAdminUsersRoute,
+  AuthenticatedAdminWhatsappRoute: AuthenticatedAdminWhatsappRoute,
   AuthenticatedAdminIndexRoute: AuthenticatedAdminIndexRoute,
 }
 
