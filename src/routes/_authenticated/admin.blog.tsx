@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
-import { AdminPage, DeleteButton, EmptyState, Field, JsonForm, slugify, useTable } from "@/components/admin/AdminUI";
+import { AdminPage, DeleteButton, Field, JsonForm, slugify, useTable } from "@/components/admin/AdminUI";
+import { DataTable, type DataColumn } from "@/components/admin/DataTable";
 import type { Row } from "@/lib/admin.functions";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -17,6 +18,54 @@ const SEO_TEMPLATE = { metaTitle: "", metaDescription: "", ogImage: "", robots: 
 
 function BlogAdmin() {
   const { rows, loading, save, remove } = useTable("blog_posts", "created_at", false);
+  const [editing, setEditing] = useState<string | null>(null);
+
+  const categories = Array.from(
+    new Set(rows.map((r) => String(r["category"] ?? "")).filter(Boolean)),
+  ).map((c) => ({ value: c, label: c }));
+
+  const columns: Array<DataColumn<Row>> = [
+    {
+      key: "title",
+      header: "Post",
+      value: (r) => String(r["title"] ?? ""),
+      render: (r) => (
+        <div>
+          <p className="font-medium">{String(r["title"])}</p>
+          <p className="text-xs text-muted-foreground">/blog/{String(r["slug"])}</p>
+        </div>
+      ),
+    },
+    { key: "category", header: "Category", value: (r) => String(r["category"] ?? "—") },
+    { key: "author", header: "Author", value: (r) => String(r["author"] ?? "—") },
+    {
+      key: "status",
+      header: "Status",
+      value: (r) => String(r["status"] ?? ""),
+      render: (r) => (
+        <Badge variant={r["status"] === "published" ? "default" : "secondary"}>{String(r["status"])}</Badge>
+      ),
+    },
+    {
+      key: "published_at",
+      header: "Published",
+      value: (r) => String(r["published_at"] ?? ""),
+      render: (r) =>
+        r["published_at"] ? (
+          <span className="whitespace-nowrap text-xs text-muted-foreground">
+            {new Date(String(r["published_at"])).toLocaleDateString()}
+          </span>
+        ) : (
+          <span className="text-xs text-muted-foreground">—</span>
+        ),
+    },
+    {
+      key: "tags",
+      header: "Tags",
+      hidden: true,
+      value: (r) => (Array.isArray(r["tags"]) ? (r["tags"] as string[]).join(", ") : ""),
+    },
+  ];
 
   return (
     <AdminPage
@@ -40,17 +89,66 @@ function BlogAdmin() {
         </Button>
       }
     >
-      {loading ? (
-        <p className="text-sm text-muted-foreground">Loading…</p>
-      ) : rows.length === 0 ? (
-        <EmptyState text="No posts yet" />
-      ) : (
-        <div className="space-y-3">
-          {rows.map((row) => (
-            <PostEditor key={String(row["id"])} row={row} onSave={save} onDelete={remove} />
-          ))}
-        </div>
-      )}
+      <DataTable
+        rows={rows}
+        loading={loading}
+        columns={columns}
+        getId={(r) => String(r["id"])}
+        searchPlaceholder="Search posts…"
+        csvName="blog-posts"
+        emptyText="No posts yet"
+        dateValue={(r) => String(r["created_at"] ?? "")}
+        filters={[
+          {
+            key: "status",
+            label: "Statuses",
+            options: [
+              { value: "published", label: "Published" },
+              { value: "draft", label: "Draft" },
+            ],
+            match: (r, v) => String(r["status"] ?? "") === v,
+          },
+          {
+            key: "category",
+            label: "Categories",
+            options: categories,
+            match: (r, v) => String(r["category"] ?? "") === v,
+          },
+        ]}
+        bulkActions={[
+          {
+            label: "Publish",
+            run: (selected) =>
+              Promise.all(
+                selected.map((r) =>
+                  save({ ...r, status: "published", published_at: r["published_at"] ?? new Date().toISOString() }),
+                ),
+              ),
+          },
+          { label: "Move to draft", run: (selected) => Promise.all(selected.map((r) => save({ ...r, status: "draft" }))) },
+          {
+            label: "Delete",
+            destructive: true,
+            confirm: "Selected posts will be permanently deleted.",
+            run: (selected) => Promise.all(selected.map((r) => remove(String(r["id"])))),
+          },
+        ]}
+        rowActions={(row) => (
+          <Button
+            size="sm"
+            variant="outline"
+            onClick={() => setEditing((id) => (id === String(row["id"]) ? null : String(row["id"])))}
+          >
+            {editing === String(row["id"]) ? "Close" : "Edit"}
+          </Button>
+        )}
+      />
+
+      {editing
+        ? rows
+            .filter((r) => String(r["id"]) === editing)
+            .map((row) => <PostEditor key={String(row["id"])} row={row} onSave={save} onDelete={remove} />)
+        : null}
     </AdminPage>
   );
 }
