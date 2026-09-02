@@ -181,11 +181,11 @@ export function ProductCard({
         ) : null}
         <Button
           onClick={handleAddToCart}
-          disabled={isLoading || !variant || soldOut}
+          disabled={adding || !variant || soldOut}
           variant="secondary"
           className="mt-4 w-full gap-1.5"
         >
-          {isLoading ? (
+          {adding ? (
             <Loader2 className="size-4 animate-spin" />
           ) : soldOut ? (
             "Out of stock"
