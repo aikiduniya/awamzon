@@ -25,13 +25,14 @@ export function QuickViewDialog({
   const buttons = useSiteButtons();
   const variant = variants.find((v) => v.id === variantId) ?? variants[0];
   const addItem = useCartStore((s) => s.addItem);
-  const isLoading = useCartStore((s) => s.isLoading);
+  const pendingMap = useCartStore((s) => s.pending);
   const setCartOpen = useCartStore((s) => s.setOpen);
   const image = node.images.edges[0]?.node;
+  const adding = variant ? Boolean(pendingMap[variant.id]) : false;
 
   const add = async () => {
-    if (!variant) return;
-    await addItem({
+    if (!variant || adding) return;
+    const result = await addItem({
       product,
       variantId: variant.id,
       variantTitle: variant.title,
@@ -39,6 +40,10 @@ export function QuickViewDialog({
       quantity: qty,
       selectedOptions: variant.selectedOptions ?? [],
     });
+    if (!result.ok) {
+      toast.error(result.error ?? "Could not add to cart", { position: "top-center" });
+      return;
+    }
     toast.success(`${node.title} added to cart`, { position: "top-center" });
     onOpenChange(false);
     setCartOpen(true);
@@ -97,8 +102,8 @@ export function QuickViewDialog({
                   <Plus className="size-3.5" />
                 </button>
               </div>
-              <Button onClick={add} disabled={isLoading || !variant?.availableForSale} className="flex-1 gap-1.5">
-                {isLoading ? (
+              <Button onClick={add} disabled={adding || !variant?.availableForSale} className="flex-1 gap-1.5">
+                {adding ? (
                   <Loader2 className="size-4 animate-spin" />
                 ) : buttons.showIcons ? (
                   <CmsIcon name={buttons.addToCartIcon} className="size-4" />

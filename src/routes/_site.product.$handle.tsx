@@ -107,7 +107,7 @@ function ProductPage() {
   const [zoomOpen, setZoomOpen] = useState(false);
   const variant = variants.find((v) => v.id === variantId) ?? variants[0];
   const addItem = useCartStore((s) => s.addItem);
-  const isLoading = useCartStore((s) => s.isLoading);
+  const pendingMap = useCartStore((s) => s.pending);
   const setOpen = useCartStore((s) => s.setOpen);
   const getCheckoutUrl = useCartStore((s) => s.getCheckoutUrl);
   const toggleWish = useWishlistStore((s) => s.toggle);
@@ -122,6 +122,7 @@ function ProductPage() {
       ? Math.round((1 - parseFloat(variant.price.amount) / parseFloat(compareAt.amount)) * 100)
       : 0;
   const stock = variant?.quantityAvailable ?? null;
+  const adding = variant ? Boolean(pendingMap[variant.id]) : false;
 
   const addToCart = async () => {
     if (!variant) return false;
@@ -297,9 +298,9 @@ function ProductPage() {
               size="lg"
               className="flex-1 gap-1.5"
               onClick={handleAdd}
-              disabled={isLoading || !variant?.availableForSale}
+              disabled={adding || !variant?.availableForSale}
             >
-              {isLoading ? (
+              {adding ? (
                 <Loader2 className="size-4 animate-spin" />
               ) : buttons.showIcons ? (
                 <CmsIcon name={buttons.addToCartIcon} className="size-4" />
@@ -326,7 +327,7 @@ function ProductPage() {
             variant="secondary"
             className="w-full gap-1.5"
             onClick={handleBuyNow}
-            disabled={isLoading || !variant?.availableForSale}
+            disabled={adding || !variant?.availableForSale}
           >
             {buttons.showIcons ? <CmsIcon name={buttons.buyNowIcon} className="size-4" /> : null}
             {buttons.buyNowLabel}
