@@ -188,3 +188,61 @@ export function AnalyticsScripts({ config }: { config: SiteConfig }) {
 
   return null;
 }
+
+/** Injects Admin → Custom code snippets into head / body-start / body-end. */
+export function CustomCodeInjector({ config }: { config: SiteConfig }) {
+  const code = group(config.settings, "custom_code", {
+    enabled: false,
+    label: "",
+    head: "",
+    bodyStart: "",
+    bodyEnd: "",
+    pages: "*",
+    devices: "all",
+  });
+
+  useEffect(() => {
+    if (!code.enabled) return;
+
+    const pages = String(code.pages ?? "*").trim();
+    if (pages && pages !== "*") {
+      const allowed = pages
+        .split(",")
+        .map((p) => p.trim().replace(/\/+$/, "") || "/")
+        .filter(Boolean);
+      const current = window.location.pathname.replace(/\/+$/, "") || "/";
+      const matches = allowed.some((p) => (p.endsWith("*") ? current.startsWith(p.slice(0, -1)) : p === current));
+      if (!matches) return;
+    }
+
+    const devices = String(code.devices ?? "all");
+    const isMobile = window.matchMedia("(max-width: 767px)").matches;
+    if (devices === "mobile" && !isMobile) return;
+    if (devices === "desktop" && isMobile) return;
+
+    const mounted: Element[] = [];
+    const inject = (html: string, target: Element, position: InsertPosition) => {
+      if (!html.trim()) return;
+      const holder = document.createElement("div");
+      holder.setAttribute("data-cms-custom-code", "");
+      holder.innerHTML = html;
+      // Inline <script> tags inserted via innerHTML never execute — recreate them.
+      holder.querySelectorAll("script").forEach((old) => {
+        const fresh = document.createElement("script");
+        for (const attr of Array.from(old.attributes)) fresh.setAttribute(attr.name, attr.value);
+        fresh.text = old.text;
+        old.replaceWith(fresh);
+      });
+      target.insertAdjacentElement(position, holder);
+      mounted.push(holder);
+    };
+
+    inject(String(code.head ?? ""), document.head, "beforeend");
+    inject(String(code.bodyStart ?? ""), document.body, "afterbegin");
+    inject(String(code.bodyEnd ?? ""), document.body, "beforeend");
+
+    return () => mounted.forEach((el) => el.remove());
+  }, [code.enabled, code.head, code.bodyStart, code.bodyEnd, code.pages, code.devices]);
+
+  return null;
+}
